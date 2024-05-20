@@ -1,6 +1,6 @@
 import 'package:FitMotion/pages/index.dart';
+import 'package:FitMotion/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -8,6 +8,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreen extends State<SplashScreen> {
+  bool isLogin = false;
+
   @override
   void initState() {
     super.initState();
@@ -19,21 +21,30 @@ class _SplashScreen extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 3));
 
     // 비동기 작업 완료 후 홈 화면으로 이동
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Index()),
-    );
+    if (isLogin) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Index()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
-
-  final spinkit = SpinKitFadingCircle(
-    color: Colors.blue,
-    size: 50.0,
-  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       body: Center(
-        child: spinkit,
+        child: Text(
+          'FitMotion',
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
