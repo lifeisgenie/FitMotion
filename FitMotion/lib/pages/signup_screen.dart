@@ -79,10 +79,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              '세부정보를 입력하고 계정을 만드세요.',
-              style: TextStyle(color: Colors.white54),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '이미 계정이 있으신가요?',
+                  style: TextStyle(color: Colors.white54),
+                ),
+                SizedBox(width: 8),
+                TextButton(
+                  onPressed: () {
+                    // 로그인 버튼 누를 때 실행될 코드
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                  child: Text('로그인하기'),
+                ),
+              ],
             ),
             SizedBox(height: 24),
             buildTextField(_phoneController, '전화번호'),
@@ -126,29 +141,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               child: Text(
                 '회원가입하기',
-                style: TextStyle(color: Colors.white),
+                style: _isSignUpEnabled
+                    ? TextStyle(color: Colors.white)
+                    : TextStyle(color: Colors.black),
               ),
             ),
             SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '이미 계정이 있으신가요?',
-                  style: TextStyle(color: Colors.white54),
-                ),
-                SizedBox(width: 8),
-                TextButton(
-                  onPressed: () {
-                    // 로그인 버튼 누를 때 실행될 코드
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
-                  },
-                  child: Text('로그인하기'),
-                ),
-              ],
-            ),
+
             SizedBox(height: 24),
             // 추가된 입력 필드
             if (_isNext)

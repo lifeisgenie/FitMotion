@@ -62,11 +62,6 @@ class _Login extends State<Login> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              '앱을 계속 이용하시려면 로그인하세요.',
-              style: TextStyle(color: Colors.white54),
-            ),
             SizedBox(height: 16),
             buildTextField(_idController, '아이디'),
             SizedBox(height: 16),
