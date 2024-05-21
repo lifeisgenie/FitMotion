@@ -1,7 +1,7 @@
+import 'package:FitMotion/pages/feedback_list.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:FitMotion/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
-import 'package:FitMotion/pages/splash_screen.dart';
 
 class Index extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class Index extends StatefulWidget {
 }
 
 class _Index extends State<Index> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -26,7 +26,7 @@ class _Index extends State<Index> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SplashScreen()),
+          MaterialPageRoute(builder: (context) => FeedbackList()),
         );
         break;
       case 2:

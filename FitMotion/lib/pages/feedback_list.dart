@@ -1,6 +1,53 @@
+import 'package:FitMotion/pages/index.dart';
+import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-class FeedbackList extends StatelessWidget {
+class FeedbackList extends StatefulWidget {
+  @override
+  _FeedbackList createState() => _FeedbackList();
+}
+
+class _FeedbackList extends State<FeedbackList> {
+  int _selectedIndex = 1;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FeedbackList()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,6 +267,10 @@ class FeedbackList extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
