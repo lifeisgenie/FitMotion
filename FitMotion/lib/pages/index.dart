@@ -1,4 +1,7 @@
 import 'package:FitMotion/pages/feedback_list.dart';
+import 'package:FitMotion/pages/profile.dart';
+import 'package:FitMotion/pages/search.dart';
+import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:FitMotion/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +23,7 @@ class _Index extends State<Index> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Index()),
+          MaterialPageRoute(builder: (context) => SearchPage()),
         );
         break;
       case 1:
@@ -38,13 +41,13 @@ class _Index extends State<Index> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Index()),
+          MaterialPageRoute(builder: (context) => ProfilePage()),
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Index()),
+          MaterialPageRoute(builder: (context) => SettingsPage()),
         );
         break;
     }
@@ -52,71 +55,86 @@ class _Index extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 30, right: 20, top: 80),
+              padding: EdgeInsets.only(
+                  left: screenWidth * 0.05,
+                  right: screenWidth * 0.04,
+                  top: screenHeight * 0.1),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '서강 님',
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '서강 님',
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.1,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text(
+                      '로그아웃',
                       style: TextStyle(
-                          fontSize: 50,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        '로그아웃',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        fontSize: screenWidth * 0.035,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ]),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 30, right: 30),
+              padding: EdgeInsets.only(
+                  left: screenWidth * 0.05, right: screenWidth * 0.05),
               child: Row(
                 children: [
                   Text(
                     'Beautiful ',
                     style: TextStyle(
-                        fontSize: 50,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                      fontSize: screenWidth * 0.1,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     '자세!',
                     style: TextStyle(
-                        fontSize: 50,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold),
+                      fontSize: screenWidth * 0.1,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.03),
             Padding(
-              padding: EdgeInsets.only(left: 30, right: 30),
+              padding: EdgeInsets.only(
+                  left: screenWidth * 0.05, right: screenWidth * 0.05),
               child: Text(
-                '오늘의 운동',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                '자세 교정',
+                style: TextStyle(
+                    fontSize: screenWidth * 0.05, color: Colors.white),
               ),
             ),
-            SizedBox(height: 10),
-            Expanded(
-              child: ExerciseCard(), // 여기서 ExerciseCard 위젯을 사용합니다.
+            SizedBox(height: screenHeight * 0.02),
+            Container(
+              height: screenHeight * 0.7, // ExerciseCard가 차지할 최대 높이
+              child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
             ),
           ],
         ),

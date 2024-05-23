@@ -1,27 +1,78 @@
 import 'package:FitMotion/pages/index.dart';
+import 'package:FitMotion/pages/profile.dart';
+import 'package:FitMotion/pages/search.dart';
+import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-
 class FeedbackList extends StatefulWidget {
   @override
+  _FeedbackList createState() => _FeedbackList();
+}
+
+class _FeedbackList extends State<FeedbackList> {
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchPage()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FeedbackList()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage()),
+        );
+        break;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    TextEditingController _searchController = TextEditingController();
+
+    void _clearSearch() {
+      _searchController.clear(); // 입력된 텍스트를 지우기
+    }
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('피드백 목록'),
         backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
-              onPressed: () {},
+              onPressed: _clearSearch,
               child: Text(
                 '검색 초기화',
                 style: TextStyle(color: Colors.blue),
@@ -31,11 +82,15 @@ class FeedbackList extends StatefulWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenHeight * 0.02,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: '운동 검색',
                 hintStyle: TextStyle(color: Colors.white54),
@@ -49,170 +104,153 @@ class FeedbackList extends StatefulWidget {
               ),
               style: TextStyle(color: Colors.white),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.02),
             Text(
-              '최근별',
-              style: TextStyle(fontSize: 20, color: Colors.blue),
+              '검색 결과',
+              style: TextStyle(
+                fontSize: screenWidth * 0.05,
+                color: Colors.blue,
+              ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: screenHeight * 0.01),
             Expanded(
               child: ListView(
                 children: [
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise1.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 5회차',
                     sets: '4세트',
                     date: '05/07',
                     time: '12:10pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise2.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 4회차',
                     sets: '2세트',
                     date: '05/05',
                     time: '11:40am',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise3.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 3회차',
                     sets: '3세트',
                     date: '04/31',
                     time: '15:21pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise4.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 2회차',
                     sets: '5세트',
                     date: '04/28',
                     time: '13:41pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise5.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 1회차',
                     sets: '1세트',
                     date: '04/25',
                     time: '12:11pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise1.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 5회차',
                     sets: '4세트',
                     date: '05/07',
                     time: '12:10pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise2.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 4회차',
                     sets: '2세트',
                     date: '05/05',
                     time: '11:40am',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise3.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 3회차',
                     sets: '3세트',
                     date: '04/31',
                     time: '15:21pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise4.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 2회차',
                     sets: '5세트',
                     date: '04/28',
                     time: '13:41pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise5.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 1회차',
                     sets: '1세트',
                     date: '04/25',
                     time: '12:11pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise1.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 5회차',
                     sets: '4세트',
                     date: '05/07',
                     time: '12:10pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise2.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 4회차',
                     sets: '2세트',
                     date: '05/05',
                     time: '11:40am',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise3.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 3회차',
                     sets: '3세트',
                     date: '04/31',
                     time: '15:21pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise4.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 2회차',
                     sets: '5세트',
                     date: '04/28',
                     time: '13:41pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise5.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 1회차',
                     sets: '1세트',
                     date: '04/25',
                     time: '12:11pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise1.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 5회차',
                     sets: '4세트',
                     date: '05/07',
                     time: '12:10pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise2.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 4회차',
                     sets: '2세트',
                     date: '05/05',
                     time: '11:40am',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise3.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 3회차',
                     sets: '3세트',
                     date: '04/31',
                     time: '15:21pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise4.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 2회차',
                     sets: '5세트',
                     date: '04/28',
                     time: '13:41pm',
                   ),
                   FeedbackItem(
-                    imageUrl:
-                        'https://example.com/exercise5.jpg', // Replace with the actual image URL
+                    imageUrl: '', // Replace with the actual image URL
                     title: '스쿼트 1회차',
                     sets: '1세트',
                     date: '04/25',
@@ -223,6 +261,10 @@ class FeedbackList extends StatefulWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -251,8 +293,8 @@ class FeedbackItem extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
-        ),
+            // backgroundImage: NetworkImage(imageUrl),
+            ),
         title: Text(
           title,
           style: TextStyle(color: Colors.white),

@@ -12,40 +12,44 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return SizedBox(
-      height: 75,
+      height: screenHeight * 0.15, // 화면 높이의 10%로 설정
       child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: currentIndex,
-          onTap: onTap,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: '피드백',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: '프로필',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: '설정',
-            ),
-          ],
-          selectedItemColor: Colors.amber[800],
-          unselectedItemColor: Colors.grey[500],
-          showUnselectedLabels: true,
-          selectedFontSize: 15, // 선택된 항목의 라벨 글꼴 크기
-          unselectedFontSize: 15, // 선택되지 않은 항목의 라벨 글꼴 크기
-          iconSize: 30),
+        type: BottomNavigationBarType.fixed,
+        currentIndex: currentIndex,
+        onTap: onTap,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: '검색',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '피드백',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '프로필',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '설정',
+          ),
+        ],
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey[500],
+        showUnselectedLabels: true,
+        selectedFontSize: screenHeight * 0.02, // 선택된 항목의 라벨 글꼴 크기
+        unselectedFontSize: screenHeight * 0.015, // 선택되지 않은 항목의 라벨 글꼴 크기
+        iconSize: screenWidth * 0.08, // 아이콘 크기
+      ),
     );
   }
 }

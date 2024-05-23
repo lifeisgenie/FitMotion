@@ -1,5 +1,7 @@
+import 'package:FitMotion/pages/exercise_detail.dart';
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/login.dart';
+import 'package:FitMotion/pages/record_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
