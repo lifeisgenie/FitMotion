@@ -1,6 +1,9 @@
+import 'package:FitMotion/pages/index.dart';
+import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-class FeedbackList extends StatelessWidget {
+
+class FeedbackList extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -12,6 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark().copyWith(
+          bottomNavigationBarTheme:
+              BottomNavigationBarTheme.of(context).copyWith(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
+        backgroundColor: Colors.black,
+      )),
       home: SplashScreen(),
     );
   }
