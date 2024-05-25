@@ -1,13 +1,8 @@
 import 'package:FitMotion/pages/exercise_detail.dart';
-import 'package:FitMotion/pages/feedback.dart';
-import 'package:FitMotion/pages/feedback_list.dart';
+
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/login.dart';
-import 'package:FitMotion/pages/profile.dart';
-import 'package:FitMotion/pages/profile_update.dart';
-import 'package:FitMotion/pages/search.dart';
-import 'package:FitMotion/pages/setting.dart';
-import 'package:FitMotion/pages/signup_detail.dart';
+import 'package:FitMotion/pages/record_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

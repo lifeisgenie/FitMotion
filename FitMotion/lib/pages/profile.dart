@@ -1,11 +1,64 @@
+import 'package:FitMotion/pages/feedback_list.dart';
+import 'package:FitMotion/pages/index.dart';
+import 'package:FitMotion/pages/search.dart';
+import 'package:FitMotion/pages/setting.dart';
+import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  final String name = '황동혁';
+
+class ProfilePage extends StatefulWidget {
+    final String name = '황동혁';
   final String email = 'ggani@gmail.com';
   final int consecutiveDays = 4;
   final int totalDays = 7;
   final int totalTime = 4; // 시간 단위로 누적 시간 설정
+  
+  @override
+  _ProfilePage createState() => _ProfilePage();
+}
+
+class _ProfilePage extends State<ProfilePage> {
+  int _selectedIndex = 3;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchPage()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FeedbackList()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Index()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SettingsPage()),
+        );
+        break;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +127,10 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 20),
           ],
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -164,3 +221,4 @@ void main() {
     theme: ThemeData.dark(), // 다크 모드 테마 설정
   ));
 }
+

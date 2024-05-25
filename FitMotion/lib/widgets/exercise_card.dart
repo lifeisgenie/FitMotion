@@ -1,3 +1,4 @@
+import 'package:FitMotion/pages/exercise_detail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -18,15 +19,58 @@ class ExerciseCard extends StatefulWidget {
 class _ExerciseCardState extends State<ExerciseCard> {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final List<Widget> imageSliders = imgList
+        .map((item) => GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExerciseDetail()),
+              );
+            },
+            child: Card(
+              margin: EdgeInsets.only(left: 16, right: 16),
+              color: Colors.grey[900],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.network(item,
+                        fit: BoxFit.cover, height: 300), // 실제 이미지 경로로 교체
+                    SizedBox(height: 10),
+                    Text(
+                      '스쿼트',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '대퇴사두근, 대둔근, 척추기립근',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                    ),
+                  ],
+                ),
+              ),
+            )))
+        .toList();
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
         child: Container(
           color: Colors.black,
-          height: 500,
+          height: screenHeight * 0.45, // 화면 높이의 80%로 설정
           child: CarouselSlider(
             options: CarouselOptions(
-              height: 460,
+              height: screenHeight *
+                  0.76, // 화면 높이의 76%로 설정 (Container의 하위에 4% 여백이 생기도록 설정)
               aspectRatio: 2.0,
               enlargeCenterPage: false,
               scrollDirection: Axis.horizontal,
@@ -38,37 +82,4 @@ class _ExerciseCardState extends State<ExerciseCard> {
       ),
     );
   }
-
-  final List<Widget> imageSliders = imgList
-      .map((item) => Card(
-            margin: EdgeInsets.only(left: 16, right: 16),
-            color: Colors.grey[900],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(item,
-                      fit: BoxFit.cover, height: 300), // 실제 이미지 경로로 교체
-                  SizedBox(height: 10),
-                  Text(
-                    '스쿼트',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    '대퇴사두근, 대둔근, 척추기립근',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-                  ),
-                ],
-              ),
-            ),
-          ))
-      .toList();
 }
