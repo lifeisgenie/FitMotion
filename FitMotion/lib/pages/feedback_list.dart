@@ -5,6 +5,7 @@ import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
+
 class FeedbackList extends StatefulWidget {
   @override
   _FeedbackList createState() => _FeedbackList();
