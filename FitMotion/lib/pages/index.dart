@@ -148,7 +148,7 @@ class _Index extends State<Index> {
             ),
             SizedBox(height: screenHeight * 0.02),
             Container(
-              height: screenHeight * 7, // ExerciseCard가 차지할 최대 높이
+              height: screenHeight * 4, // ExerciseCard가 차지할 최대 높이
               child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
             ),
           ],
