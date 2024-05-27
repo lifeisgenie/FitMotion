@@ -1,10 +1,12 @@
 import 'package:FitMotion/pages/feedback_list.dart';
+import 'package:FitMotion/pages/login.dart';
 import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:FitMotion/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Index extends StatefulWidget {
   @override
@@ -13,6 +15,17 @@ class Index extends StatefulWidget {
 
 class _Index extends State<Index> {
   int _selectedIndex = 2;
+
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt');
+
+    // 로그인 화면으로 이동
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -81,7 +94,9 @@ class _Index extends State<Index> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _logout();
+                    },
                     child: Text(
                       '로그아웃',
                       style: TextStyle(
@@ -133,7 +148,7 @@ class _Index extends State<Index> {
             ),
             SizedBox(height: screenHeight * 0.02),
             Container(
-              height: screenHeight * 0.7, // ExerciseCard가 차지할 최대 높이
+              height: screenHeight * 7, // ExerciseCard가 차지할 최대 높이
               child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
             ),
           ],

@@ -1,5 +1,3 @@
-import 'package:FitMotion/pages/exercise_detail.dart';
-
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/login.dart';
 import 'package:FitMotion/pages/record_screen.dart';
@@ -26,7 +24,7 @@ class _SplashScreen extends State<SplashScreen> {
     // 비동기 작업 완료 후 홈 화면으로 이동
     if (!isLogin) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => Index()),
       );
     } else {
       Navigator.of(context).pushReplacement(

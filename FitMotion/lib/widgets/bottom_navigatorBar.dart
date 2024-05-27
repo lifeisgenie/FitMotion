@@ -16,7 +16,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: screenHeight * 0.15, // 화면 높이의 10%로 설정
+      height: screenHeight * 0.1, // 화면 높이의 10%로 설정
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,

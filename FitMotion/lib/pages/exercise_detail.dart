@@ -1,3 +1,4 @@
+import 'package:FitMotion/pages/record_screen.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetail extends StatefulWidget {
@@ -89,6 +90,11 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                         child: ElevatedButton(
                           onPressed: () {
                             // 교정 시작하기 버튼 클릭 시 처리할 로직 추가
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RecordScreen(),
+                                ));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,

@@ -20,6 +20,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     final List<Widget> imageSliders = imgList
         .map((item) => GestureDetector(
@@ -30,19 +31,25 @@ class _ExerciseCardState extends State<ExerciseCard> {
               );
             },
             child: Card(
-              margin: EdgeInsets.only(left: 16, right: 16),
+              margin: EdgeInsets.only(
+                  left: screenWidth * 0.016, right: screenWidth * 0.016),
               color: Colors.grey[900],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.only(
+                    left: screenWidth * 0.04,
+                    right: screenWidth * 0.04,
+                    top: screenHeight * 0.02,
+                    bottom: screenHeight * 0.02),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.network(item,
-                        fit: BoxFit.cover, height: 300), // 실제 이미지 경로로 교체
-                    SizedBox(height: 10),
+                        fit: BoxFit.cover,
+                        height: screenHeight * 0.3), // 실제 이미지 경로로 교체
+                    SizedBox(height: screenHeight * 0.015),
                     Text(
                       '스쿼트',
                       style: TextStyle(
@@ -50,7 +57,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: screenHeight * 0.015),
                     Text(
                       '대퇴사두근, 대둔근, 척추기립근',
                       style: TextStyle(fontSize: 16, color: Colors.grey[500]),

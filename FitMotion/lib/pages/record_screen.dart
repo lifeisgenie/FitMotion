@@ -138,6 +138,12 @@ class _RecordScreen extends State<RecordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Record Screen'), // 화면 제목
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘
+          onPressed: () {
+            Navigator.of(context).pop(); // 이전 페이지로 돌아가기
+          },
+        ),
       ),
       body: Column(
         children: [
