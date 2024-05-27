@@ -58,23 +58,33 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // 배경색 검은색으로 설정
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('환경설정'),
-        leading: Icon(Icons.settings),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0), // AppBar 배경색
+        title: Row(
+          children: [
+            SizedBox(width: 16), // 아이콘을 오른쪽으로 이동시키기 위한 SizedBox
+            Icon(
+              Icons.settings,
+              size: 35, // 아이콘 크기 설정
+            ),
+            SizedBox(width: 15), // 아이콘과 텍스트 사이의 간격 조정
+            Text(
+              '환경설정',
+              style:
+                  TextStyle(fontSize: 37, color: Colors.white), // 환경설정 텍스트 색상
+            ),
+          ],
+        ),
+        leading: Container(), // 뒤로가기 화살표 제거
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: ListView(
           children: [
-            Text(
-              '황동혁',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
+            SizedBox(height: 40),
             Card(
-              color: Colors.grey[850],
+              color: Colors.grey[850], // 카드 배경색 설정
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -85,7 +95,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(
                       '계정 설정',
-                      style: TextStyle(fontSize: 16, color: Colors.white54),
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white54), // 텍스트 색상 설정
                     ),
                     SizedBox(height: 10),
                     _buildListItem('프로필 수정', Icons.person, () {
@@ -113,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SizedBox(height: 20),
             Card(
-              color: Colors.grey[850],
+              color: Colors.grey[850], // 카드 배경색 설정
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -124,7 +135,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(
                       '더보기',
-                      style: TextStyle(fontSize: 16, color: Colors.white54),
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white54), // 텍스트 색상 설정
                     ),
                     SizedBox(height: 10),
                     _buildListItem('자세히보기', Icons.info, () {
@@ -173,15 +185,22 @@ class _SettingsPageState extends State<SettingsPage> {
       onChanged: onChanged,
       activeColor: Colors.blue,
       inactiveThumbColor: Colors.grey,
-      inactiveTrackColor: Colors.grey,
+      inactiveTrackColor: Color.fromARGB(255, 0, 0, 0), // 비활성화된 트랙 색상 설정
     );
   }
 
   Widget _buildDivider() {
     return Divider(
-      color: Colors.white54,
+      color: Colors.white54, // 구분선 색상 설정
       height: 1,
       thickness: 1,
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: SettingsPage(),
+    theme: ThemeData.dark(), // 다크 모드 테마 설정
+  ));
 }
