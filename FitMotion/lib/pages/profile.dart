@@ -5,14 +5,13 @@ import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-
 class ProfilePage extends StatefulWidget {
-    final String name = '황동혁';
-  final String email = 'ggani@gmail.com';
+  final String name = '황동혁';
+  final String email = 'donghyuk@gmail.com';
   final int consecutiveDays = 4;
   final int totalDays = 7;
   final int totalTime = 4; // 시간 단위로 누적 시간 설정
-  
+
   @override
   _ProfilePage createState() => _ProfilePage();
 }
@@ -59,72 +58,71 @@ class _ProfilePage extends State<ProfilePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text('프로필'),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   title: Text('프로필'),
+      //   centerTitle: true,
+      // ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 100),
             Text(
-              '$name 회원님',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-              textAlign: TextAlign.center,
+              '${widget.name} 회원님',
+              style: TextStyle(fontSize: 30, color: Colors.white),
+              textAlign: TextAlign.left,
             ),
             SizedBox(height: 8),
             Text(
-              email,
+              widget.email,
               style: TextStyle(fontSize: 16, color: Colors.white60),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
             SizedBox(height: 40),
             Text(
               '달성 현황',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 30, color: Colors.white),
+              textAlign: TextAlign.left,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 0),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 children: [
-                  _buildStatCard('연속 출석', '$consecutiveDays일', 16, 24),
-                  _buildStatCard('누적 출석', '$totalDays일', 16, 24),
-                  _buildStatCardWithIcon(
-                      '누적 시간', '$totalTime시간', Icons.access_time, 16, 24),
-                  _buildActionCard('개인정보 수정', Icons.person, 16, 16),
+                  _buildStatCard('연속 출석', '${widget.consecutiveDays}일', 16, 24),
+                  _buildStatCard('누적 출석', '${widget.totalDays}일', 16, 24),
+                  _buildStatCardWithIcon('누적 시간', '${widget.totalTime}시간',
+                      Icons.access_time, 16, 24),
+                  _buildActionCard('개인정보', '수정', Icons.person, 16, 16),
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // 뒤로가기 버튼 클릭 시 처리할 로직 추가
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              child: Text(
-                '뒤로가기',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-            SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // 뒤로가기 버튼 클릭 시 처리할 로직 추가
+            //     Navigator.of(context).pop();
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.blue,
+            //     padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(10.0),
+            //     ),
+            //   ),
+            //   child: Text(
+            //     '뒤로가기',
+            //     style: TextStyle(color: Colors.white, fontSize: 16),
+            //   ),
+            // ),
+            // SizedBox(height: 0),
           ],
         ),
       ),
@@ -144,18 +142,20 @@ class _ProfilePage extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        //
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             label,
             style: TextStyle(fontSize: labelFontSize, color: Colors.white60),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
         ],
       ),
@@ -171,6 +171,8 @@ class _ProfilePage extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        //
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: Colors.white60, size: 40),
@@ -178,21 +180,21 @@ class _ProfilePage extends State<ProfilePage> {
           Text(
             label,
             style: TextStyle(fontSize: labelFontSize, color: Colors.white60),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionCard(
-      String label, IconData icon, double labelFontSize, double valueFontSize) {
+  Widget _buildActionCard(String label1, String label2, IconData icon,
+      double labelFontSize, double valueFontSize) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -200,14 +202,19 @@ class _ProfilePage extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        //
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(icon, color: Colors.white60, size: 40),
           SizedBox(height: 8),
+          Text(label1,
+              style: TextStyle(fontSize: labelFontSize, color: Colors.blue),
+              textAlign: TextAlign.left),
           Text(
-            label,
+            label2,
             style: TextStyle(fontSize: labelFontSize, color: Colors.blue),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
         ],
       ),
@@ -221,4 +228,3 @@ void main() {
     theme: ThemeData.dark(), // 다크 모드 테마 설정
   ));
 }
-
