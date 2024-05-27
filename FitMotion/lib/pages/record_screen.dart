@@ -117,7 +117,7 @@ class _RecordScreenState extends State<RecordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Record Screen'),
+        title: Text('영상 촬영'), // 운동 종류 촬영
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -131,49 +131,70 @@ class _RecordScreenState extends State<RecordScreen> {
             Stack(
               children: [
                 Container(
+                  width: MediaQuery.of(context)
+                      .size
+                      .width, // 카메라 화면의 너비를 화면의 100%로 지정
                   height: MediaQuery.of(context).size.height * 0.8,
-                  color: _isRecording ? null : Colors.yellow,
                   child: CameraPreview(_controller!),
                 ),
                 Positioned(
-                  top: 20,
-                  left: 20,
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  left: MediaQuery.of(context).size.width * 0.05,
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.04,
+                        right: MediaQuery.of(context).size.width * 0.04,
+                        top: MediaQuery.of(context).size.height * 0.01,
+                        bottom: MediaQuery.of(context).size.height * 0.01),
                     color: Colors.black54,
                     child: Text(
                       "스쿼트",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: MediaQuery.of(context).size.width * 0.05),
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_controller != null &&
-                        _controller!.value.isInitialized) {
-                      _selectedCameraIndex =
-                          (_selectedCameraIndex + 1) % cameras!.length;
-                      _controller = CameraController(
-                        cameras![_selectedCameraIndex],
-                        ResolutionPreset.high,
-                      );
-                      _controller!.initialize().then((_) {
-                        setState(() {});
-                      });
-                    }
-                  },
-                  child: Text('Switch Camera'),
-                ),
                 Positioned(
-                  bottom: 40,
+                    top: MediaQuery.of(context).size.height * 0.03,
+                    right: MediaQuery.of(context).size.width * 0.05,
+                    child: IconButton(
+                        // Switch camera 버튼을 아이콘 버튼으로 변경
+                        icon: _selectedCameraIndex == 0
+                            ? Icon(Icons.camera_front)
+                            : Icon(Icons.camera_rear),
+                        iconSize: MediaQuery.of(context).size.width * 0.1,
+                        onPressed: () {
+                          if (_controller != null &&
+                              _controller!.value.isInitialized) {
+                            _selectedCameraIndex =
+                                (_selectedCameraIndex + 1) % cameras!.length;
+                            _controller = CameraController(
+                              cameras![_selectedCameraIndex],
+                              ResolutionPreset.high,
+                            );
+                            _controller!.initialize().then((_) {
+                              setState(() {});
+                            });
+                          }
+                        })),
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height * 0.03,
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.03,
+                        right: MediaQuery.of(context).size.width * 0.03,
+                        top: MediaQuery.of(context).size.height * 0.01,
+                        bottom: MediaQuery.of(context).size.height * 0.01),
                     color: Colors.black54,
                     child: Text(
-                      _isRecording ? 'Recording...' : 'Tap to start recording',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      _isRecording ? '녹화중' : '녹화준비중',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: MediaQuery.of(context).size.width * 0.05,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
