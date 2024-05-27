@@ -1,135 +1,115 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:FitMotion/pages/index.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as img;
-import 'dart:typed_data';
-import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
 
 class RecordScreen extends StatefulWidget {
   @override
-  _RecordScreen createState() => _RecordScreen();
+  _RecordScreenState createState() => _RecordScreenState();
 }
 
-class _RecordScreen extends State<RecordScreen> {
-  CameraController? _controller; // 카메라 컨트롤러
-  List<CameraDescription>? cameras; // 이용 가능한 카메라 목록
-  bool _isRecording = false; // 녹화 상태
-  XFile? _videoFile; // 녹화된 비디오 파일
-  StreamController<Image>? _imageStreamController; // 이미지 스트림 컨트롤러
-  Timer? _frameTimer; // 프레임 타이머
-  int _capturedFrameCount = 0; // 캡처된 프레임 수
-  int _selectedCameraIndex = 0; // 선택된 카메라 인덱스
-
-  Future<void> _switchCamera() async {
-    if (_controller != null && _controller!.value.isInitialized) {
-      final cameraCount = cameras?.length ?? 0;
-      if (cameraCount < 2) return; // 카메라가 2개 미만인 경우 전환하지 않음
-      _selectedCameraIndex = (_selectedCameraIndex + 1) % cameraCount;
-      await _controller!.dispose();
-      _controller = CameraController(
-        cameras![_selectedCameraIndex],
-        ResolutionPreset.high,
-      );
-      await _controller!.initialize();
-      setState(() {});
-    }
-  }
+class _RecordScreenState extends State<RecordScreen> {
+  CameraController? _controller;
+  List<CameraDescription>? cameras;
+  bool _isRecording = false;
+  int _selectedCameraIndex = 0;
+  late String _videoPath;
 
   @override
   void initState() {
     super.initState();
-    _initializeCamera(); // 카메라 초기화
-    _imageStreamController = StreamController<Image>(); // 이미지 스트림 컨트롤러 초기화
+    _initializeCamera();
   }
 
   Future<void> _initializeCamera() async {
-    cameras = await availableCameras(); // 이용 가능한 카메라 목록 가져오기
+    cameras = await availableCameras();
     if (cameras != null && cameras!.isNotEmpty) {
-      _controller = CameraController(cameras![_selectedCameraIndex],
-          ResolutionPreset.high); // 첫 번째 카메라로 컨트롤러 초기화
-      await _controller?.initialize(); // 컨트롤러 초기화 완료
+      _controller = CameraController(
+          cameras![_selectedCameraIndex], ResolutionPreset.high);
+      await _controller?.initialize();
       setState(() {});
     }
   }
 
   Future<void> _startRecording() async {
     if (_controller != null && _controller!.value.isInitialized) {
-      final directory =
-          await getApplicationDocumentsDirectory(); // 저장 디렉토리 가져오기
-      final filePath =
-          path.join(directory.path, '${DateTime.now()}.mp4'); // 파일 경로 생성
-      await _controller?.startVideoRecording(); // 비디오 녹화 시작
-      setState(() {
-        _isRecording = true; // 녹화 상태 업데이트
-      });
-      _frameTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-        _captureFrame(); // 500밀리초마다 프레임 캡처
-      });
+      try {
+        final DateTime now = DateTime.now();
+        final String formattedDate =
+            '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}-${now.second}';
+        final Directory appDir = await getTemporaryDirectory();
+        final String videoDirPath = '${appDir.path}/videos';
+        await Directory(videoDirPath).create(recursive: true);
+        _videoPath = '$videoDirPath/video_$formattedDate.mp4';
+
+        await _controller!.startVideoRecording();
+        setState(() {
+          _isRecording = true;
+        });
+      } catch (e) {
+        print('녹화 시작 중 오류 발생: $e');
+      }
     }
   }
 
   Future<void> _stopRecording() async {
     if (_controller != null && _controller!.value.isRecordingVideo) {
-      _videoFile = await _controller?.stopVideoRecording(); // 비디오 녹화 중지
-      setState(() {
-        _isRecording = false; // 녹화 상태 업데이트
-      });
-      _frameTimer?.cancel(); // 프레임 타이머 중지
-    }
-  }
-
-  Future<void> _captureFrame() async {
-    if (_controller == null || !_controller!.value.isInitialized) {
-      return;
-    }
-
-    try {
-      final image = await _controller!.takePicture(); // 사진 찍기
-      final imageBytes = await image.readAsBytes(); // 이미지 바이트로 읽기
-      final img.Image? frame = img.decodeImage(imageBytes); // 이미지 디코딩
-
-      if (frame != null) {
+      try {
+        final XFile videoFile = await _controller!.stopVideoRecording();
         setState(() {
-          _capturedFrameCount++; // 캡처된 프레임 수 증가
+          _isRecording = false;
+          _videoPath = videoFile.path;
         });
-        _imageStreamController?.add(Image.memory(
-            Uint8List.fromList(img.encodeJpg(frame)))); // 이미지 스트림에 추가
+        if (_videoPath.isNotEmpty) {
+          try {
+            // Assuming you have a server endpoint to handle video upload
+            final Uri serverUri = Uri.parse('');
+            final File videoFile = File(_videoPath);
+            final String videoName = path.basename(videoFile.path);
 
-        // 서버로 전송
-        await _sendFrameToServer(Uint8List.fromList(img.encodeJpg(frame)));
+            if (!await videoFile.exists()) {
+              print('파일이 존재하지 않습니다: $_videoPath');
+              return;
+            }
+
+            final Uint8List videoBytes = await videoFile.readAsBytes();
+            final http.MultipartRequest request =
+                http.MultipartRequest('POST', serverUri)
+                  ..files.add(http.MultipartFile.fromBytes('video', videoBytes,
+                      filename: videoName));
+
+            print('Video path: ghkrdls$_videoPath');
+            final http.StreamedResponse response = await request.send();
+            if (response.statusCode == 200) {
+              print("비디오 전송 완료");
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Index()),
+              );
+            } else {
+              print('비디오 전송 실패. 오류 코드: ${response.statusCode}');
+            }
+          } catch (e) {
+            print('비디오 전송 실패: $e');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Index()),
+            );
+          }
+        }
+      } catch (e) {
+        print('녹화 중지 중 오류 발생: $e');
       }
-    } catch (e) {
-      print('Error capturing frame: $e'); // 에러 처리
-    }
-  }
-
-  Future<void> _sendFrameToServer(Uint8List jpgBytes) async {
-    try {
-      final response = await http.post(
-        Uri.parse('http://yourserver.com/upload'), // 서버의 엔드포인트 URL
-        headers: {
-          'Content-Type': 'application/octet-stream', // 콘텐츠 타입 설정
-        },
-        body: jpgBytes, // 이미지 데이터 전송
-      );
-
-      if (response.statusCode == 200) {
-        print('영상 전송 성공'); // 성공 메시지 출력
-      } else {
-        print('영상 업로드 실패: ${response.statusCode}'); // 실패 메시지 출력
-      }
-    } catch (e) {
-      print('영상 전송 실패: $e'); // 에러 처리
     }
   }
 
   @override
   void dispose() {
-    _controller?.dispose(); // 컨트롤러 해제
-    _imageStreamController?.close(); // 이미지 스트림 컨트롤러 닫기
-    _frameTimer?.cancel(); // 프레임 타이머 취소
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -137,11 +117,11 @@ class _RecordScreen extends State<RecordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Record Screen'), // 화면 제목
+        title: Text('Record Screen'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // 뒤로 가기 아이콘
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(); // 이전 페이지로 돌아가기
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -151,9 +131,9 @@ class _RecordScreen extends State<RecordScreen> {
             Stack(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height *
-                      0.8, // 카메라 프리뷰 높이를 전체 화면의 80%로 설정
-                  child: CameraPreview(_controller!), // 카메라 프리뷰
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  color: _isRecording ? null : Colors.yellow,
+                  child: CameraPreview(_controller!),
                 ),
                 Positioned(
                   top: 20,
@@ -162,16 +142,27 @@ class _RecordScreen extends State<RecordScreen> {
                     padding: EdgeInsets.all(8),
                     color: Colors.black54,
                     child: Text(
-                      "스쿼트", // 캡처된 프레임 수 표시
+                      "스쿼트",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    _switchCamera();
+                  onPressed: () {
+                    if (_controller != null &&
+                        _controller!.value.isInitialized) {
+                      _selectedCameraIndex =
+                          (_selectedCameraIndex + 1) % cameras!.length;
+                      _controller = CameraController(
+                        cameras![_selectedCameraIndex],
+                        ResolutionPreset.high,
+                      );
+                      _controller!.initialize().then((_) {
+                        setState(() {});
+                      });
+                    }
                   },
-                  child: Text('Switch Camera'), // 버튼 텍스트
+                  child: Text('Switch Camera'),
                 ),
                 Positioned(
                   bottom: 40,
@@ -181,7 +172,7 @@ class _RecordScreen extends State<RecordScreen> {
                     padding: EdgeInsets.all(8),
                     color: Colors.black54,
                     child: Text(
-                      '$_capturedFrameCount 번 촬영중', // 자막 텍스트
+                      _isRecording ? 'Recording...' : 'Tap to start recording',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -190,19 +181,45 @@ class _RecordScreen extends State<RecordScreen> {
               ],
             ),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () {
               if (_isRecording) {
-                await _stopRecording(); // 녹화 중지
+                _showConfirmationModal();
               } else {
-                await _startRecording(); // 녹화 시작
+                _startRecording();
               }
             },
-            child: Text(_isRecording
-                ? 'Stop Recording'
-                : 'Start Recording'), // 버튼 텍스트 업데이트
+            child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
           ),
         ],
       ),
+    );
+  }
+
+  void _showConfirmationModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('녹화 중지'),
+          content: Text('정말로 녹화를 중지하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 모달 닫기
+              },
+              child: Text('아니오'),
+            ),
+            TextButton(
+              onPressed: () {
+                // _stopRecording(); // 예를 누르면 녹화 중지
+                _stopRecording();
+                Navigator.of(context).pop();
+              },
+              child: Text('예'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
