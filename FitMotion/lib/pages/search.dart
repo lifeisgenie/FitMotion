@@ -136,6 +136,7 @@ class _SearchPage extends State<SearchPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('자세 교정'),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

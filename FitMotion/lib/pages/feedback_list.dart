@@ -5,7 +5,6 @@ import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 
-
 class FeedbackList extends StatefulWidget {
   @override
   _FeedbackList createState() => _FeedbackList();
@@ -69,6 +68,7 @@ class _FeedbackList extends State<FeedbackList> {
       appBar: AppBar(
         title: Text('피드백 목록'),
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
