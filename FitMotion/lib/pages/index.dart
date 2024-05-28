@@ -81,6 +81,7 @@ class _Index extends State<Index> {
               padding: EdgeInsets.only(
                   left: screenWidth * 0.05,
                   right: screenWidth * 0.04,
+                  // bottom: screenHeight * 0.01,
                   top: screenHeight * 0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,12 +98,15 @@ class _Index extends State<Index> {
                     onPressed: () {
                       _logout();
                     },
-                    child: Text(
-                      '로그아웃',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.035,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: EdgeInsets.all(5.0), //padding 추가 했습니다
+                      child: Text(
+                        '로그아웃',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.035,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -143,7 +147,8 @@ class _Index extends State<Index> {
               child: Text(
                 '자세 교정',
                 style: TextStyle(
-                    fontSize: screenWidth * 0.05, color: Colors.white),
+                    fontSize: screenWidth * 0.06,
+                    color: Colors.white), // 0.6로 수정함
               ),
             ),
             SizedBox(height: screenHeight * 0.02),
