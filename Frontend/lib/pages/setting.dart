@@ -60,15 +60,12 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: Colors.black, // 배경색 검은색으로 설정
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 0, 0, 0), // AppBar 배경색
         title: Row(
           children: [
-            SizedBox(width: 16), // 아이콘을 오른쪽으로 이동시키기 위한 SizedBox
-            Icon(
-              Icons.settings,
-              size: 35, // 아이콘 크기 설정
-            ),
-            SizedBox(width: 15), // 아이콘과 텍스트 사이의 간격 조정
+            // SizedBox(width: 16), // 아이콘을 오른쪽으로 이동시키기 위한 SizedBox
+            // SizedBox(width: 32233), // 아이콘과 텍스트 사이의 간격 조정
             Text(
               '환경설정',
               style:
@@ -76,7 +73,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ],
         ),
-        leading: Container(), // 뒤로가기 화살표 제거
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
