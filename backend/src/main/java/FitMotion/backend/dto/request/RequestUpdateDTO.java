@@ -1,4 +1,4 @@
-package FitMotion.backend.dto.update;
+package FitMotion.backend.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserProfileDTO {
+public class RequestUpdateDTO {
     private String email;
     private String username;
     private int age;
     private String phone;
-    private String gender;
     private double height;
     private double weight;
 }

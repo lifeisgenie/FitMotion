@@ -6,7 +6,7 @@ import FitMotion.backend.dto.request.RequestSignUpDTO;
 import FitMotion.backend.dto.response.ResponseLoginDTO;
 import FitMotion.backend.dto.response.ResponseLogoutDTO;
 import FitMotion.backend.dto.response.ResponseMessageDTO;
-import FitMotion.backend.dto.update.UpdateUserProfileDTO;
+import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
@@ -129,6 +129,31 @@ public class UserService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("로그아웃 실패")
                     .build();
+        }
+    }
+
+    /**
+     * 개인정보 수정
+     */
+    @Transactional
+    public ResponseMessageDTO updateUserProfile(RequestUpdateDTO dto) {
+        try {
+            UserProfile userProfile = userProfileRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+            userProfile.setUsername(dto.getUsername());
+            userProfile.setAge(dto.getAge());
+            userProfile.setPhone(dto.getPhone());
+            userProfile.setHeight(dto.getHeight());
+            userProfile.setWeight(dto.getWeight());
+
+            userProfileRepository.save(userProfile);
+
+            return new ResponseMessageDTO(HttpStatus.OK.value(), "개인정보 수정 성공");
+        } catch (UserNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("개인정보 수정 실패", e);
         }
     }
 }
