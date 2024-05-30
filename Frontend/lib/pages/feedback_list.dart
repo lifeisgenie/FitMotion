@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FeedbackList extends StatefulWidget {
   @override
@@ -11,6 +14,13 @@ class FeedbackList extends StatefulWidget {
 }
 
 class _FeedbackList extends State<FeedbackList> {
+  // late Future<List<Map<String, String>>> futureFeedbackData;
+  @override
+  void initState() {
+    super.initState();
+    // futureFeedbackData = fetchFeedbackData();
+  }
+
   int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
@@ -51,6 +61,45 @@ class _FeedbackList extends State<FeedbackList> {
         break;
     }
   }
+
+  final List<Map<String, String>> feedbackData = [
+    {
+      'imageUrl': '',
+      'title': '스쿼트 5회차',
+      'sets': '4세트',
+      'date': '05/07',
+      'time': '12:10pm'
+    },
+    {
+      'imageUrl': '',
+      'title': '벤치프레스 3회차',
+      'sets': '3세트',
+      'date': '05/08',
+      'time': '10:00am'
+    },
+  ];
+
+// Future<List<Map<String, String>>> fetchFeedbackData() async {
+//   await dotenv.load(fileName: ".env");
+//   final String baseUrl = dotenv.env['BASE_URL']!;
+//   final Uri url = Uri.parse('$baseUrl/url');
+//   final response = await http.get(url);
+
+//   if (response.statusCode == 200) {
+//     List<dynamic> feedbackData = jsonDecode(response.body);
+//     return feedbackData.map((item) {
+//       return {
+//         'imageUrl': item['imageUrl'] as String,
+//         'title': item['title'] as String,
+//         'sets': item['sets'] as String,
+//         'date': item['date'] as String,
+//         'time': item['time'] as String,
+//       };
+//     }).toList();
+//   } else {
+//     throw Exception('Failed to load feedback data');
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -116,150 +165,42 @@ class _FeedbackList extends State<FeedbackList> {
             SizedBox(height: screenHeight * 0.01),
             Expanded(
               child: ListView(
-                children: [
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                ],
+                children: feedbackData.map((feedback) {
+                  return FeedbackItem(
+                    imageUrl: feedback['imageUrl']!,
+                    title: feedback['title']!,
+                    sets: feedback['sets']!,
+                    date: feedback['date']!,
+                    time: feedback['time']!,
+                  );
+                }).toList(),
               ),
             ),
+            // Expanded(
+            //     child: FutureBuilder<List<Map<String, String>>>(
+            //         future: futureFeedbackData,
+            //         builder: (context, snapshot) {
+            //           if (snapshot.connectionState == ConnectionState.waiting) {
+            //             return Center(child: CircularProgressIndicator());
+            //           } else if (snapshot.hasError) {
+            //             return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
+            //           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            //             return Center(child: Text('데이터가 존재하지 않습니다.'));
+            //           } else {
+            //             final feedbackData = snapshot.data!;
+            //             return ListView(
+            //               children: feedbackData.map((item) {
+            //                 return FeedbackItem(
+            //                   imageUrl: item['imageUrl']!,
+            //                   title: item['title']!,
+            //                   sets: item['sets']!,
+            //                   date: item['date']!,
+            //                   time: item['time']!,
+            //                 );
+            //               }).toList(),
+            //             );
+            //           }
+            //         })),
           ],
         ),
       ),

@@ -22,6 +22,8 @@ class _SplashScreen extends State<SplashScreen> {
     // 비동기 작업 수행 (예: 데이터 로딩, 초기화 등)
     await Future.delayed(Duration(seconds: 2));
 
+    isLogin = await checkLoginStatus();
+
     // 비동기 작업 완료 후 홈 화면으로 이동
     if (isLogin) {
       Navigator.of(context).pushReplacement(

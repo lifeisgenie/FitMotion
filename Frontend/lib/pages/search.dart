@@ -5,6 +5,9 @@ import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SearchPage extends StatefulWidget {
   @override
@@ -12,6 +15,14 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
+  // late Future<List<Map<String, String>>> futureExercises;
+
+  @override
+  void initState() {
+    super.initState();
+    // futureExercises = fetchExercises();
+  }
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -66,68 +77,27 @@ class _SearchPage extends State<SearchPage> {
       'image':
           'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
     },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
     // 필요에 따라 더 많은 항목을 추가
   ];
+
+  // Future<List<Map<String, String>>> fetchExercises() async {
+  //   await dotenv.load(fileName: ".env");
+  //   final String baseUrl = dotenv.env['BASE_URL']!;
+  //   final Uri url = Uri.parse('$baseUrl/url');
+  //   final response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> data = jsonDecode(response.body);
+  //     return data.map((item) {
+  //       return {
+  //         'title': item['title'] as String,
+  //         'subtitle': item['subtitle'] as String,
+  //         'image': item['image'] as String,
+  //       };
+  //     }).toList();
+  //   } else {
+  //     throw Exception('데이터를 불러오는데 실패');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +148,34 @@ class _SearchPage extends State<SearchPage> {
                 },
               ),
             ),
+            // Expanded(
+            //   child: FutureBuilder<List<Map<String, String>>>(
+            //     future: futureExercises,
+            //     builder: (context, snapshot) {
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return Center(child: CircularProgressIndicator());
+            //       } else if (snapshot.hasError) {
+            //         return Center(child: Text('Failed to load data'));
+            //       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            //         return Center(child: Text('No data available'));
+            //       } else {
+            //         final exercises = snapshot.data!;
+            //         return GridView.builder(
+            //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount: 2,
+            //             crossAxisSpacing: 10,
+            //             mainAxisSpacing: 10,
+            //             childAspectRatio: 0.8,
+            //           ),
+            //           itemCount: exercises.length,
+            //           itemBuilder: (context, index) {
+            //             return _buildExerciseCard(exercises[index]);
+            //           },
+            //         );
+            //       }
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
