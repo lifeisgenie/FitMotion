@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseLoginDTO {
+    private int statusCode;
+    private String message;
     private String accessToken;
     private String refreshToken;
-    private String message;
     private String email;
 }
