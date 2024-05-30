@@ -5,9 +5,11 @@ import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
 import FitMotion.backend.dto.response.ResponseLoginDTO;
 import FitMotion.backend.dto.response.ResponseLogoutDTO;
+import FitMotion.backend.dto.response.ResponseMessageDTO;
 import FitMotion.backend.dto.update.UpdateUserProfileDTO;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
+import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
@@ -36,16 +38,17 @@ public class UserService {
     /**
      * 회원가입
      */
-    public String SignUp(RequestSignUpDTO dto) {
+    @Transactional
+    public ResponseMessageDTO signUp(RequestSignUpDTO dto) {
+        String email = dto.getEmail();
+        Boolean isExist = userRepository.existsByEmail(email);
+
+        // 이메일이 이미 존재하는지 확인
+        if (isExist) {
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
+
         try {
-            String email = dto.getEmail();
-            Boolean isExist = userRepository.existsByEmail(email);
-
-            // 이메일이 이미 존재하는지 확인
-            if (isExist) {
-                return "Email already exists";
-            }
-
             // 사용자 정보 저장
             User user = User.builder()
                     .email(dto.getEmail())
@@ -66,9 +69,10 @@ public class UserService {
             // 새로운 사용자 객체를 저장소에 저장
             userProfileRepository.save(userProfile);
 
-            return "회원 가입 성공";
+            return new ResponseMessageDTO(HttpStatus.CREATED.value(), "회원 가입 성공");
         } catch (Exception e) {
-            throw new RuntimeException("회원 가입 실패", e);
+            // 기타 예외 발생 시
+            return new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 가입 실패");
         }
     }
 
@@ -76,7 +80,6 @@ public class UserService {
      * 로그인
      */
     public ResponseLoginDTO login(RequestLoginDTO dto) {
-
         try {
             // 사용자 존재 여부 확인
             User user = userRepository.findByEmail(dto.getEmail())
@@ -97,12 +100,15 @@ public class UserService {
             String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
             String refreshToken = jwtUtil.generateRefreshToken(customUserDetails.getUsername());
 
-            // 빌터 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
+            // 빌더 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
             return ResponseLoginDTO.builder()
+                    .statusCode(HttpStatus.OK.value())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                    .build(); // 객체를 빌드하여 반환.
-        } catch (AuthenticationException e) { // 인증 과정에서 예외가 발생하면(잘못된 이메일 또는 비밀번호) 예외를 개치
+                    .message("로그인 성공")
+                    .email(dto.getEmail())
+                    .build();
+        } catch (AuthenticationException e) {
             throw new RuntimeException("로그인 실패", e);
         }
     }
@@ -111,34 +117,18 @@ public class UserService {
      * 로그아웃
      */
     public ResponseLogoutDTO logout() {
-        // 로그아웃 로직 추가 필요 (토큰 블랙리스트 또는 클라이언트 측에서 처리)
-        // 여기서는 단순히 성공 메시지를 반환
-        return ResponseLogoutDTO.builder()
-                .status(HttpStatus.OK.value())
-                .message("로그아웃 성공")
-                .build();
-    }
-
-    /**
-     * 개인정보 수정
-     */
-    @Transactional
-    public String updateUserProfile(UpdateUserProfileDTO dto) {
         try {
-            UserProfile userProfile = userProfileRepository.findByEmail(dto.getEmail())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            userProfile.setUsername(dto.getUsername());
-            userProfile.setAge(dto.getAge());
-            userProfile.setPhone(dto.getPhone());
-            userProfile.setHeight(dto.getHeight());
-            userProfile.setWeight(dto.getWeight());
-
-            userProfileRepository.save(userProfile);
-
-            return "User profile updated successfully";
+            // 로그아웃 로직 (예: 토큰 무효화, 세션 종료 등)
+            return ResponseLogoutDTO.builder()
+                    .status(HttpStatus.OK.value())
+                    .message("로그아웃 성공")
+                    .build();
         } catch (Exception e) {
-            throw new RuntimeException("User profile update failed", e);
+            // 예외 발생 시 로그아웃 실패 메시지 반환
+            return ResponseLogoutDTO.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .message("로그아웃 실패")
+                    .build();
         }
     }
 }
