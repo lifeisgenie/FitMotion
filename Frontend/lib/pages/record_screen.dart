@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:FitMotion/pages/feedback.dart';
 import 'package:FitMotion/pages/index.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -88,7 +89,7 @@ class _RecordScreenState extends State<RecordScreen> {
               print("비디오 전송 완료");
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Index()),
+                MaterialPageRoute(builder: (context) => FeedbackPage()),
               );
             } else {
               print('비디오 전송 실패. 오류 코드: ${response.statusCode}');
@@ -97,7 +98,7 @@ class _RecordScreenState extends State<RecordScreen> {
             print('비디오 전송 실패: $e');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Index()),
+              MaterialPageRoute(builder: (context) => FeedbackPage()),
             );
           }
         }

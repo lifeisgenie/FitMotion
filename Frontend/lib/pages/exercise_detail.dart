@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:FitMotion/pages/record_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ExerciseDetail extends StatefulWidget {
   @override
@@ -11,6 +14,36 @@ class _ExerciseDetail extends State<ExerciseDetail> {
   final String muscles = '대퇴사두근, 대둔근, 척추기립근';
   final String description =
       '스쿼트는 웨이트 트레이닝의 가장 대표적인 운동 중 하나이며, 데드리프트, 벤치 프레스와 함께 웨이트 트레이닝의 트로이카 운동으로 꼽힌다. 중량을 거루는 스포츠인 파워리프팅 중 하나이다.';
+
+  // late String url;
+  // late String title;
+  // late String muscles;
+  // late String description;
+  // bool isLoading = true;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchExerciseDetail();
+  // }
+
+  //   Future<void> fetchExerciseDetail() async {
+  //   final response = await http.get(Uri.parse('http://your-backend-url.com/exercise?id=${widget.exerciseId}'));
+
+  //   if (response.statusCode == 200) {
+  //     final data = json
+  //     .decode(response.body);
+  //     setState(() {
+  //       url = data['url'];
+  //       title = data['title'];
+  //       muscles = data['muscles'];
+  //       description = data['description'];
+  //       isLoading = false;
+  //     });
+  //   } else {
+  //     throw Exception('Failed to load exercise detail');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
