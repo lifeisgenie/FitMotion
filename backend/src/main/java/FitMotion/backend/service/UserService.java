@@ -3,16 +3,19 @@ package FitMotion.backend.service;
 import FitMotion.backend.dto.CustomUserDetails;
 import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
+import FitMotion.backend.dto.response.ResponseExerciseDTO;
 import FitMotion.backend.dto.response.ResponseLoginDTO;
 import FitMotion.backend.dto.response.ResponseLogoutDTO;
 import FitMotion.backend.dto.response.ResponseMessageDTO;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
+import FitMotion.backend.entity.Exercise;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
+import FitMotion.backend.repository.ExerciseRepository;
 import FitMotion.backend.repository.UserProfileRepository;
 import FitMotion.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +28,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final ExerciseRepository exerciseRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -154,6 +161,26 @@ public class UserService {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("개인정보 수정 실패", e);
+        }
+    }
+
+    /**
+     * 운동 조회
+     */
+    public ResponseExerciseDTO getAllExercises() {
+        try {
+            List<Exercise> exercises = exerciseRepository.findAll();
+            List<ResponseExerciseDTO.ExerciseInfo> exerciseInfoList = exercises.stream()
+                    .map(exercise -> new ResponseExerciseDTO.ExerciseInfo(
+                            exercise.getExerciseName(),
+                            exercise.getExerciseCategory(),
+                            exercise.getExerciseExplain(),
+                            exercise.getExerciseUrl()))
+                    .collect(Collectors.toList());
+
+            return new ResponseExerciseDTO(200, "운동 조회 성공", exerciseInfoList);
+        } catch (Exception e) {
+            return new ResponseExerciseDTO(500, "운동 조회 실패", null);
         }
     }
 }
