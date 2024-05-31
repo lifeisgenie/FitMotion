@@ -97,32 +97,14 @@ class _ProfilePage extends State<ProfilePage> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 children: [
-                  _buildStatCard('연속 출석', '${widget.consecutiveDays}일', 16, 24),
-                  _buildStatCard('누적 출석', '${widget.totalDays}일', 16, 24),
+                  _buildStatCard('연속 출석', '${widget.consecutiveDays}일', 24, 35),
+                  _buildStatCard('누적 출석', '${widget.totalDays}일', 24, 35),
                   _buildStatCardWithIcon('누적 시간', '${widget.totalTime}시간',
-                      Icons.access_time, 16, 24),
-                  _buildActionCard('개인정보', '수정', Icons.person, 16, 16),
+                      Icons.access_time, 20, 30),
+                  _buildActionCard('개인정보', '수정', Icons.person, 24, 24),
                 ],
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // 뒤로가기 버튼 클릭 시 처리할 로직 추가
-            //     Navigator.of(context).pop();
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Colors.blue,
-            //     padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(10.0),
-            //     ),
-            //   ),
-            //   child: Text(
-            //     '뒤로가기',
-            //     style: TextStyle(color: Colors.white, fontSize: 16),
-            //   ),
-            // ),
-            // SizedBox(height: 0),
           ],
         ),
       ),
@@ -142,8 +124,7 @@ class _ProfilePage extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        //
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
@@ -170,23 +151,36 @@ class _ProfilePage extends State<ProfilePage> {
         color: Colors.grey[900],
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        //
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Icon(icon, color: Colors.white60, size: 40),
-          SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(fontSize: labelFontSize, color: Colors.white60),
-            textAlign: TextAlign.left,
+          Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style:
+                      TextStyle(fontSize: labelFontSize, color: Colors.white60),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  value,
+                  style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
-            textAlign: TextAlign.left,
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Icon(
+              icon,
+              color: Colors.white60,
+              size: 50,
+            ),
           ),
         ],
       ),
@@ -202,11 +196,10 @@ class _ProfilePage extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         //
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white60, size: 40),
           SizedBox(height: 8),
           Text(label1,
               style: TextStyle(fontSize: labelFontSize, color: Colors.blue),

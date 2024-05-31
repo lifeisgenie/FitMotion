@@ -25,13 +25,13 @@ class _SplashScreen extends State<SplashScreen> {
     isLogin = await checkLoginStatus();
 
     // 비동기 작업 완료 후 홈 화면으로 이동
-    if (isLogin) {
+    if (!isLogin) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => Index()),
       );
     } else {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => Index()),
       );
     }
   }
