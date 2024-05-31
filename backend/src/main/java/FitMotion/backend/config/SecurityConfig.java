@@ -36,30 +36,21 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // HTTP 보안 설정
     @Bean
     public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))  // CORS 설정 추가
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
-
-                        // 해당 API에 대해서는 모든 요청을 허가
-                        .requestMatchers("/user/login", "/user/signup", "/user/exercise").permitAll()
-                        // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
+                        .requestMatchers("/user/login", "/user/signup", "/user/exercise/**").permitAll()
                         .anyRequest().authenticated())
-
-                // JWT를 사용하기 때문에 세션을 사용하지 않음
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http
-                // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 추가
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 위치에 추가
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

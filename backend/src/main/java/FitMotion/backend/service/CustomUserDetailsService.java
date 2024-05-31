@@ -15,7 +15,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    // 사용자 이메일로 사용자 세부 정보 로드
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
