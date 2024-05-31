@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestSignUpDTO {
-
     private String email;
     private String password;
     private String username;
@@ -19,5 +18,4 @@ public class RequestSignUpDTO {
     private String gender;
     private double height;
     private double weight;
-
 }

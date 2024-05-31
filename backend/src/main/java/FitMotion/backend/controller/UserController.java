@@ -2,12 +2,8 @@ package FitMotion.backend.controller;
 
 import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
-import FitMotion.backend.dto.response.ResponseExerciseDTO;
-import FitMotion.backend.dto.response.ResponseLoginDTO;
-import FitMotion.backend.dto.response.ResponseLogoutDTO;
-import FitMotion.backend.dto.response.ResponseMessageDTO;
+import FitMotion.backend.dto.response.*;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
-import FitMotion.backend.entity.Exercise;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
@@ -16,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -84,11 +78,20 @@ public class UserController {
     }
 
     /**
-     * 운동 조회
+     * 운동 상세 조회
      */
-    @GetMapping("/exercise")
-    public ResponseEntity<ResponseExerciseDTO> getAllExercises() {
-        ResponseExerciseDTO response = userService.getAllExercises();
+    @GetMapping("/exercise/{exerciseName}")
+    public ResponseEntity<ResponseExerciseDTO> getExerciseLists(@PathVariable String exerciseName) {
+        ResponseExerciseDTO response = userService.getExerciseLists(exerciseName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    /**
+     * 운동 리스트 조회
+     */
+    @GetMapping("/exercise/list")
+    public ResponseEntity<ResponseExerciseListsDTO> getAllExercises() {
+        ResponseExerciseListsDTO response = userService.getAllExercises();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

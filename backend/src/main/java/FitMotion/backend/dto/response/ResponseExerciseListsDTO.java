@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ResponseExerciseDTO {
+public class ResponseExerciseListsDTO {
     private int statusCode;
     private String message;
     private ExerciseData data;
@@ -15,6 +15,12 @@ public class ResponseExerciseDTO {
     @Data
     @AllArgsConstructor
     public static class ExerciseData {
+        private List<ExerciseInfo> exerciseList;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class ExerciseInfo {
         private String exerciseName;
         private String exerciseCategory;
         private String exerciseExplain;
