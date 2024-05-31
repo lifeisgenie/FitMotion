@@ -35,12 +35,6 @@ class _FeedbackList extends State<FeedbackList> {
           MaterialPageRoute(builder: (context) => SearchPage()),
         );
         break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FeedbackList()),
-        );
-        break;
       case 2:
         Navigator.push(
           context,
@@ -78,28 +72,6 @@ class _FeedbackList extends State<FeedbackList> {
       'time': '10:00am'
     },
   ];
-
-// Future<List<Map<String, String>>> fetchFeedbackData() async {
-//   await dotenv.load(fileName: ".env");
-//   final String baseUrl = dotenv.env['BASE_URL']!;
-//   final Uri url = Uri.parse('$baseUrl/url');
-//   final response = await http.get(url);
-
-//   if (response.statusCode == 200) {
-//     List<dynamic> feedbackData = jsonDecode(response.body);
-//     return feedbackData.map((item) {
-//       return {
-//         'imageUrl': item['imageUrl'] as String,
-//         'title': item['title'] as String,
-//         'sets': item['sets'] as String,
-//         'date': item['date'] as String,
-//         'time': item['time'] as String,
-//       };
-//     }).toList();
-//   } else {
-//     throw Exception('Failed to load feedback data');
-//   }
-// }
 
   @override
   Widget build(BuildContext context) {

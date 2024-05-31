@@ -45,12 +45,7 @@ class _Index extends State<Index> {
           MaterialPageRoute(builder: (context) => FeedbackList()),
         );
         break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Index()),
-        );
-        break;
+
       case 3:
         Navigator.push(
           context,
@@ -153,7 +148,6 @@ class _Index extends State<Index> {
             ),
             SizedBox(height: screenHeight * 0.02),
             Container(
-
               height: screenHeight * 0.7, // ExerciseCard가 차지할 최대 높이
 
               child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.

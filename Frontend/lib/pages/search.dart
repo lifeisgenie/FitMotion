@@ -31,12 +31,6 @@ class _SearchPage extends State<SearchPage> {
     });
 
     switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SearchPage()),
-        );
-        break;
       case 1:
         Navigator.push(
           context,
@@ -136,20 +130,6 @@ class _SearchPage extends State<SearchPage> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             SizedBox(height: 10),
-            // Expanded(
-            //   child: GridView.builder(
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //       crossAxisCount: 2,
-            //       crossAxisSpacing: 10,
-            //       mainAxisSpacing: 10,
-            //       childAspectRatio: 0.8,
-            //     ),
-            //     itemCount: exercises.length,
-            //     itemBuilder: (context, index) {
-            //       return _buildExerciseCard(exercises[index]);
-            //     },
-            //   ),
-            // ),
             Expanded(
               child: FutureBuilder<List<Map<String, String>>>(
                 future: futureExercises,
@@ -175,6 +155,7 @@ class _SearchPage extends State<SearchPage> {
                       },
                     );
                   }
+
                 },
               ),
             ),
