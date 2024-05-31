@@ -56,12 +56,6 @@ class _SettingsPageState extends State<SettingsPage> {
           MaterialPageRoute(builder: (context) => ProfilePage()),
         );
         break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SettingsPage()),
-        );
-        break;
     }
   }
 
