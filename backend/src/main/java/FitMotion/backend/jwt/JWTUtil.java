@@ -53,7 +53,11 @@ public class JWTUtil {
 
     // 모든 클레임 추출
     public Claims extractAllClaims(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     // 이메일 추출
