@@ -26,7 +26,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
     try {
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
-      final Uri url = Uri.parse('$baseUrl/user/exercise');
+      final Uri url = Uri.parse('$baseUrl/user/exercise/list');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
