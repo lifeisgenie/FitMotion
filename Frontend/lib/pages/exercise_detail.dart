@@ -2,9 +2,14 @@ import 'dart:convert';
 
 import 'package:FitMotion/pages/record_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ExerciseDetail extends StatefulWidget {
+  final String exerciseName;
+
+  ExerciseDetail({required this.exerciseName});
+
   @override
   _ExerciseDetail createState() => _ExerciseDetail();
 }
@@ -15,35 +20,38 @@ class _ExerciseDetail extends State<ExerciseDetail> {
   final String description =
       '스쿼트는 웨이트 트레이닝의 가장 대표적인 운동 중 하나이며, 데드리프트, 벤치 프레스와 함께 웨이트 트레이닝의 트로이카 운동으로 꼽힌다. 중량을 거루는 스포츠인 파워리프팅 중 하나이다.';
 
-  // late String url;
-  // late String title;
-  // late String muscles;
-  // late String description;
-  // bool isLoading = true;
+  late String exerciseUrl;
+  late String exerciseName;
+  late String exerciseCategory;
+  late String exerciseExplain;
+  bool isLoading = true;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchExerciseDetail();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    fetchExerciseDetail(exerciseName);
+  }
 
-  //   Future<void> fetchExerciseDetail() async {
-  //   final response = await http.get(Uri.parse('http://your-backend-url.com/exercise?id=${widget.exerciseId}'));
+  Future<void> fetchExerciseDetail(String exerciseName) async {
+    await dotenv.load(fileName: ".env");
+    final String baseUrl = dotenv.env['BASE_URL']!;
+    final Uri url =
+        Uri.parse('$baseUrl/user/exercise/?exerciseName=$exerciseName');
+    final response = await http.get(url);
 
-  //   if (response.statusCode == 200) {
-  //     final data = json
-  //     .decode(response.body);
-  //     setState(() {
-  //       url = data['url'];
-  //       title = data['title'];
-  //       muscles = data['muscles'];
-  //       description = data['description'];
-  //       isLoading = false;
-  //     });
-  //   } else {
-  //     throw Exception('Failed to load exercise detail');
-  //   }
-  // }
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        exerciseUrl = data['exerciseUrl'];
+        exerciseName = data['exerciseName'];
+        exerciseCategory = data['exerciseCategory'];
+        exerciseExplain = data['exerciseExplain'];
+        isLoading = false;
+      });
+    } else {
+      throw Exception('Failed to load exercise detail');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +74,8 @@ class _ExerciseDetail extends State<ExerciseDetail> {
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80', // 메인 이미지 URL을 실제 URL로 변경
+                  Image.asset(
+                    exerciseUrl,
                     width: double.infinity,
                     height: 300,
                     fit: BoxFit.cover,
@@ -105,7 +113,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        muscles,
+                        exerciseCategory,
                         style: TextStyle(fontSize: 16, color: Colors.white60),
                       ),
                       SizedBox(height: 20),
@@ -115,14 +123,13 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        description,
+                        exerciseExplain,
                         style: TextStyle(fontSize: 16, color: Colors.white70),
                       ),
                       SizedBox(height: 40),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            // 교정 시작하기 버튼 클릭 시 처리할 로직 추가
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

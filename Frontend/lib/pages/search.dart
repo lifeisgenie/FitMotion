@@ -15,12 +15,12 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
-  // late Future<List<Map<String, String>>> futureExercises;
+  late Future<List<Map<String, String>>> futureExercises;
 
   @override
   void initState() {
     super.initState();
-    // futureExercises = fetchExercises();
+    futureExercises = fetchExercises();
   }
 
   int _selectedIndex = 0;
@@ -58,40 +58,34 @@ class _SearchPage extends State<SearchPage> {
     }
   }
 
-  final List<Map<String, String>> exercises = [
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    // 필요에 따라 더 많은 항목을 추가
-  ];
+  Future<List<Map<String, String>>> fetchExercises() async {
+    try {
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['BASE_URL']!;
+      final Uri url = Uri.parse('$baseUrl/user/exercise');
+      final response = await http.get(url);
 
-  // Future<List<Map<String, String>>> fetchExercises() async {
-  //   await dotenv.load(fileName: ".env");
-  //   final String baseUrl = dotenv.env['BASE_URL']!;
-  //   final Uri url = Uri.parse('$baseUrl/url');
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> data = jsonDecode(response.body);
-  //     return data.map((item) {
-  //       return {
-  //         'title': item['title'] as String,
-  //         'subtitle': item['subtitle'] as String,
-  //         'image': item['image'] as String,
-  //       };
-  //     }).toList();
-  //   } else {
-  //     throw Exception('데이터를 불러오는데 실패');
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        final jsonString = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> json = jsonDecode(jsonString);
+        List<dynamic> data = json['exerciseList'];
+        print("Received data: $data");
+        return data.map((item) {
+          return {
+            'exerciseName': item['exerciseName'] as String,
+            'exerciseCategory': item['exerciseCategory'] as String,
+            'exerciseUrl': item['exerciseUrl'] as String,
+          };
+        }).toList();
+      } else {
+        print('Failed to load exercises. Status code: ${response.statusCode}');
+        throw Exception('Failed to load exercises');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Error fetching exercises: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,16 +131,31 @@ class _SearchPage extends State<SearchPage> {
             ),
             SizedBox(height: 10),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.8,
-                ),
-                itemCount: exercises.length,
-                itemBuilder: (context, index) {
-                  return _buildExerciseCard(exercises[index]);
+              child: FutureBuilder<List<Map<String, String>>>(
+                future: futureExercises,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('데이터 로드 실패'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('데이터가 존재하지 않습니다.'));
+                  } else {
+                    final exercises = snapshot.data!;
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: exercises.length,
+                      itemBuilder: (context, index) {
+                        return _buildExerciseCard(exercises[index]);
+                      },
+                    );
+                  }
+
                 },
               ),
             ),
@@ -165,7 +174,9 @@ class _SearchPage extends State<SearchPage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ExerciseDetail()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  ExerciseDetail(exerciseName: exercise['exerciseName']!)),
         );
       },
       child: Card(
@@ -181,8 +192,8 @@ class _SearchPage extends State<SearchPage> {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    exercise['image']!,
+                  child: Image.asset(
+                    exercise['exerciseUrl']!,
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -190,12 +201,12 @@ class _SearchPage extends State<SearchPage> {
               ),
               SizedBox(height: 8),
               Text(
-                exercise['title']!,
+                exercise['exerciseName']!,
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               SizedBox(height: 4),
               Text(
-                exercise['subtitle']!,
+                exercise['exerciseCategory']!,
                 style: TextStyle(fontSize: 14, color: Colors.white70),
               ),
             ],
