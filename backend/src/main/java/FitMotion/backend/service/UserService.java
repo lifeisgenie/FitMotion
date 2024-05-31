@@ -3,10 +3,7 @@ package FitMotion.backend.service;
 import FitMotion.backend.dto.CustomUserDetails;
 import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
-import FitMotion.backend.dto.response.ResponseExerciseListsDTO;
-import FitMotion.backend.dto.response.ResponseLoginDTO;
-import FitMotion.backend.dto.response.ResponseLogoutDTO;
-import FitMotion.backend.dto.response.ResponseMessageDTO;
+import FitMotion.backend.dto.response.*;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.entity.Exercise;
 import FitMotion.backend.entity.User;
@@ -163,6 +160,31 @@ public class UserService {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("개인정보 수정 실패", e);
+        }
+    }
+
+    /**
+     * 운동 상세 조회
+     */
+    public ResponseExerciseDTO getExerciseLists(String exerciseName) {
+        try {
+            Optional<Exercise> exerciseOptional = exerciseRepository.findByExerciseName(exerciseName);
+            if (exerciseOptional.isPresent()) {
+                Exercise exercise = exerciseOptional.get();
+                ResponseExerciseDTO.ExerciseData exerciseData = new ResponseExerciseDTO.ExerciseData(
+                        exercise.getExerciseName(),
+                        exercise.getExerciseCategory(),
+                        exercise.getExerciseExplain(),
+                        exercise.getExerciseUrl()
+                );
+
+                return new ResponseExerciseDTO(200, "운동 상세 조회 성공", exerciseData);
+            } else {
+                return new ResponseExerciseDTO(404, "운동을 찾을 수 없습니다", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseExerciseDTO(500, "운동 조회 실패", null);
         }
     }
 

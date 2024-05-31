@@ -10,11 +10,11 @@ import java.util.List;
 public class ResponseExerciseDTO {
     private int statusCode;
     private String message;
-    private List<ExerciseInfo> exerciseList;
+    private ExerciseData data;
 
     @Data
     @AllArgsConstructor
-    public static class ExerciseInfo {
+    public static class ExerciseData {
         private String exerciseName;
         private String exerciseCategory;
         private String exerciseExplain;
