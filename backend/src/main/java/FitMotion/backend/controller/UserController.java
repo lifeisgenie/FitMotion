@@ -80,7 +80,7 @@ public class UserController {
     /**
      * 운동 상세 조회
      */
-    @GetMapping("/exercise/{exerciseName}")
+    @GetMapping("/exercise/detail/{exerciseName}")
     public ResponseEntity<ResponseExerciseDTO> getExerciseLists(@PathVariable String exerciseName) {
         ResponseExerciseDTO response = userService.getExerciseLists(exerciseName);
         return ResponseEntity.status(response.getStatusCode()).body(response);
