@@ -31,12 +31,6 @@ class _SearchPage extends State<SearchPage> {
     });
 
     switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SearchPage()),
-        );
-        break;
       case 1:
         Navigator.push(
           context,
