@@ -101,6 +101,8 @@ class _SearchPage extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _searchController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -114,6 +116,7 @@ class _SearchPage extends State<SearchPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: '운동 검색',
                 hintStyle: TextStyle(color: Colors.white54),
@@ -124,7 +127,12 @@ class _SearchPage extends State<SearchPage> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
-                suffixIcon: Icon(Icons.mic, color: Colors.white54),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.close, color: Colors.white54),
+                  onPressed: () {
+                    _searchController.clear(); // 입력된 텍스트를 지우기
+                  },
+                ),
               ),
               style: TextStyle(color: Colors.white),
             ),
