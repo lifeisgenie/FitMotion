@@ -84,101 +84,104 @@ class _FeedbackList extends State<FeedbackList> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text('피드백 목록'),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              onPressed: _clearSearch,
-              child: Text(
-                '검색 초기화',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.02,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '운동 검색',
-                hintStyle: TextStyle(color: Colors.white54),
-                prefixIcon: Icon(Icons.search, color: Colors.white54),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
+        appBar: AppBar(
+          title: Text('피드백 목록'),
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                onPressed: _clearSearch,
+                child: Text(
+                  '검색 초기화',
+                  style: TextStyle(color: Colors.blue),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
             ),
-            SizedBox(height: screenHeight * 0.02),
-            Text(
-              '검색 결과',
-              style: TextStyle(
-                fontSize: screenWidth * 0.05,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.01),
-            Expanded(
-              child: ListView(
-                children: feedbackData.map((feedback) {
-                  return FeedbackItem(
-                    imageUrl: feedback['imageUrl']!,
-                    title: feedback['title']!,
-                    sets: feedback['sets']!,
-                    date: feedback['date']!,
-                    time: feedback['time']!,
-                  );
-                }).toList(),
-              ),
-            ),
-            // Expanded(
-            //     child: FutureBuilder<List<Map<String, String>>>(
-            //         future: futureFeedbackData,
-            //         builder: (context, snapshot) {
-            //           if (snapshot.connectionState == ConnectionState.waiting) {
-            //             return Center(child: CircularProgressIndicator());
-            //           } else if (snapshot.hasError) {
-            //             return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
-            //           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            //             return Center(child: Text('데이터가 존재하지 않습니다.'));
-            //           } else {
-            //             final feedbackData = snapshot.data!;
-            //             return ListView(
-            //               children: feedbackData.map((item) {
-            //                 return FeedbackItem(
-            //                   imageUrl: item['imageUrl']!,
-            //                   title: item['title']!,
-            //                   sets: item['sets']!,
-            //                   date: item['date']!,
-            //                   time: item['time']!,
-            //                 );
-            //               }).toList(),
-            //             );
-            //           }
-            //         })),
           ],
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenHeight * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '운동 검색',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  prefixIcon: Icon(Icons.search, color: Colors.white54),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Text(
+                '검색 결과',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.05,
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.01),
+              Expanded(
+                child: ListView(
+                  children: feedbackData.map((feedback) {
+                    return FeedbackItem(
+                      imageUrl: feedback['imageUrl']!,
+                      title: feedback['title']!,
+                      sets: feedback['sets']!,
+                      date: feedback['date']!,
+                      time: feedback['time']!,
+                    );
+                  }).toList(),
+                ),
+              ),
+              // Expanded(
+              //     child: FutureBuilder<List<Map<String, String>>>(
+              //         future: futureFeedbackData,
+              //         builder: (context, snapshot) {
+              //           if (snapshot.connectionState == ConnectionState.waiting) {
+              //             return Center(child: CircularProgressIndicator());
+              //           } else if (snapshot.hasError) {
+              //             return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
+              //           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              //             return Center(child: Text('데이터가 존재하지 않습니다.'));
+              //           } else {
+              //             final feedbackData = snapshot.data!;
+              //             return ListView(
+              //               children: feedbackData.map((item) {
+              //                 return FeedbackItem(
+              //                   imageUrl: item['imageUrl']!,
+              //                   title: item['title']!,
+              //                   sets: item['sets']!,
+              //                   date: item['date']!,
+              //                   time: item['time']!,
+              //                 );
+              //               }).toList(),
+              //             );
+              //           }
+              //         })),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
