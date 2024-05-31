@@ -15,7 +15,7 @@ import lombok.*;
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId; // 자동으로 생성되는 ID
+    private Long userId;
     private String email;
     private String username;
     private int age;

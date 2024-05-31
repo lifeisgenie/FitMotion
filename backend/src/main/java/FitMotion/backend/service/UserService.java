@@ -3,7 +3,7 @@ package FitMotion.backend.service;
 import FitMotion.backend.dto.CustomUserDetails;
 import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
-import FitMotion.backend.dto.response.ResponseExerciseDTO;
+import FitMotion.backend.dto.response.ResponseExerciseListsDTO;
 import FitMotion.backend.dto.response.ResponseLoginDTO;
 import FitMotion.backend.dto.response.ResponseLogoutDTO;
 import FitMotion.backend.dto.response.ResponseMessageDTO;
@@ -25,10 +25,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -165,22 +167,25 @@ public class UserService {
     }
 
     /**
-     * 운동 조회
+     * 운동 리스트 조회
      */
-    public ResponseExerciseDTO getAllExercises() {
+    public ResponseExerciseListsDTO getAllExercises() {
         try {
             List<Exercise> exercises = exerciseRepository.findAll();
-            List<ResponseExerciseDTO.ExerciseInfo> exerciseInfoList = exercises.stream()
-                    .map(exercise -> new ResponseExerciseDTO.ExerciseInfo(
+            List<ResponseExerciseListsDTO.ExerciseInfo> exerciseList = exercises.stream()
+                    .map(exercise -> new ResponseExerciseListsDTO.ExerciseInfo(
                             exercise.getExerciseName(),
                             exercise.getExerciseCategory(),
                             exercise.getExerciseExplain(),
                             exercise.getExerciseUrl()))
                     .collect(Collectors.toList());
 
-            return new ResponseExerciseDTO(200, "운동 조회 성공", exerciseInfoList);
+            ResponseExerciseListsDTO.ExerciseData exerciseData = new ResponseExerciseListsDTO.ExerciseData(exerciseList);
+
+            return new ResponseExerciseListsDTO(200, "운동 리스트 조회 성공", exerciseData);
         } catch (Exception e) {
-            return new ResponseExerciseDTO(500, "운동 조회 실패", null);
+            return new ResponseExerciseListsDTO(500, "운동 리스트 조회 실패", null);
         }
     }
+
 }
