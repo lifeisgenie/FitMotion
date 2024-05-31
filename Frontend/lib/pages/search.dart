@@ -156,34 +156,6 @@ class _SearchPage extends State<SearchPage> {
                 },
               ),
             ),
-            // Expanded(
-            //   child: FutureBuilder<List<Map<String, String>>>(
-            //     future: futureExercises,
-            //     builder: (context, snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.waiting) {
-            //         return Center(child: CircularProgressIndicator());
-            //       } else if (snapshot.hasError) {
-            //         return Center(child: Text('Failed to load data'));
-            //       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            //         return Center(child: Text('No data available'));
-            //       } else {
-            //         final exercises = snapshot.data!;
-            //         return GridView.builder(
-            //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //             crossAxisCount: 2,
-            //             crossAxisSpacing: 10,
-            //             mainAxisSpacing: 10,
-            //             childAspectRatio: 0.8,
-            //           ),
-            //           itemCount: exercises.length,
-            //           itemBuilder: (context, index) {
-            //             return _buildExerciseCard(exercises[index]);
-            //           },
-            //         );
-            //       }
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
