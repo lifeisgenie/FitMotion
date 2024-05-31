@@ -2,10 +2,7 @@ package FitMotion.backend.controller;
 
 import FitMotion.backend.dto.request.RequestLoginDTO;
 import FitMotion.backend.dto.request.RequestSignUpDTO;
-import FitMotion.backend.dto.response.ResponseExerciseListsDTO;
-import FitMotion.backend.dto.response.ResponseLoginDTO;
-import FitMotion.backend.dto.response.ResponseLogoutDTO;
-import FitMotion.backend.dto.response.ResponseMessageDTO;
+import FitMotion.backend.dto.response.*;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
@@ -78,6 +75,15 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 정보 수정 실패"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * 운동 상세 조회
+     */
+    @GetMapping("/exercise/{exerciseName}")
+    public ResponseEntity<ResponseExerciseDTO> getExerciseLists(@PathVariable String exerciseName) {
+        ResponseExerciseDTO response = userService.getExerciseLists(exerciseName);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     /**
