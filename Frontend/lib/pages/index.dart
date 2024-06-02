@@ -94,11 +94,11 @@ class _Index extends State<Index> {
                       _logout();
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(5.0), //padding 추가 했습니다
+                      padding: EdgeInsets.all(2.0),
                       child: Text(
                         '로그아웃',
                         style: TextStyle(
-                          fontSize: screenWidth * 0.035,
+                          fontSize: screenWidth * 0.04,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
