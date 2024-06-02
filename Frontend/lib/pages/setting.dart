@@ -80,14 +80,14 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               '계정 설정',
-              style: TextStyle(fontSize: 22, color: Colors.white),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
           ListTile(
             leading: Icon(Icons.person, color: Colors.white),
             title: Text(
               '프로필 수정',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
             onTap: () {
@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: Icon(Icons.notifications, color: Colors.white),
             title: Text(
               '알림설정',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
             onTap: () {
@@ -109,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: Icon(Icons.campaign, color: Colors.white),
             title: Text(
               '공지사항',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
             onTap: () {
@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: Icon(Icons.dark_mode, color: Colors.white),
             title: Text(
               '다크 모드',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Switch(
               value: isDarkMode,
@@ -137,14 +137,14 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               '더보기',
-              style: TextStyle(fontSize: 22, color: Colors.white),
+              style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
           ListTile(
             leading: Icon(Icons.support_agent, color: Colors.white),
             title: Text(
               '고객센터',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
             onTap: () {
@@ -155,11 +155,11 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: Icon(Icons.info, color: Colors.white),
             title: Text(
               '앱 관리',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Text(
               '1.1.7',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             onTap: () {
               // 앱 관리 페이지로 이동
