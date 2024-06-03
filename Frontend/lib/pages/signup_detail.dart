@@ -1,10 +1,76 @@
-import 'package:flutter/material.dart';
-import 'login.dart'; // login.dart 파일을 import 합니다.
+import 'dart:convert';
 
-class SignUpDetailPage extends StatelessWidget {
+import 'package:FitMotion/pages/login.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:http/http.dart' as http;
+
+class SignUpDetailPage extends StatefulWidget {
+  final String phone;
+  final String email;
+  final String password;
+
+  SignUpDetailPage({
+    required this.phone,
+    required this.email,
+    required this.password,
+  });
+
+  @override
+  _SignUpDetailPageState createState() => _SignUpDetailPageState();
+}
+
+class _SignUpDetailPageState extends State<SignUpDetailPage> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+
+  Future<void> _userSignup() async {
+    final String phone = widget.phone;
+    final String email = widget.email;
+    final String password = widget.password;
+    final String username = usernameController.text;
+    final String age = ageController.text;
+    final String height = heightController.text;
+    final String weight = weightController.text;
+
+    // 서버에 전송하는 예제
+    try {
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['BASE_URL']!;
+      final Uri url = Uri.parse('$baseUrl/user/signup');
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "email": email,
+          "password": password,
+          "username": username,
+          "age": age,
+          "phone": phone,
+          "height": height,
+          "weight": weight
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('회원가입 성공, 다시 로그인 하세요.');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      } else {
+        // 회원가입 실패
+        print('회원가입 실패. status code: ${response.statusCode}');
+        print(password);
+      }
+    } catch (e) {
+      print('회원가입 에러: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +100,8 @@ class SignUpDetailPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
+              _buildTextField(usernameController, '이름'),
+              SizedBox(height: 20),
               _buildTextField(ageController, '나이'),
               SizedBox(height: 20),
               _buildTextField(heightController, '신장'),
@@ -45,11 +113,7 @@ class SignUpDetailPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // 저장하기 버튼 클릭 시 login.dart로 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Login()), // Login 클래스로 이동
-                    );
+                    _userSignup();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -69,7 +133,7 @@ class SignUpDetailPage extends StatelessWidget {
                 width: double.infinity, // 버튼의 너비를 텍스트 필드와 동일하게 설정
                 child: ElevatedButton(
                   onPressed: () {
-                    // 나중에 입력하기 버튼 클릭 시 처리할 로직 추가
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -112,12 +176,6 @@ class SignUpDetailPage extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: SignUpDetailPage(),
-    theme: ThemeData.dark(), // 다크 모드 테마 설정
-  ));
-}
 
 
 

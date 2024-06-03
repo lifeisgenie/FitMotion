@@ -32,8 +32,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
       if (response.statusCode == 200) {
         final jsonString = utf8.decode(response.bodyBytes);
         Map<String, dynamic> json = jsonDecode(jsonString);
-        List<dynamic> data = json['exerciseList'];
-        print("Received data: $data");
+        List<dynamic> data = json['data']['exerciseList'];
         return data.map((item) {
           return {
             'exerciseName': item['exerciseName'] as String,

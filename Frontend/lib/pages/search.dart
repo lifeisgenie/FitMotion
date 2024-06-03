@@ -73,7 +73,7 @@ class _SearchPage extends State<SearchPage> {
       if (response.statusCode == 200) {
         final jsonString = utf8.decode(response.bodyBytes);
         Map<String, dynamic> json = jsonDecode(jsonString);
-        List<dynamic> data = json['exerciseList'];
+        List<dynamic> data = json['data']['exerciseList'];
         print("Received data: $data");
         return data.map((item) {
           return {
