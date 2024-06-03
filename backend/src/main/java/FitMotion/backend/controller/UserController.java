@@ -24,9 +24,9 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public ResponseEntity<ResponseMessageDTO> signUp(@RequestBody RequestSignUpDTO signUpDTO) {
+    public ResponseEntity<ResponseMessageDTO> signUp(@RequestBody RequestSignUpDTO dto) {
         try {
-            ResponseMessageDTO result = userService.signUp(signUpDTO);
+            ResponseMessageDTO result = userService.signUp(dto);
             return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatusCode()));
         } catch (EmailAlreadyExistsException e) {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -81,8 +81,8 @@ public class UserController {
      * 운동 상세 조회
      */
     @GetMapping("/exercise/detail/{exerciseName}")
-    public ResponseEntity<ResponseExerciseDTO> getExerciseLists(@PathVariable String exerciseName) {
-        ResponseExerciseDTO response = userService.getExerciseLists(exerciseName);
+    public ResponseEntity<ResponseExerciseDTO> getExerciseDetail(@PathVariable String exerciseName) {
+        ResponseExerciseDTO response = userService.getExerciseDetail(exerciseName);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -94,4 +94,6 @@ public class UserController {
         ResponseExerciseListsDTO response = userService.getAllExercises();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+
 }

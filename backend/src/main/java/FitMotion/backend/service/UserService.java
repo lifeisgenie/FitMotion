@@ -67,6 +67,7 @@ public class UserService {
 
             // 사용자 프로필 정보 저장
             UserProfile userProfile = UserProfile.builder()
+                    .user(user)
                     .username(dto.getUsername())
                     .age(dto.getAge())
                     .phone(dto.getPhone())
@@ -102,13 +103,11 @@ public class UserService {
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
 
-            // 인증된 사용자 정보 가져오기
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-            // access, refresh 토큰 생성
+
             String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
             String refreshToken = jwtUtil.generateRefreshToken(customUserDetails.getUsername());
 
-            // 빌더 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
             return ResponseLoginDTO.builder()
                     .statusCode(HttpStatus.OK.value())
                     .accessToken(accessToken)
@@ -126,13 +125,11 @@ public class UserService {
      */
     public ResponseLogoutDTO logout() {
         try {
-            // 로그아웃 로직 (예: 토큰 무효화, 세션 종료 등)
             return ResponseLogoutDTO.builder()
                     .status(HttpStatus.OK.value())
                     .message("로그아웃 성공")
                     .build();
         } catch (Exception e) {
-            // 예외 발생 시 로그아웃 실패 메시지 반환
             return ResponseLogoutDTO.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("로그아웃 실패")
@@ -146,7 +143,7 @@ public class UserService {
     @Transactional
     public ResponseMessageDTO updateUserProfile(RequestUpdateDTO dto) {
         try {
-            UserProfile userProfile = userProfileRepository.findByUser_Email(dto.getEmail())
+            UserProfile userProfile = userProfileRepository.findByUserEmail(dto.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
             userProfile.setUsername(dto.getUsername());
@@ -168,7 +165,7 @@ public class UserService {
     /**
      * 운동 상세 조회
      */
-    public ResponseExerciseDTO getExerciseLists(String exerciseName) {
+    public ResponseExerciseDTO getExerciseDetail(String exerciseName) {
         try {
             Optional<Exercise> exerciseOptional = exerciseRepository.findByExerciseName(exerciseName);
             if (exerciseOptional.isPresent()) {
