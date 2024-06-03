@@ -1,9 +1,6 @@
 package FitMotion.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -16,7 +13,11 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    private String email;
+
+    @OneToOne
+    @JoinColumn(name = "email", referencedColumnName = "email")
+    private User user;
+
     private String username;
     private int age;
     private String phone;

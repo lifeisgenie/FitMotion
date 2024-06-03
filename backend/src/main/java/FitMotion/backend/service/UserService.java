@@ -64,7 +64,6 @@ public class UserService {
 
             // 사용자 프로필 정보 저장
             UserProfile userProfile = UserProfile.builder()
-                    .email(dto.getEmail())
                     .username(dto.getUsername())
                     .age(dto.getAge())
                     .phone(dto.getPhone())
@@ -144,7 +143,7 @@ public class UserService {
     @Transactional
     public ResponseMessageDTO updateUserProfile(RequestUpdateDTO dto) {
         try {
-            UserProfile userProfile = userProfileRepository.findByEmail(dto.getEmail())
+            UserProfile userProfile = userProfileRepository.findByUser_Email(dto.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
             userProfile.setUsername(dto.getUsername());
