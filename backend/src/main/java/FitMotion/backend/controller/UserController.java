@@ -1,9 +1,7 @@
 package FitMotion.backend.controller;
 
-import FitMotion.backend.dto.request.RequestLoginDTO;
-import FitMotion.backend.dto.request.RequestSignUpDTO;
+import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
-import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
@@ -12,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -81,8 +82,8 @@ public class UserController {
      * 운동 상세 조회
      */
     @GetMapping("/exercise/detail/{exerciseName}")
-    public ResponseEntity<ResponseExerciseDTO> getExerciseDetail(@PathVariable String exerciseName) {
-        ResponseExerciseDTO response = userService.getExerciseDetail(exerciseName);
+    public ResponseEntity<ResponseExerciseDetailDTO> getExerciseDetail(@PathVariable String exerciseName) {
+        ResponseExerciseDetailDTO response = userService.getExerciseDetail(exerciseName);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -95,5 +96,19 @@ public class UserController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-
+    /**
+     * 피드백 리스트 조회
+     */
+    @GetMapping("/feedback/list/{userId}")
+    public ResponseEntity<ResponseFeedbackListDTO> getFeedbackList(@PathVariable Long userId) {
+        try {
+            List<ResponseFeedbackListDTO.FeedbackInfo> feedbackList = userService.getFeedbackListByUserId(userId);
+            ResponseFeedbackListDTO.FeedbackData data = new ResponseFeedbackListDTO.FeedbackData(feedbackList);
+            return ResponseEntity.ok(new ResponseFeedbackListDTO(200, "피드백 리스트 조회 성공", data));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseFeedbackListDTO(500, "피드백 리스트 조회 실패", null));
+        }
+    }
 }

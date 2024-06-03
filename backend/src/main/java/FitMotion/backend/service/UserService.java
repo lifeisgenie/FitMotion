@@ -6,6 +6,7 @@ import FitMotion.backend.dto.request.RequestSignUpDTO;
 import FitMotion.backend.dto.response.*;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.entity.Exercise;
+import FitMotion.backend.entity.FeedbackFile;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
@@ -13,6 +14,7 @@ import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
 import FitMotion.backend.repository.ExerciseRepository;
+import FitMotion.backend.repository.FeedbackRepository;
 import FitMotion.backend.repository.UserProfileRepository;
 import FitMotion.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,9 +44,13 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    // @Value("${file.upload-dir}")
+    private String uploadDir;
+
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final ExerciseRepository exerciseRepository;
+    private final FeedbackRepository feedbackRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -165,25 +176,25 @@ public class UserService {
     /**
      * 운동 상세 조회
      */
-    public ResponseExerciseDTO getExerciseDetail(String exerciseName) {
+    public ResponseExerciseDetailDTO getExerciseDetail(String exerciseName) {
         try {
             Optional<Exercise> exerciseOptional = exerciseRepository.findByExerciseName(exerciseName);
             if (exerciseOptional.isPresent()) {
                 Exercise exercise = exerciseOptional.get();
-                ResponseExerciseDTO.ExerciseData exerciseData = new ResponseExerciseDTO.ExerciseData(
+                ResponseExerciseDetailDTO.ExerciseData exerciseData = new ResponseExerciseDetailDTO.ExerciseData(
                         exercise.getExerciseName(),
                         exercise.getExerciseCategory(),
                         exercise.getExerciseExplain(),
                         exercise.getExerciseUrl()
                 );
 
-                return new ResponseExerciseDTO(200, "운동 상세 조회 성공", exerciseData);
+                return new ResponseExerciseDetailDTO(200, "운동 상세 조회 성공", exerciseData);
             } else {
-                return new ResponseExerciseDTO(404, "운동을 찾을 수 없습니다", null);
+                return new ResponseExerciseDetailDTO(404, "운동을 찾을 수 없습니다", null);
             }
         } catch (Exception e) {
             logger.error("운동 조회 실패: {}", e.getMessage(), e);
-            return new ResponseExerciseDTO(500, "운동 조회 실패", null);
+            return new ResponseExerciseDetailDTO(500, "운동 조회 실패", null);
         }
     }
 
@@ -207,5 +218,19 @@ public class UserService {
         } catch (Exception e) {
             return new ResponseExerciseListsDTO(500, "운동 리스트 조회 실패", null);
         }
+    }
+
+    /**
+     * 피드백 리스트 조회
+     */
+    public List<ResponseFeedbackListDTO.FeedbackInfo> getFeedbackListByUserId(Long userId) {
+        List<FeedbackFile> feedbackFiles = feedbackRepository.findByUserId(userId);
+        return feedbackFiles.stream()
+                .map(feedback -> new ResponseFeedbackListDTO.FeedbackInfo(
+                        feedback.getFeedbackId(),
+                        feedback.getExercise().getExerciseId(),
+                        feedback.getCreatedDate()
+                ))
+                .collect(Collectors.toList());
     }
 }

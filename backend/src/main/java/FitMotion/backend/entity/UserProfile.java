@@ -18,7 +18,6 @@ public class UserProfile {
 
     @OneToOne
     @JoinColumn(name = "email", referencedColumnName = "email", nullable = false)
-    @JsonManagedReference
     private User user;
 
     private String username;

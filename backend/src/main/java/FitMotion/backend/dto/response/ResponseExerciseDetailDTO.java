@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResponseExerciseDTO {
+public class ResponseExerciseDetailDTO {
     private int statusCode;
     private String message;
     private ExerciseData data;

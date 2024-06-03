@@ -14,7 +14,7 @@ public class FeedbackFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_id")
-    private int feedbackId;
+    private Long feedbackId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
@@ -28,5 +28,6 @@ public class FeedbackFile {
     private String videoUrl;
 
     @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 }

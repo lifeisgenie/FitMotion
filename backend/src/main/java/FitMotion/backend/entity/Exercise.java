@@ -3,13 +3,17 @@ package FitMotion.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "exercise_id")
-    private int exerciseId;
+    private Long exerciseId;
 
     @Column(name = "exercise_name")
     private String exerciseName;

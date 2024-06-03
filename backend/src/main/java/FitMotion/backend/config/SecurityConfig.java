@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/signup", "/user/exercise/**").permitAll()
+                        .requestMatchers("/user/login", "/user/signup", "/user/profile", "/user/exercise/**", "/user/feedback/list/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
