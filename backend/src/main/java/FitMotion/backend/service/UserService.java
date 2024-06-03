@@ -219,6 +219,24 @@ public class UserService {
             return new ResponseExerciseListsDTO(500, "운동 리스트 조회 실패", null);
         }
     }
+    /**
+     * 피드백 상세 조회
+     */
+    public ResponseFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
+        Optional<FeedbackFile> feedbackOptional = feedbackRepository.findById(feedbackId);
+        if (feedbackOptional.isPresent()) {
+            FeedbackFile feedback = feedbackOptional.get();
+            ResponseFeedbackDetailDTO.FeedbackData feedbackData = new ResponseFeedbackDetailDTO.FeedbackData(
+                    feedback.getFeedbackId(),
+                    feedback.getExercise().getExerciseId(),
+                    feedback.getVideoUrl(),
+                    feedback.getCreatedDate()
+            );
+            return new ResponseFeedbackDetailDTO(200, "피드백 조회 성공", feedbackData);
+        } else {
+            return new ResponseFeedbackDetailDTO(500, "피드백 조회 실패", null);
+        }
+    }
 
     /**
      * 피드백 리스트 조회
