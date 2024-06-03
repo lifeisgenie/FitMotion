@@ -15,7 +15,6 @@ public class RequestSignUpDTO {
     private String username;
     private int age;
     private String phone;
-    private String gender;
     private double height;
     private double weight;
 }
