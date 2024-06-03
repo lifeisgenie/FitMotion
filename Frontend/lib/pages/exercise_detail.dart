@@ -21,7 +21,6 @@ class _ExerciseDetail extends State<ExerciseDetail> {
       '스쿼트는 웨이트 트레이닝의 가장 대표적인 운동 중 하나이며, 데드리프트, 벤치 프레스와 함께 웨이트 트레이닝의 트로이카 운동으로 꼽힌다. 중량을 거루는 스포츠인 파워리프팅 중 하나이다.';
 
   late String exerciseUrl;
-  late String exerciseName;
   late String exerciseCategory;
   late String exerciseExplain;
   bool isLoading = true;
@@ -29,7 +28,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
   @override
   void initState() {
     super.initState();
-    fetchExerciseDetail(exerciseName);
+    fetchExerciseDetail(widget.exerciseName);
   }
 
   Future<void> fetchExerciseDetail(String exerciseName) async {
@@ -49,7 +48,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
         isLoading = false;
       });
     } else {
-      throw Exception('Failed to load exercise detail');
+      throw Exception('운동 상세 로드 실패');
     }
   }
 
@@ -133,7 +132,9 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RecordScreen(),
+                                  builder: (context) => RecordScreen(
+                                    exerciseName: widget.exerciseName,
+                                  ),
                                 ));
                           },
                           style: ElevatedButton.styleFrom(
