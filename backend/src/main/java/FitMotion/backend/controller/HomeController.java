@@ -13,6 +13,6 @@ public class HomeController {
     public String home() {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return "Welcome to FitMotion"+username;
+        return "index"+username;
     }
 }

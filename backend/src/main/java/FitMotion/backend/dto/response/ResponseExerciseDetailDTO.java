@@ -3,11 +3,9 @@ package FitMotion.backend.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
-public class ResponseExerciseDTO {
+public class ResponseExerciseDetailDTO {
     private int statusCode;
     private String message;
     private ExerciseData data;
