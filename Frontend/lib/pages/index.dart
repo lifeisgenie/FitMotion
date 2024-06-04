@@ -5,6 +5,7 @@ import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:FitMotion/widgets/exercise_card.dart';
+import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -152,11 +153,7 @@ class _Index extends State<Index> {
 
               child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
             ),
-            /* Container(
-  height: screenHeight * 0.7, // 전체 화면 높이의 70%
-  child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
-),
-            */
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

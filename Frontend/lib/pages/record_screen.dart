@@ -93,7 +93,7 @@ class _RecordScreenState extends State<RecordScreen> {
               print("비디오 전송 완료");
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => FeedbackPage()),
+                MaterialPageRoute(builder: (context) => MyFeedback()),
               );
             } else {
               print('비디오 전송 실패. 오류 코드: ${response.statusCode}');
@@ -102,7 +102,7 @@ class _RecordScreenState extends State<RecordScreen> {
             print('비디오 전송 실패: $e');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => FeedbackPage()),
+              MaterialPageRoute(builder: (context) => MyFeedback()),
             );
           }
         }

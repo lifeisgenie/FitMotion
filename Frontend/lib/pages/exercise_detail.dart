@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:FitMotion/pages/record_screen.dart';
+import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 
 class ExerciseDetail extends StatefulWidget {
   final String exerciseName;
-
   ExerciseDetail({required this.exerciseName});
 
   @override
@@ -19,38 +15,6 @@ class _ExerciseDetail extends State<ExerciseDetail> {
   final String muscles = '대퇴사두근, 대둔근, 척추기립근';
   final String description =
       '스쿼트는 웨이트 트레이닝의 가장 대표적인 운동 중 하나이며, 데드리프트, 벤치 프레스와 함께 웨이트 트레이닝의 트로이카 운동으로 꼽힌다. 중량을 거루는 스포츠인 파워리프팅 중 하나이다.';
-
-  late String exerciseUrl;
-  late String exerciseCategory;
-  late String exerciseExplain;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchExerciseDetail(widget.exerciseName);
-  }
-
-  Future<void> fetchExerciseDetail(String exerciseName) async {
-    await dotenv.load(fileName: ".env");
-    final String baseUrl = dotenv.env['BASE_URL']!;
-    final Uri url =
-        Uri.parse('$baseUrl/user/exercise/?exerciseName=$exerciseName');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        exerciseUrl = data['exerciseUrl'];
-        exerciseName = data['exerciseName'];
-        exerciseCategory = data['exerciseCategory'];
-        exerciseExplain = data['exerciseExplain'];
-        isLoading = false;
-      });
-    } else {
-      throw Exception('운동 상세 로드 실패');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +37,8 @@ class _ExerciseDetail extends State<ExerciseDetail> {
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    exerciseUrl,
+                  Image.network(
+                    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80', // 메인 이미지 URL을 실제 URL로 변경
                     width: double.infinity,
                     height: 300,
                     fit: BoxFit.cover,
@@ -112,7 +76,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        exerciseCategory,
+                        muscles,
                         style: TextStyle(fontSize: 16, color: Colors.white60),
                       ),
                       SizedBox(height: 20),
@@ -122,20 +86,25 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        exerciseExplain,
+                        description,
                         style: TextStyle(fontSize: 16, color: Colors.white70),
                       ),
                       SizedBox(height: 40),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => RecordScreen(
+                            //         exerciseName: widget.exerciseName,
+                            //       ),
+                            //     ));
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RecordScreen(
-                                    exerciseName: widget.exerciseName,
-                                  ),
-                                ));
+                                    builder: (context) => SquartCheck()));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
