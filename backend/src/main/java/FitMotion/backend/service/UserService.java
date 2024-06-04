@@ -6,6 +6,7 @@ import FitMotion.backend.dto.request.RequestSignUpDTO;
 import FitMotion.backend.dto.response.*;
 import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.entity.Exercise;
+import FitMotion.backend.entity.FeedbackFile;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
@@ -13,19 +14,26 @@ import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
 import FitMotion.backend.repository.ExerciseRepository;
+import FitMotion.backend.repository.FeedbackRepository;
 import FitMotion.backend.repository.UserProfileRepository;
 import FitMotion.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,9 +42,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    // @Value("${file.upload-dir}")
+    private String uploadDir;
+
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final ExerciseRepository exerciseRepository;
+    private final FeedbackRepository feedbackRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -64,6 +78,7 @@ public class UserService {
 
             // 사용자 프로필 정보 저장
             UserProfile userProfile = UserProfile.builder()
+                    .user(user)
                     .username(dto.getUsername())
                     .age(dto.getAge())
                     .phone(dto.getPhone())
@@ -99,13 +114,11 @@ public class UserService {
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
 
-            // 인증된 사용자 정보 가져오기
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-            // access, refresh 토큰 생성
+
             String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
             String refreshToken = jwtUtil.generateRefreshToken(customUserDetails.getUsername());
 
-            // 빌더 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
             return ResponseLoginDTO.builder()
                     .statusCode(HttpStatus.OK.value())
                     .accessToken(accessToken)
@@ -123,13 +136,11 @@ public class UserService {
      */
     public ResponseLogoutDTO logout() {
         try {
-            // 로그아웃 로직 (예: 토큰 무효화, 세션 종료 등)
             return ResponseLogoutDTO.builder()
                     .status(HttpStatus.OK.value())
                     .message("로그아웃 성공")
                     .build();
         } catch (Exception e) {
-            // 예외 발생 시 로그아웃 실패 메시지 반환
             return ResponseLogoutDTO.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .message("로그아웃 실패")
@@ -143,7 +154,7 @@ public class UserService {
     @Transactional
     public ResponseMessageDTO updateUserProfile(RequestUpdateDTO dto) {
         try {
-            UserProfile userProfile = userProfileRepository.findByUser_Email(dto.getEmail())
+            UserProfile userProfile = userProfileRepository.findByUserEmail(dto.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
             userProfile.setUsername(dto.getUsername());
@@ -165,25 +176,25 @@ public class UserService {
     /**
      * 운동 상세 조회
      */
-    public ResponseExerciseDTO getExerciseLists(String exerciseName) {
+    public ResponseExerciseDetailDTO getExerciseDetail(String exerciseName) {
         try {
             Optional<Exercise> exerciseOptional = exerciseRepository.findByExerciseName(exerciseName);
             if (exerciseOptional.isPresent()) {
                 Exercise exercise = exerciseOptional.get();
-                ResponseExerciseDTO.ExerciseData exerciseData = new ResponseExerciseDTO.ExerciseData(
+                ResponseExerciseDetailDTO.ExerciseData exerciseData = new ResponseExerciseDetailDTO.ExerciseData(
                         exercise.getExerciseName(),
                         exercise.getExerciseCategory(),
                         exercise.getExerciseExplain(),
                         exercise.getExerciseUrl()
                 );
 
-                return new ResponseExerciseDTO(200, "운동 상세 조회 성공", exerciseData);
+                return new ResponseExerciseDetailDTO(200, "운동 상세 조회 성공", exerciseData);
             } else {
-                return new ResponseExerciseDTO(404, "운동을 찾을 수 없습니다", null);
+                return new ResponseExerciseDetailDTO(404, "운동을 찾을 수 없습니다", null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseExerciseDTO(500, "운동 조회 실패", null);
+            logger.error("운동 조회 실패: {}", e.getMessage(), e);
+            return new ResponseExerciseDetailDTO(500, "운동 조회 실패", null);
         }
     }
 
@@ -208,5 +219,36 @@ public class UserService {
             return new ResponseExerciseListsDTO(500, "운동 리스트 조회 실패", null);
         }
     }
+    /**
+     * 피드백 상세 조회
+     */
+    public ResponseFeedbackDetailDTO getFeedbackDetail(Long feedbackId) {
+        Optional<FeedbackFile> feedbackOptional = feedbackRepository.findById(feedbackId);
+        if (feedbackOptional.isPresent()) {
+            FeedbackFile feedback = feedbackOptional.get();
+            ResponseFeedbackDetailDTO.FeedbackData feedbackData = new ResponseFeedbackDetailDTO.FeedbackData(
+                    feedback.getFeedbackId(),
+                    feedback.getExercise().getExerciseId(),
+                    feedback.getVideoUrl(),
+                    feedback.getCreatedDate()
+            );
+            return new ResponseFeedbackDetailDTO(200, "피드백 조회 성공", feedbackData);
+        } else {
+            return new ResponseFeedbackDetailDTO(500, "피드백 조회 실패", null);
+        }
+    }
 
+    /**
+     * 피드백 리스트 조회
+     */
+    public List<ResponseFeedbackListDTO.FeedbackInfo> getFeedbackListByUserId(Long userId) {
+        List<FeedbackFile> feedbackFiles = feedbackRepository.findByUserId(userId);
+        return feedbackFiles.stream()
+                .map(feedback -> new ResponseFeedbackListDTO.FeedbackInfo(
+                        feedback.getFeedbackId(),
+                        feedback.getExercise().getExerciseId(),
+                        feedback.getCreatedDate()
+                ))
+                .collect(Collectors.toList());
+    }
 }
