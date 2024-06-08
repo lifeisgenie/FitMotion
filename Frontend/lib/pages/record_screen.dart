@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:FitMotion/pages/feedback.dart';
 import 'package:FitMotion/pages/index.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -8,6 +9,10 @@ import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 class RecordScreen extends StatefulWidget {
+  final String exerciseName;
+
+  RecordScreen({required this.exerciseName});
+
   @override
   _RecordScreenState createState() => _RecordScreenState();
 }
@@ -40,7 +45,7 @@ class _RecordScreenState extends State<RecordScreen> {
       try {
         final DateTime now = DateTime.now();
         final String formattedDate =
-            '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}-${now.second}';
+            '${widget.exerciseName}_{now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}-${now.second}';
         final Directory appDir = await getTemporaryDirectory();
         final String videoDirPath = '${appDir.path}/videos';
         await Directory(videoDirPath).create(recursive: true);
@@ -88,7 +93,7 @@ class _RecordScreenState extends State<RecordScreen> {
               print("비디오 전송 완료");
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Index()),
+                MaterialPageRoute(builder: (context) => MyFeedback()),
               );
             } else {
               print('비디오 전송 실패. 오류 코드: ${response.statusCode}');
@@ -97,7 +102,7 @@ class _RecordScreenState extends State<RecordScreen> {
             print('비디오 전송 실패: $e');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Index()),
+              MaterialPageRoute(builder: (context) => MyFeedback()),
             );
           }
         }
@@ -148,7 +153,7 @@ class _RecordScreenState extends State<RecordScreen> {
                         bottom: MediaQuery.of(context).size.height * 0.01),
                     color: Colors.black54,
                     child: Text(
-                      "스쿼트",
+                      widget.exerciseName,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: MediaQuery.of(context).size.width * 0.05),

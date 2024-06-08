@@ -5,6 +5,7 @@ import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:FitMotion/widgets/exercise_card.dart';
+import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,12 +46,7 @@ class _Index extends State<Index> {
           MaterialPageRoute(builder: (context) => FeedbackList()),
         );
         break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Index()),
-        );
-        break;
+
       case 3:
         Navigator.push(
           context,
@@ -99,11 +95,11 @@ class _Index extends State<Index> {
                       _logout();
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(5.0), //padding 추가 했습니다
+                      padding: EdgeInsets.all(2.0),
                       child: Text(
                         '로그아웃',
                         style: TextStyle(
-                          fontSize: screenWidth * 0.035,
+                          fontSize: screenWidth * 0.04,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -153,16 +149,11 @@ class _Index extends State<Index> {
             ),
             SizedBox(height: screenHeight * 0.02),
             Container(
-
               height: screenHeight * 0.7, // ExerciseCard가 차지할 최대 높이
 
               child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
             ),
-            /* Container(
-  height: screenHeight * 0.7, // 전체 화면 높이의 70%
-  child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
-),
-            */
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

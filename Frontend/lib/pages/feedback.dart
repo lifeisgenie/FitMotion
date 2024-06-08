@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FeedbackPage extends StatelessWidget {
+class MyFeedback extends StatefulWidget {
+  @override
+  _MyFeedback createState() => _MyFeedback();
+}
+
+class _MyFeedback extends State<MyFeedback> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,17 +19,6 @@ class FeedbackPage extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: Icon(Icons.arrow_forward),
-              onPressed: () {
-                // 다음 화면으로 이동하는 로직을 여기에 추가
-              },
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -32,7 +26,7 @@ class FeedbackPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '1세트',
+              '스쿼트',
               style: TextStyle(fontSize: 24, color: Colors.white),
             ),
             SizedBox(height: 20),
