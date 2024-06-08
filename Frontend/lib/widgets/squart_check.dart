@@ -15,10 +15,8 @@ class SquartCheck extends StatefulWidget {
 class _SquartCheckState extends State<SquartCheck> {
   CameraController? _controller;
   List<CameraDescription> cameras = [];
-  bool _isRecording = false;
   int _selectedCameraIndex = 0;
-  // 영상을 담을 리스트
-  List<File> recordedFiles = [];
+  bool _check = false;
 
   List<dynamic>? _data;
   int _imageHeight = 0;
@@ -39,41 +37,6 @@ class _SquartCheckState extends State<SquartCheck> {
       await _controller?.initialize();
       setState(() {});
     }
-  }
-
-  // 녹화 시작 함수
-  Future<void> _startRecording() async {
-    if (!_controller!.value.isRecordingVideo) {
-      await _controller!.startVideoRecording();
-      _isRecording = true;
-      print("Recording started");
-    }
-  }
-
-// 녹화 종료 함수
-  Future<void> _stopRecording() async {
-    if (_controller!.value.isRecordingVideo) {
-      XFile videoFile = await _controller!.stopVideoRecording();
-      recordedFiles.add(File(videoFile.path));
-      _isRecording = false;
-      print("데이터를 저장했습니다. ${videoFile.path}");
-
-      // 5개의 영상을 녹화하면 URL로 전송
-      if (recordedFiles.length >= 5) {
-        await _sendVideos(recordedFiles);
-        recordedFiles.clear();
-      }
-    }
-  }
-
-  Future<void> _sendVideos(List<File> data) async {
-    print("전송!");
-    // final url = Uri.parse('YOUR_URL_HERE');
-    // 데이터 전송 로직을 여기에 추가
-    // 예를 들어, http 패키지를 사용하여 데이터를 전송할 수 있습니다.
-    // var response = await http.post(url, body: jsonEncode(data));
-    // print('Response status: ${response.statusCode}');
-    // print('Response body: ${response.body}');
   }
 
   _setRecognitions(data, imageHeight, imageWidth) {
@@ -99,6 +62,22 @@ class _SquartCheckState extends State<SquartCheck> {
     }
   }
 
+  // 스쿼트 확인 상태를 갱신하는 함수
+  void updateCheckValue(bool value) {
+    if (mounted) {
+      setState(() {
+        _check = value;
+      });
+      print("check는 $_check");
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -112,18 +91,21 @@ class _SquartCheckState extends State<SquartCheck> {
         children: <Widget>[
           if (cameras != null && cameras!.isNotEmpty)
             Camera(
-              cameras: cameras!,
+              cameras: cameras,
               setRecognitions: _setRecognitions,
+              check: _check, // check 변수 전달
             ),
-          RenderData(
-            data: _data ?? [],
-            previewH: max(_imageHeight, _imageWidth),
-            previewW: min(_imageHeight, _imageWidth),
-            screenH: screen.height,
-            screenW: screen.width,
-            startRecording: _startRecording,
-            stopRecording: _stopRecording,
-          ),
+          if (_data != null)
+            RenderData(
+              data: _data ?? [],
+              previewH: max(_imageHeight, _imageWidth),
+              previewW: min(_imageHeight, _imageWidth),
+              screenH: screen.height,
+              screenW: screen.width,
+              controller: _controller!,
+              check: _check,
+              updateCheckValue: updateCheckValue,
+            ),
         ],
       ),
     );

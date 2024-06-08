@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:FitMotion/pages/feedback.dart';
+import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 
 class RenderData extends StatefulWidget {
   final List<dynamic> data; // 추적 데이터 리스트
@@ -12,8 +15,9 @@ class RenderData extends StatefulWidget {
   final int previewW; // 미리보기 너비
   final double screenH; // 화면 높이
   final double screenW; // 화면 너비
-  final Function startRecording; // 녹화 시작 함수
-  final Function stopRecording; // 녹화 종료 함수
+  final CameraController controller;
+  final bool check;
+  final Function(bool) updateCheckValue;
 
   RenderData({
     required this.data,
@@ -21,8 +25,9 @@ class RenderData extends StatefulWidget {
     required this.previewW,
     required this.screenH,
     required this.screenW,
-    required this.startRecording,
-    required this.stopRecording,
+    required this.controller,
+    required this.check,
+    required this.updateCheckValue,
   });
 
   @override
@@ -31,6 +36,107 @@ class RenderData extends StatefulWidget {
 
 class _RenderDataState extends State<RenderData> {
   Map<String, List<double>>? inputArr; // 신체 부위와 해당 좌표를 저장하는 맵
+
+  // 영상을 담을 리스트
+  List<File> recordedFiles = [];
+
+  // 녹화 상태를 확인하는 boolean
+  bool _isRecording = false;
+
+  int ch = 0;
+
+  // 스쿼트 확인 상태를 갱신하는 함수
+  void _updateCheck(bool value) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.updateCheckValue(value);
+    });
+  }
+
+  // 녹화 시작 함수
+  Future<void> _startRecording() async {
+    if (!widget.controller!.value.isRecordingVideo) {
+      print("녹화시작");
+      await widget.controller!.startVideoRecording();
+      print("실행 ${widget.controller!.value.isRecordingVideo} !!");
+      setState(() {
+        _isRecording = true;
+      });
+
+      print("_isRecording ${_isRecording} !!");
+    }
+  }
+
+// 녹화 종료 함수
+  Future<void> _stopRecording() async {
+    print("실행 ${widget.controller!.value.isRecordingVideo}");
+    print("isRecording $_isRecording");
+    if (_isRecording && widget.controller!.value.isRecordingVideo) {
+      try {
+        XFile? videoFile = await widget.controller!.stopVideoRecording();
+        print("내용물 : ${videoFile.path}");
+        if (videoFile != null) {
+          recordedFiles.add(File(videoFile.path));
+          _isRecording = false;
+          // 새로운 파일 경로에 MP4 확장자 추가
+          String mp4FilePath = '${videoFile.path}.mp4';
+          // 파일을 새로운 경로로 복사
+          await videoFile.saveTo(mp4FilePath);
+          print("데이터를 저장했습니다. $mp4FilePath");
+          await _saveVideoToGallery(mp4FilePath);
+        } else {
+          print("비디오 파일이 null입니다.");
+        }
+      } on CameraException catch (e) {
+        print("카메라 예외 발생: $e");
+      } catch (e) {
+        print("예외 발생: $e");
+      }
+    } else {
+      print("녹화 중이 아닙니다.");
+    }
+    // 영상을 녹화하면 URL로 전송
+    if (recordedFiles.length >= 1) {
+      print("얍");
+      await _sendVideos(recordedFiles);
+      recordedFiles.clear();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyFeedback()),
+      );
+    }
+  }
+
+  Future<void> _saveVideoToGallery(String videoPath) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final galleryDir = await getExternalStorageDirectory();
+
+    final String videoFileName = videoPath.split('/').last;
+    final String newVideoPath =
+        '${galleryDir?.path ?? appDir.path}/$videoFileName.mp4';
+
+    try {
+      // 동영상 파일을 갤러리로 복사
+      final File videoFile = File(videoPath);
+      final File newVideoFile = await videoFile.copy(newVideoPath);
+
+      // 갤러리에 저장
+      final result = await ImageGallerySaver.saveFile(newVideoFile.path);
+
+      print('동영상이 갤러리에 저장되었습니다: $result');
+    } catch (e) {
+      print('동영상을 갤러리에 저장하는 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  Future<void> _sendVideos(List<File> data) async {
+    print("전송!");
+    // final url = Uri.parse('YOUR_URL_HERE');
+    // 데이터 전송 로직을 여기에 추가
+    // 예를 들어, http 패키지를 사용하여 데이터를 전송할 수 있습니다.
+    // var response = await http.post(url, body: jsonEncode(data));
+    // print('Response status: ${response.statusCode}');
+    // print('Response body: ${response.body}');
+  }
 
   String exercise = 'squat'; // 현재 운동
   double upperRange = 300; // 스쿼트 상한선
@@ -45,14 +151,6 @@ class _RenderDataState extends State<RenderData> {
   double kneeLY = 0; // 왼쪽 무릎 Y 좌표
   bool squatUp = false; // 스쿼트 상위 위치 플래그
   String whatToDo = '포즈를 확인중...'; // 현재 상태
-
-  // 영상 데이터를 담을 리스트
-  List<Map<String, List<double>>> squatData = [];
-
-  // 영상을 담을 리스트
-  List<File> recordedFiles = [];
-
-  bool isrecording = false;
 
   // 각 신체 부위의 위치를 저장하는 변수들
   var leftEyePos = Vector(0, 0);
@@ -82,17 +180,16 @@ class _RenderDataState extends State<RenderData> {
     kneeRY = 0;
     kneeLY = 0;
     squatUp = true;
-    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   if (!_isRecording) {
+    //     _startRecording();
+    //   }
+    // });
   }
 
   // 운동에 따른 자세를 체크하는 함수
   bool _postureAccordingToExercise(Map<String, List<double>> poses) {
-    if (_counter == 5) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyFeedback()),
-      );
-    }
+    print(poses);
     setState(() {
       shoulderLY = poses['leftShoulder']?[1] ?? 0.0;
       shoulderRY = poses['rightShoulder']?[1] ?? 0.0;
@@ -136,39 +233,22 @@ class _RenderDataState extends State<RenderData> {
     }
   }
 
-// 영상 데이터를 URL로 전송하는 함수
-  Future<void> _sendVideos(List<File> videos) async {
-    var request = http.MultipartRequest('POST', Uri.parse('YOUR_URL_HERE'));
-
-    for (var video in videos) {
-      request.files
-          .add(await http.MultipartFile.fromPath('videos', video.path));
-    }
-
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('Videos successfully uploaded');
-    } else {
-      print('Video upload failed with status: ${response.statusCode}');
-    }
-  }
-
 // 스쿼트 카운팅 로직을 처리하는 함수
   Future<void> _countingLogic(Map<String, List<double>> poses) async {
     if (poses != null) {
       _checkCorrectPosture(poses);
       print(whatToDo);
-      print(isCorrectPosture);
-      print(squatUp);
+      // print(isCorrectPosture);
+      // print(squatUp);
       if (isCorrectPosture && squatUp && midCount == false) {
+        _updateCheck(true);
         // 올바른 초기 자세일 때
-        setState(() {
-          whatToDo = '올라옵니다!';
-          correctColor = Colors.green;
-        });
         squatUp = !squatUp;
         isCorrectPosture = false;
-        await widget.startRecording(); // 녹화 시작
+        setState(() {
+          whatToDo = '내려갑시다!';
+          correctColor = Colors.green;
+        });
       }
 
       // 스쿼트를 다 내렸을 때
@@ -177,7 +257,7 @@ class _RenderDataState extends State<RenderData> {
         isCorrectPosture = false;
         squatUp = !squatUp;
         setState(() {
-          whatToDo = '내려갑니다!';
+          whatToDo = '올라옵시다!';
           correctColor = Colors.green;
         });
       }
@@ -194,7 +274,8 @@ class _RenderDataState extends State<RenderData> {
         setState(() {
           whatToDo = '다시!';
         });
-        await widget.stopRecording(); // 녹화 종료 및 데이터 저장
+        // await _stopRecording(); // 녹화 종료 및 데이터 저장
+        _updateCheck(false);
       }
     }
   }
