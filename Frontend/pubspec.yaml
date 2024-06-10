@@ -111,3 +111,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: fonts/noto_sans/NotoSans-Regular.ttf
+        - asset: fonts/noto_sans/NotoSans-Bold.ttf
+        # - asset: fonts/noto_sans/NotoSans-SemiBold.ttf
+        #   weight: 600

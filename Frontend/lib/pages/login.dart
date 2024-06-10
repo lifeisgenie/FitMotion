@@ -53,7 +53,29 @@ class _Login extends State<Login> {
     } else {
       // 로그인 실패
       print('Failed to login: ${response.statusCode}');
+      _showLoginFailedDialog();
     }
+  }
+
+  void _showLoginFailedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('로그인 실패'),
+          content:
+              Text(' 아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요..'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
