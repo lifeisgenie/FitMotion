@@ -93,14 +93,6 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => RecordScreen(
-                            //         exerciseName: widget.exerciseName,
-                            //       ),
-                            //     ));
-
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -7,8 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ExerciseCard extends StatefulWidget {
-  // late Future<List<Map<String, String>>> futureImageData;
-
   @override
   _ExerciseCardState createState() => _ExerciseCardState();
 }
@@ -22,6 +20,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
     futureExercises = fetchExercises();
   }
 
+  // 운동 목록 불러오기
   Future<List<Map<String, String>>> fetchExercises() async {
     try {
       await dotenv.load(fileName: ".env");
@@ -56,14 +55,27 @@ class _ExerciseCardState extends State<ExerciseCard> {
         future: futureExercises,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            // 데이터 로딩 중인 경우 로딩
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            // 오류 발생 시 오류 메시지 표시
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '데이터를 불러오지 못했습니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                ],
+              ),
+            );
           } else {
             final List<Map<String, String>> exercises = snapshot.data!;
             final screenHeight = MediaQuery.of(context).size.height;
             final screenWidth = MediaQuery.of(context).size.width;
-
+            // 운동 목록에서 각 운동을 나타내는 보여주는 화면
             final List<Widget> imageSliders = exercises
                 .map((item) => GestureDetector(
                       onTap: () {
@@ -72,7 +84,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                           MaterialPageRoute(
                               builder: (context) => ExerciseDetail(
                                   exerciseName: item['exerciseName']!)),
-                        );
+                        ); // 운동 상세 페이지로 이동
                       },
                       child: Container(
                         constraints: BoxConstraints(maxWidth: 300),
@@ -128,14 +140,15 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 child: Container(
                   color: Colors.black,
                   height: screenHeight * 0.45, // 화면 높이의 80%로 설정
+                  // Casosel로 슬라이드 나열
                   child: CarouselSlider(
                     options: CarouselOptions(
                       height: screenHeight *
                           0.76, // 화면 높이의 76%로 설정 (Container의 하위에 4% 여백이 생기도록 설정)
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: false,
-                      scrollDirection: Axis.horizontal,
-                      autoPlay: true,
+                      aspectRatio: 2.0, // 카로셀 종횡비를 2:1로 설정
+                      enlargeCenterPage: false, // 가운데 페이지 확대 비활성화
+                      scrollDirection: Axis.horizontal, // 수평 스크롤 방향 설정
+                      autoPlay: true, // 자동 재생 활성화
                     ),
                     items: imageSliders,
                   ),

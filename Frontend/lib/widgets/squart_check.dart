@@ -14,14 +14,13 @@ class SquartCheck extends StatefulWidget {
 
 class _SquartCheckState extends State<SquartCheck> {
   CameraController? _controller;
-  List<CameraDescription> cameras = [];
-  int _selectedCameraIndex = 0;
-  bool _check = false;
+  List<CameraDescription> cameras = []; // 사용 가능한 카메라 목록
+  bool _check = false; // 스쿼트 상태를 확인하는 변수
 
-  List<dynamic>? _data;
-  int _imageHeight = 0;
-  int _imageWidth = 0;
-  int x = 1;
+  List<dynamic>? _data; // 모델에서 가져온 데이터
+  int _imageHeight = 0; // 이미지 높이
+  int _imageWidth = 0; // 이미지 너비
+  int x = 1; // 플레이스홀더 변수
 
   @override
   void initState() {
@@ -30,6 +29,7 @@ class _SquartCheckState extends State<SquartCheck> {
     _initializeCamera();
   }
 
+  // 카메라를 초기화하는 함수
   Future<void> _initializeCamera() async {
     cameras = await availableCameras();
     if (cameras != null && cameras!.isNotEmpty) {
@@ -39,6 +39,7 @@ class _SquartCheckState extends State<SquartCheck> {
     }
   }
 
+  // 인식 결과를 설정하는 함수
   _setRecognitions(data, imageHeight, imageWidth) {
     if (!mounted) {
       return;
@@ -50,11 +51,13 @@ class _SquartCheckState extends State<SquartCheck> {
     });
   }
 
+  // 모델을 로드하는 함수
   Future<void> _loadModel() async {
     try {
       await Tflite.loadModel(
-        model: "assets/posenet_mv1_075_float_from_checkpoints.tflite",
-        // model: "assets/1.tflite",
+        model:
+            "assets/posenet_mv1_075_float_from_checkpoints.tflite", // 모델 불러오기
+        // model: "assets/1.tflite", // movenet(이건 안되더라 // 수정필요)
       );
       print('모델 로드 성공');
     } catch (e) {
@@ -91,20 +94,21 @@ class _SquartCheckState extends State<SquartCheck> {
         children: <Widget>[
           if (cameras != null && cameras!.isNotEmpty)
             Camera(
-              cameras: cameras,
-              setRecognitions: _setRecognitions,
+              cameras: cameras, // 카메라 목록 전달
+              setRecognitions: _setRecognitions, // 인식 결과 설정 함수 전달
               check: _check, // check 변수 전달
             ),
           if (_data != null)
             RenderData(
-              data: _data ?? [],
-              previewH: max(_imageHeight, _imageWidth),
-              previewW: min(_imageHeight, _imageWidth),
-              screenH: screen.height,
-              screenW: screen.width,
-              controller: _controller!,
-              check: _check,
-              updateCheckValue: updateCheckValue,
+              data: _data ?? [], // 인식 결과 데이터 전달
+              previewH: max(_imageHeight, _imageWidth), // 프리뷰 높이 설정
+              previewW: min(_imageHeight, _imageWidth), // 프리뷰 너비 설정
+              screenH: screen.height, // 화면 높이
+              screenW: screen.width, // 화면 너비
+              controller: _controller!, // 카메라 컨트롤러 전달
+              check: _check, // 스쿼트 확인 상태 전달
+              updateCheckValue:
+                  updateCheckValue, // 스쿼트 확인 상태 갱신 함수 전달 (스쿼트 중이면 녹화)
             ),
         ],
       ),

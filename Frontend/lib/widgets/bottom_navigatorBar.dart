@@ -43,9 +43,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
             label: '설정',
           ),
         ],
-        selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Colors.grey[500],
-        showUnselectedLabels: true,
+        selectedItemColor: Colors.amber[800], // 선택된 항목의 색상
+        unselectedItemColor: Colors.grey[500], // 선택되지 않은 항목의 색상
+        showUnselectedLabels: true, // 선택되지 않은 항목에 라벨 표시
         selectedFontSize: screenHeight * 0.02, // 선택된 항목의 라벨 글꼴 크기
         unselectedFontSize: screenHeight * 0.015, // 선택되지 않은 항목의 라벨 글꼴 크기
         iconSize: screenWidth * 0.08, // 아이콘 크기

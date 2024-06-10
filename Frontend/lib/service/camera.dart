@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'dart:math' as math;
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_tflite/flutter_tflite.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
+// 콜백 타입 정의
 typedef void Callback(List<dynamic> list, int h, int w);
 
 class Camera extends StatefulWidget {
@@ -32,12 +34,12 @@ class Camera extends StatefulWidget {
 
 class _CameraState extends State<Camera> {
   CameraController? controller;
-  bool isDetecting = false;
-  bool isRecording = false;
-  List<Uint8List> _frames = [];
-  late String _videoPath;
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
-  late DateTime startRecordingTime;
+  bool isDetecting = false; // 인식 중인지 여부
+  bool isRecording = false; // 녹화 중인지 여부
+  List<Uint8List> _frames = []; // 프레임 리스트
+  late String _videoPath; // 비디오 파일 경로
+  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg(); // FFmpeg 인스턴스
+  late DateTime startRecordingTime; // 녹화 시작 시간
 
   @override
   void initState() {
@@ -60,6 +62,7 @@ class _CameraState extends State<Camera> {
     }
   }
 
+  // 스쿼트 상태에 따라서 check 변경
   @override
   void didUpdateWidget(Camera oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -68,6 +71,7 @@ class _CameraState extends State<Camera> {
     }
   }
 
+  // check에 따라서 녹화 On / Off
   void setCheck(bool value) {
     print('스쿼트 확인 상태: $value');
     if (value == true) {
@@ -79,6 +83,7 @@ class _CameraState extends State<Camera> {
     }
   }
 
+  // 캡쳐된 이미지 처리 함수 -> 이미지 크기와 상태 조정
   void _processCameraImage(CameraImage image) {
     // 각 플레인의 데이터 가져오기
     final Plane planeY = image.planes[0];
@@ -113,9 +118,9 @@ class _CameraState extends State<Camera> {
   // 녹화 시작 함수
   Future<void> _startRecording() async {
     await _flutterFFmpeg.execute('-version');
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await getApplicationDocumentsDirectory(); // 디렉토리 설정
     _videoPath =
-        '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.mp4';
+        '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.mp4'; // 경로 설정
     startRecordingTime = DateTime.now();
 
     setState(() {
@@ -151,7 +156,7 @@ class _CameraState extends State<Camera> {
     await sink.close();
 
     // 프레임 데이터를 적절하게 저장했는지 확인
-    print('Frame data saved to $inputFilePath');
+    print('프레임 데이터 저장 완료 :  $inputFilePath');
 
     final Duration recordingDuration =
         DateTime.now().difference(startRecordingTime);
@@ -162,7 +167,7 @@ class _CameraState extends State<Camera> {
         '-f rawvideo -pix_fmt nv21 -s 1280x720 -r 8 -i $inputFilePath -vf "transpose=3" -t $recordingDurationInSeconds $outputPath';
     await _flutterFFmpeg.execute(ffmpegCommand);
 
-    print('Video saved to $outputPath');
+    print('비디오 저장 완료 :  $outputPath');
     Future.delayed(Duration(seconds: 1), () async {
       try {
         final result = await ImageGallerySaver.saveFile(outputPath);
@@ -175,8 +180,24 @@ class _CameraState extends State<Camera> {
         print("실패 ㅜㅜ ");
       }
     });
+    await _uploadVideoToServer(outputPath);
   }
 
+  // 서버에 비디오 파일을 업로드하는 함수
+  Future<void> _uploadVideoToServer(String filePath) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://your_flask_server/upload'));
+    request.files.add(await http.MultipartFile.fromPath('video', filePath));
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Video uploaded successfully');
+    } else {
+      print('Video upload failed');
+    }
+  }
+
+  // 이미지 스트림 시작 함수
   void startImageStream() {
     if (controller != null && controller!.value.isInitialized) {
       controller?.startImageStream((CameraImage img) {
@@ -200,7 +221,7 @@ class _CameraState extends State<Camera> {
             nmsRadius: 10,
           ).then((recognitions) {
             int endTime = DateTime.now().millisecondsSinceEpoch;
-
+            // 인식 결과 설정
             widget.setRecognitions(recognitions!, img.height, img.width);
 
             isDetecting = false;
@@ -224,25 +245,29 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
+    // 카메라가 없으면 빈 화면
     if (controller == null || !controller!.value.isInitialized) {
       return Container();
     }
 
+    // 화면 크기 가져오기
     var tmp = MediaQuery.of(context).size;
-    var screenH = math.max(tmp.height, tmp.width);
-    var screenW = math.min(tmp.height, tmp.width);
+    var screenH = math.max(tmp.height, tmp.width); // 화면 높이
+    var screenW = math.min(tmp.height, tmp.width); // 화면 너비
     tmp = controller!.value.previewSize!;
-    var previewH = math.max(tmp.height, tmp.width);
-    var previewW = math.min(tmp.height, tmp.width);
-    var screenRatio = screenH / screenW;
-    var previewRatio = previewH / previewW;
+    var previewH = math.max(tmp.height, tmp.width); // 카메라 미리보기 높이
+    var previewW = math.min(tmp.height, tmp.width); // 카메라 미리보기 너비
+    var screenRatio = screenH / screenW; // 화면 비율
+    var previewRatio = previewH / previewW; // 미리보기 비율
 
     return OverflowBox(
+      // 화면 비율과 미리보기 비율을 비교하여 최대 높이 설정
       maxHeight:
           screenRatio > previewRatio ? screenH : screenW / previewW * previewH,
+      // 화면 비율과 미리보기 비율을 비교하여 최대 너비 설정
       maxWidth:
           screenRatio > previewRatio ? screenH / previewH * previewW : screenW,
-      child: CameraPreview(controller!),
+      child: CameraPreview(controller!), // 카메라 미리보기 위젯 반환
     );
   }
 }
