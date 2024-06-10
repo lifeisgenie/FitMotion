@@ -100,8 +100,13 @@ class _SearchPage extends State<SearchPage> {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Text('자세 교정'),
+          title: Text('자세 교정',
+              style: TextStyle(
+                fontFamily: 'NotoSans',
+                fontWeight: FontWeight.bold,
+              )),
           automaticallyImplyLeading: false,
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -132,7 +137,11 @@ class _SearchPage extends State<SearchPage> {
               SizedBox(height: 20),
               Text(
                 '검색 결과',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(
+                    fontFamily: 'NotoSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.white),
               ),
               SizedBox(height: 10),
               Expanded(

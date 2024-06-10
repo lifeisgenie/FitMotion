@@ -69,7 +69,11 @@ class _ProfilePage extends State<ProfilePage> {
             SizedBox(height: 100),
             Text(
               '${widget.name} 회원님',
-              style: TextStyle(fontSize: 30, color: Colors.white),
+              style: TextStyle(
+                  fontFamily: 'NotoSans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 30,
+                  color: Colors.white),
               textAlign: TextAlign.left,
             ),
             SizedBox(height: 8),
@@ -81,7 +85,11 @@ class _ProfilePage extends State<ProfilePage> {
             SizedBox(height: 40),
             Text(
               '달성 현황',
-              style: TextStyle(fontSize: 30, color: Colors.white),
+              style: TextStyle(
+                  fontFamily: 'NotoSans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 30,
+                  color: Colors.white),
               textAlign: TextAlign.left,
             ),
             SizedBox(height: 0),
@@ -123,13 +131,21 @@ class _ProfilePage extends State<ProfilePage> {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: labelFontSize, color: Colors.white60),
+            style: TextStyle(
+                fontFamily: 'NotoSans',
+                fontWeight: FontWeight.w600,
+                fontSize: labelFontSize,
+                color: Colors.white),
             textAlign: TextAlign.left,
           ),
           SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
+            style: TextStyle(
+                fontFamily: 'NotoSans',
+                fontWeight: FontWeight.w600,
+                fontSize: valueFontSize,
+                color: Colors.blue),
             textAlign: TextAlign.left,
           ),
         ],
@@ -154,14 +170,21 @@ class _ProfilePage extends State<ProfilePage> {
               children: [
                 Text(
                   label,
-                  style:
-                      TextStyle(fontSize: labelFontSize, color: Colors.white60),
+                  style: TextStyle(
+                      fontFamily: 'NotoSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: labelFontSize,
+                      color: Colors.white),
                   textAlign: TextAlign.left,
                 ),
                 SizedBox(height: 8),
                 Text(
                   value,
-                  style: TextStyle(fontSize: valueFontSize, color: Colors.blue),
+                  style: TextStyle(
+                      fontFamily: 'NotoSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: valueFontSize,
+                      color: Colors.blue),
                   textAlign: TextAlign.left,
                 ),
               ],
@@ -196,11 +219,19 @@ class _ProfilePage extends State<ProfilePage> {
         children: [
           SizedBox(height: 8),
           Text(label1,
-              style: TextStyle(fontSize: labelFontSize, color: Colors.blue),
+              style: TextStyle(
+                  fontFamily: 'NotoSans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: labelFontSize,
+                  color: Colors.white),
               textAlign: TextAlign.left),
           Text(
             label2,
-            style: TextStyle(fontSize: labelFontSize, color: Colors.blue),
+            style: TextStyle(
+                fontFamily: 'NotoSans',
+                fontWeight: FontWeight.w600,
+                fontSize: labelFontSize,
+                color: Colors.white),
             textAlign: TextAlign.left,
           ),
         ],
