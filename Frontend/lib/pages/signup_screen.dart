@@ -1,3 +1,4 @@
+import 'package:FitMotion/pages/signup_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:FitMotion/pages/login.dart';
 import 'package:FitMotion/widgets/password_input.dart';
@@ -19,7 +20,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isPasswordVisible = false;
   bool _isPasswordVisible2 = false;
   bool _isSignUpEnabled = false;
-  bool _isNext = false;
 
   @override
   void initState() {
@@ -51,15 +51,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  @override
-  void _next() {
-    setState(() {
-      _isNext = true;
-    });
-  }
-
   Future<void> _signUp() async {
-    // Your sign-up logic here
+    final String phone = _phoneController.text;
+    final String email = _idController.text;
+    final String password = _passwordController.text;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignUpDetailPage(
+            phone: phone,
+            email: email,
+            password: password,
+          ),
+        ));
   }
 
   @override
@@ -79,7 +84,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -132,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _isSignUpEnabled ? _next : null,
+              onPressed: _isSignUpEnabled ? _signUp : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _isSignUpEnabled
                     ? Colors.blue
@@ -146,20 +150,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     : TextStyle(color: Colors.black),
               ),
             ),
-            SizedBox(height: 16),
-
-            SizedBox(height: 24),
-            // 추가된 입력 필드
-            if (_isNext)
-              Column(
-                children: [
-                  buildTextField(_heightController, '키'),
-                  SizedBox(height: 16),
-                  buildTextField(_weightController, '몸무게'),
-                  SizedBox(height: 16),
-                  buildTextField(_ageController, '나이'),
-                ],
-              ),
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/signup_screen.dart';
 import 'package:FitMotion/widgets/password_input.dart';
@@ -21,38 +21,39 @@ class _Login extends State<Login> {
   Future<void> _login() async {
     final email = _idController.text;
     final password = _passwordController.text;
+    await dotenv.load(fileName: ".env");
     final String baseUrl = dotenv.env['BASE_URL']!;
     final Uri url = Uri.parse('$baseUrl/user/login');
 
-    // final response = await http.post(
-    //   url,
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: jsonEncode({
-    //     'email': email,
-    //     'password': password,
-    //   }),
-    // );
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
 
-    // if (response.statusCode == 200) {
-    //   // 성공적으로 로그인됨
-    //   print('Login successful');
-    // final responseData = jsonDecode(response.body);
-    // final accessToken = responseData['accessToken'];
-    // final refreshToken = responseData['refreshToken'];
+    if (response.statusCode == 200) {
+      // 성공적으로 로그인됨
+      print('로그인 성공');
+      final responseData = jsonDecode(response.body);
+      final accessToken = responseData['accessToken'];
+      final refreshToken = responseData['refreshToken'];
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('accessToken', accessToken);
-    // await prefs.setString('refreshToken', refreshToken);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('accessToken', accessToken);
+      await prefs.setString('refreshToken', refreshToken);
 
-    // // 홈 화면으로 이동
-    // Navigator.pushReplacement(
-    //     context, MaterialPageRoute(builder: (context) => Index()));
-    // } else {
-    //   // 로그인 실패
-    //   print('Failed to login: ${response.statusCode}');
-    // }
+      // 홈 화면으로 이동
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Index()));
+    } else {
+      // 로그인 실패
+      print('Failed to login: ${response.statusCode}');
+    }
   }
 
   @override

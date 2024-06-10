@@ -1,7 +1,11 @@
 import 'package:FitMotion/pages/record_screen.dart';
+import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetail extends StatefulWidget {
+  final String exerciseName;
+  ExerciseDetail({required this.exerciseName});
+
   @override
   _ExerciseDetail createState() => _ExerciseDetail();
 }
@@ -89,12 +93,18 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            // 교정 시작하기 버튼 클릭 시 처리할 로직 추가
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => RecordScreen(
+                            //         exerciseName: widget.exerciseName,
+                            //       ),
+                            //     ));
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => RecordScreen(),
-                                ));
+                                    builder: (context) => SquartCheck()));
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,

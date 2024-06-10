@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class FeedbackList extends StatefulWidget {
   @override
@@ -11,6 +14,13 @@ class FeedbackList extends StatefulWidget {
 }
 
 class _FeedbackList extends State<FeedbackList> {
+  // late Future<List<Map<String, String>>> futureFeedbackData;
+  @override
+  void initState() {
+    super.initState();
+    // futureFeedbackData = fetchFeedbackData();
+  }
+
   int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
@@ -23,12 +33,6 @@ class _FeedbackList extends State<FeedbackList> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SearchPage()),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FeedbackList()),
         );
         break;
       case 2:
@@ -52,6 +56,23 @@ class _FeedbackList extends State<FeedbackList> {
     }
   }
 
+  final List<Map<String, String>> feedbackData = [
+    {
+      'imageUrl': '',
+      'title': '스쿼트 5회차',
+      'sets': '4세트',
+      'date': '05/07',
+      'time': '12:10pm'
+    },
+    {
+      'imageUrl': '',
+      'title': '벤치프레스 3회차',
+      'sets': '3세트',
+      'date': '05/08',
+      'time': '10:00am'
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     TextEditingController _searchController = TextEditingController();
@@ -63,209 +84,104 @@ class _FeedbackList extends State<FeedbackList> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text('피드백 목록'),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              onPressed: _clearSearch,
-              child: Text(
-                '검색 초기화',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.02,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '운동 검색',
-                hintStyle: TextStyle(color: Colors.white54),
-                prefixIcon: Icon(Icons.search, color: Colors.white54),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
+        appBar: AppBar(
+          title: Text('피드백 목록'),
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                onPressed: _clearSearch,
+                child: Text(
+                  '검색 초기화',
+                  style: TextStyle(color: Colors.blue),
                 ),
-              ),
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(height: screenHeight * 0.02),
-            Text(
-              '검색 결과',
-              style: TextStyle(
-                fontSize: screenWidth * 0.05,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.01),
-            Expanded(
-              child: ListView(
-                children: [
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 5회차',
-                    sets: '4세트',
-                    date: '05/07',
-                    time: '12:10pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 4회차',
-                    sets: '2세트',
-                    date: '05/05',
-                    time: '11:40am',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 3회차',
-                    sets: '3세트',
-                    date: '04/31',
-                    time: '15:21pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 2회차',
-                    sets: '5세트',
-                    date: '04/28',
-                    time: '13:41pm',
-                  ),
-                  FeedbackItem(
-                    imageUrl: '', // Replace with the actual image URL
-                    title: '스쿼트 1회차',
-                    sets: '1세트',
-                    date: '04/25',
-                    time: '12:11pm',
-                  ),
-                ],
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenHeight * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '운동 검색',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  prefixIcon: Icon(Icons.search, color: Colors.white54),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Text(
+                '검색 결과',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.05,
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.01),
+              Expanded(
+                child: ListView(
+                  children: feedbackData.map((feedback) {
+                    return FeedbackItem(
+                      imageUrl: feedback['imageUrl']!,
+                      title: feedback['title']!,
+                      sets: feedback['sets']!,
+                      date: feedback['date']!,
+                      time: feedback['time']!,
+                    );
+                  }).toList(),
+                ),
+              ),
+              // Expanded(
+              //     child: FutureBuilder<List<Map<String, String>>>(
+              //         future: futureFeedbackData,
+              //         builder: (context, snapshot) {
+              //           if (snapshot.connectionState == ConnectionState.waiting) {
+              //             return Center(child: CircularProgressIndicator());
+              //           } else if (snapshot.hasError) {
+              //             return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
+              //           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              //             return Center(child: Text('데이터가 존재하지 않습니다.'));
+              //           } else {
+              //             final feedbackData = snapshot.data!;
+              //             return ListView(
+              //               children: feedbackData.map((item) {
+              //                 return FeedbackItem(
+              //                   imageUrl: item['imageUrl']!,
+              //                   title: item['title']!,
+              //                   sets: item['sets']!,
+              //                   date: item['date']!,
+              //                   time: item['time']!,
+              //                 );
+              //               }).toList(),
+              //             );
+              //           }
+              //         })),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

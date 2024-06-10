@@ -20,7 +20,9 @@ class _SplashScreen extends State<SplashScreen> {
 
   Future<void> _loadResources() async {
     // 비동기 작업 수행 (예: 데이터 로딩, 초기화 등)
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
+
+    isLogin = await checkLoginStatus();
 
     // 비동기 작업 완료 후 홈 화면으로 이동
     if (!isLogin) {
@@ -29,7 +31,7 @@ class _SplashScreen extends State<SplashScreen> {
       );
     } else {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => Index()),
       );
     }
   }

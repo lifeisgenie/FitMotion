@@ -5,6 +5,9 @@ import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SearchPage extends StatefulWidget {
   @override
@@ -12,20 +15,27 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> {
+  late Future<List<Map<String, String>>> futureExercises;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    futureExercises = fetchExercises();
+  }
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    if (_selectedIndex == index) {
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
 
     switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SearchPage()),
-        );
-        break;
       case 1:
         Navigator.push(
           context,
@@ -53,137 +63,117 @@ class _SearchPage extends State<SearchPage> {
     }
   }
 
-  final List<Map<String, String>> exercises = [
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    {
-      'title': '풀업',
-      'subtitle': '광배근, 이두근...',
-      'image':
-          'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80' // 이미지 URL을 실제 URL로 변경
-    },
-    // 필요에 따라 더 많은 항목을 추가
-  ];
+  Future<List<Map<String, String>>> fetchExercises() async {
+    try {
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['BASE_URL']!;
+      final Uri url = Uri.parse('$baseUrl/user/exercise/list');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final jsonString = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> json = jsonDecode(jsonString);
+        List<dynamic> data = json['data']['exerciseList'];
+        print("Received data: $data");
+        return data.map((item) {
+          return {
+            'exerciseName': item['exerciseName'] as String,
+            'exerciseCategory': item['exerciseCategory'] as String,
+            'exerciseUrl': item['exerciseUrl'] as String,
+          };
+        }).toList();
+      } else {
+        print('Failed to load exercises. Status code: ${response.statusCode}');
+        throw Exception('Failed to load exercises');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Error fetching exercises: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         backgroundColor: Colors.black,
-        title: Text('자세 교정'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: '운동 검색',
-                hintStyle: TextStyle(color: Colors.white54),
-                prefixIcon: Icon(Icons.search, color: Colors.white54),
-                filled: true,
-                fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                suffixIcon: Icon(Icons.mic, color: Colors.white54),
-              ),
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(height: 20),
-            Text(
-              '검색 결과',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.8,
-                ),
-                itemCount: exercises.length,
-                itemBuilder: (context, index) {
-                  return _buildExerciseCard(exercises[index]);
-                },
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text('자세 교정'),
+          automaticallyImplyLeading: false,
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: '운동 검색',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  prefixIcon: Icon(Icons.search, color: Colors.white54),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white54),
+                    onPressed: () {
+                      _searchController.clear(); // 입력된 텍스트를 지우기
+                    },
+                  ),
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: 20),
+              Text(
+                '검색 결과',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: FutureBuilder<List<Map<String, String>>>(
+                  future: futureExercises,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                          child: Text('데이터 로드 실패',
+                              style: TextStyle(color: Colors.white)));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                          child: Text('데이터가 존재하지 않습니다.',
+                              style: TextStyle(color: Colors.white)));
+                    } else {
+                      final exercises = snapshot.data!;
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemCount: exercises.length,
+                        itemBuilder: (context, index) {
+                          return _buildExerciseCard(exercises[index]);
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
@@ -193,7 +183,9 @@ class _SearchPage extends State<SearchPage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ExerciseDetail()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  ExerciseDetail(exerciseName: exercise['exerciseName']!)),
         );
       },
       child: Card(
@@ -209,8 +201,8 @@ class _SearchPage extends State<SearchPage> {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    exercise['image']!,
+                  child: Image.asset(
+                    exercise['exerciseUrl']!,
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -218,12 +210,12 @@ class _SearchPage extends State<SearchPage> {
               ),
               SizedBox(height: 8),
               Text(
-                exercise['title']!,
+                exercise['exerciseName']!,
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               SizedBox(height: 4),
               Text(
-                exercise['subtitle']!,
+                exercise['exerciseCategory']!,
                 style: TextStyle(fontSize: 14, color: Colors.white70),
               ),
             ],
