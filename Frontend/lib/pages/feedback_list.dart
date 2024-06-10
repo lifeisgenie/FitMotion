@@ -6,6 +6,7 @@ import 'package:FitMotion/pages/search.dart';
 import 'package:FitMotion/pages/setting.dart';
 import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class FeedbackList extends StatefulWidget {
@@ -14,14 +15,49 @@ class FeedbackList extends StatefulWidget {
 }
 
 class _FeedbackList extends State<FeedbackList> {
-  // late Future<List<Map<String, String>>> futureFeedbackData;
+  late Future<List<Map<String, String>>> futureFeedbackData;
+
   @override
   void initState() {
     super.initState();
-    // futureFeedbackData = fetchFeedbackData();
+    fetchFeedbackData();
   }
 
   int _selectedIndex = 1;
+
+  Future<void> fetchFeedbackData() async {
+    try {
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['BASE_URL']!;
+      final Uri url = Uri.parse('$baseUrl/feedback/list/1');
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final Map<String, dynamic> data = responseData['data'];
+
+        final List<dynamic> feedbackList = data['feedback_list'];
+
+        for (var feedback in feedbackList) {
+          int fdId = feedback['fd_id'];
+          int exerciseId = feedback['exercise_id'];
+          String createdDate = feedback['created_date'];
+
+          // 원하는 작업 수행
+          print('Feedback ID: $fdId');
+          print('Exercise ID: $exerciseId');
+          print('Created Date: $createdDate');
+        }
+
+        print('피드백 리스트 조회 성공');
+      } else {
+        throw Exception('피드백 리스트 조회 실패');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {

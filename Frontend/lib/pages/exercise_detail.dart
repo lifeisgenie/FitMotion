@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:FitMotion/pages/record_screen.dart';
 import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 class ExerciseDetail extends StatefulWidget {
   final String exerciseName;
