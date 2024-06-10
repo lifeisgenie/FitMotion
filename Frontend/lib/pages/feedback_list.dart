@@ -94,16 +94,16 @@ class _FeedbackList extends State<FeedbackList> {
 
   final List<Map<String, String>> feedbackData = [
     {
-      'imageUrl': '',
-      'title': '스쿼트 5회차',
-      'sets': '4세트',
+      'exercise_url': './assets/images/squat.jpg',
+      'exercise_name': '스쿼트',
+      'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
       'date': '05/07',
       'time': '12:10pm'
     },
     {
-      'imageUrl': '',
-      'title': '벤치프레스 3회차',
-      'sets': '3세트',
+      'exercise_url': './assets/images/bench_press.jpg',
+      'exercise_name': '벤치프레스',
+      'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
       'date': '05/08',
       'time': '10:00am'
     },
@@ -177,9 +177,9 @@ class _FeedbackList extends State<FeedbackList> {
                 child: ListView(
                   children: feedbackData.map((feedback) {
                     return FeedbackItem(
-                      imageUrl: feedback['imageUrl']!,
-                      title: feedback['title']!,
-                      sets: feedback['sets']!,
+                      exercise_url: feedback['exercise_url']!,
+                      exercise_name: feedback['exercise_name']!,
+                      content: feedback['content']!,
                       date: feedback['date']!,
                       time: feedback['time']!,
                     );
@@ -224,16 +224,16 @@ class _FeedbackList extends State<FeedbackList> {
 }
 
 class FeedbackItem extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String sets;
+  final String exercise_url;
+  final String exercise_name;
+  final String content;
   final String date;
   final String time;
 
   FeedbackItem(
-      {required this.imageUrl,
-      required this.title,
-      required this.sets,
+      {required this.exercise_url,
+      required this.exercise_name,
+      required this.content,
       required this.date,
       required this.time});
 
@@ -246,14 +246,14 @@ class FeedbackItem extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
-            // backgroundImage: NetworkImage(imageUrl),
-            ),
+          backgroundImage: AssetImage(exercise_url),
+        ),
         title: Text(
-          title,
+          exercise_name,
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(
-          sets,
+          content,
           style: TextStyle(color: Colors.white70),
         ),
         trailing: Column(
