@@ -1,10 +1,8 @@
 package FitMotion.backend.service;
 
 import FitMotion.backend.dto.CustomUserDetails;
-import FitMotion.backend.dto.request.RequestLoginDTO;
-import FitMotion.backend.dto.request.RequestSignUpDTO;
+import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
-import FitMotion.backend.dto.request.RequestUpdateDTO;
 import FitMotion.backend.entity.Exercise;
 import FitMotion.backend.entity.FeedbackFile;
 import FitMotion.backend.entity.User;
@@ -28,12 +26,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,9 +36,6 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
-    // @Value("${file.upload-dir}")
-    private String uploadDir;
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
@@ -152,9 +142,9 @@ public class UserService {
      * 개인정보 수정
      */
     @Transactional
-    public ResponseMessageDTO updateUserProfile(RequestUpdateDTO dto) {
+    public ResponseMessageDTO updateUserProfile(String email, RequestUpdateDTO dto) {
         try {
-            UserProfile userProfile = userProfileRepository.findByUserEmail(dto.getEmail())
+            UserProfile userProfile = userProfileRepository.findByUserEmail(email)
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
             userProfile.setUsername(dto.getUsername());
@@ -219,6 +209,7 @@ public class UserService {
             return new ResponseExerciseListsDTO(500, "운동 리스트 조회 실패", null);
         }
     }
+
     /**
      * 피드백 상세 조회
      */
