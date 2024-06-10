@@ -20,7 +20,7 @@ class _FeedbackList extends State<FeedbackList> {
   @override
   void initState() {
     super.initState();
-    FeedbackLists = fetchFeedbackData();
+    // FeedbackLists = fetchFeedbackData();
   }
 
   int _selectedIndex = 1;
@@ -126,6 +126,7 @@ class _FeedbackList extends State<FeedbackList> {
 
   final List<Map<String, String>> feedbackData = [
     {
+      'fd_id': "1",
       'exercise_url': './assets/images/squat.jpg',
       'exercise_name': '스쿼트',
       'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
@@ -133,6 +134,7 @@ class _FeedbackList extends State<FeedbackList> {
       'time': '12:10pm'
     },
     {
+      'fd_id': "2",
       'exercise_url': './assets/images/bench_press.jpg',
       'exercise_name': '벤치프레스',
       'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
