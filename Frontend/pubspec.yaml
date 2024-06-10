@@ -89,6 +89,7 @@ flutter:
   assets:
     - .env
     - ./assets/
+    - ./assets/video/
     - ./assets/images/
     - ./assets/posenet_mv1_075_float_from_checkpoints.tflite
     - ./assets/1.tflite

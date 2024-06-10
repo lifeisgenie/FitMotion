@@ -27,6 +27,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
   final TextEditingController weightController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
 
+  // 회원가입 함수
   Future<void> _userSignup() async {
     final String phone = widget.phone;
     final String email = widget.email;
@@ -36,7 +37,6 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
     final String height = heightController.text;
     final String weight = weightController.text;
 
-    // 서버에 전송하는 예제
     try {
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
@@ -112,7 +112,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
                 width: double.infinity, // 버튼의 너비를 텍스트 필드와 동일하게 설정
                 child: ElevatedButton(
                   onPressed: () {
-                    // 저장하기 버튼 클릭 시 login.dart로 이동
+                    // 저장하기 버튼 클릭 시 회원가입
                     _userSignup();
                   },
                   style: ElevatedButton.styleFrom(
@@ -130,7 +130,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
               ),
               SizedBox(height: 10),
               SizedBox(
-                width: double.infinity, // 버튼의 너비를 텍스트 필드와 동일하게 설정
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -155,6 +155,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
     );
   }
 
+  // 입력
   Widget _buildTextField(TextEditingController controller, String hintText) {
     return TextField(
       controller: controller,
@@ -169,7 +170,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
         ),
       ),
       style: TextStyle(color: Colors.white),
-      keyboardType: hintText == '나이' || hintText == '몸무게'
+      keyboardType: hintText == '나이' || hintText == '몸무게' || hintText == '신장'
           ? TextInputType.number
           : TextInputType.text,
     );

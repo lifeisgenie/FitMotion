@@ -46,6 +46,7 @@ class _Login extends State<Login> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessToken', accessToken);
       await prefs.setString('refreshToken', refreshToken);
+      await prefs.setString('email', email);
 
       // 홈 화면으로 이동
       Navigator.pushReplacement(
