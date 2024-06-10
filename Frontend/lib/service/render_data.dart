@@ -179,7 +179,6 @@ class _RenderDataState extends State<RenderData> {
         setState(() {
           whatToDo = '다시!';
         });
-        // await _stopRecording(); // 녹화 종료 및 데이터 저장
         _updateCheck(false);
       }
     }

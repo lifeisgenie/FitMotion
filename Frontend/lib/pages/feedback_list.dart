@@ -15,17 +15,17 @@ class FeedbackList extends StatefulWidget {
 }
 
 class _FeedbackList extends State<FeedbackList> {
-  late Future<List<Map<String, String>>> futureFeedbackData;
+  late Future<List<Map<String, dynamic>>> FeedbackLists;
 
   @override
   void initState() {
     super.initState();
-    fetchFeedbackData();
+    FeedbackLists = fetchFeedbackData();
   }
 
   int _selectedIndex = 1;
 
-  Future<void> fetchFeedbackData() async {
+  Future<List<Map<String, dynamic>>> fetchFeedbackData() async {
     try {
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
@@ -34,28 +34,60 @@ class _FeedbackList extends State<FeedbackList> {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final Map<String, dynamic> data = responseData['data'];
-
-        final List<dynamic> feedbackList = data['feedback_list'];
-
-        for (var feedback in feedbackList) {
-          int fdId = feedback['fd_id'];
-          int exerciseId = feedback['exercise_id'];
-          String createdDate = feedback['created_date'];
-
-          // 원하는 작업 수행
-          print('Feedback ID: $fdId');
-          print('Exercise ID: $exerciseId');
-          print('Created Date: $createdDate');
-        }
+        final jsonString = utf8.decode(response.bodyBytes);
+        Map<String, dynamic> responseData = json.decode(jsonString);
+        List<dynamic> data = responseData['data']['feedback_list'];
 
         print('피드백 리스트 조회 성공');
+        return data.map((item) {
+          Map<String, dynamic> exerciseData = item['exercise'];
+          String date = formatDate(item['created_date']);
+          String time = formatTime(item['created_date']);
+          return {
+            'fd_id': item['fd_id'] as int,
+            'exercise': {
+              'exerciseName': exerciseData['exerciseName'] as String,
+              'exerciseCategory': exerciseData['exerciseCategory'] as String,
+              'exerciseExplain': exerciseData['exerciseExplain'] as String,
+              'exerciseUrl': exerciseData['exerciseUrl'] as String,
+            },
+            'date': date,
+            'time': time,
+          };
+        }).toList();
       } else {
         throw Exception('피드백 리스트 조회 실패');
       }
     } catch (e) {
       print('Error: $e');
+      throw Exception('Error fetching feedback data: $e');
+    }
+  }
+
+// 날짜 변환
+  String formatDate(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    String date = '${dateTime.month}/${dateTime.day}';
+    return date; // 날짜만 반환
+  }
+
+// 시간 변환
+  String formatTime(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    String time =
+        '${_formatTime(dateTime.hour)}:${dateTime.minute}${dateTime.hour < 12 ? '오전' : '오후'}';
+
+    return time; // 시간만 반환
+  }
+
+// 오전 오후 확인
+  String _formatTime(int hour) {
+    if (hour == 0) {
+      return '12';
+    } else if (hour > 12) {
+      return '${hour - 12}';
+    } else {
+      return '$hour';
     }
   }
 
@@ -201,11 +233,11 @@ class _FeedbackList extends State<FeedbackList> {
               //             return ListView(
               //               children: feedbackData.map((item) {
               //                 return FeedbackItem(
-              //                   imageUrl: item['imageUrl']!,
-              //                   title: item['title']!,
-              //                   sets: item['sets']!,
-              //                   date: item['date']!,
-              //                   time: item['time']!,
+              //  exercise_url: feedback['exercise_url']!,
+              // exercise_name: feedback['exercise_name']!,
+              // content: feedback['content']!,
+              // date: feedback['date']!,
+              // time: feedback['time']!,
               //                 );
               //               }).toList(),
               //             );
@@ -253,6 +285,7 @@ class FeedbackItem extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(
+          overflow: TextOverflow.ellipsis,
           content,
           style: TextStyle(color: Colors.white70),
         ),
