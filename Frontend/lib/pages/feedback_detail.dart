@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
-class FeedbackPage extends StatelessWidget {
+class FeedbackPage extends StatefulWidget {
+  final int fd_id;
+
+  FeedbackPage({required this.fd_id});
+
+  @override
+  _FeedbackPage createState() => _FeedbackPage();
+}
+
+class _FeedbackPage extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
