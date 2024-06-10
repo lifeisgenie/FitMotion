@@ -1,8 +1,9 @@
 package FitMotion.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,4 +26,7 @@ public class UserProfile {
     private String phone;
     private double height;
     private double weight;
+
+    @OneToMany(mappedBy = "userProfile")
+    private List<FeedbackFile> feedbackFiles;
 }

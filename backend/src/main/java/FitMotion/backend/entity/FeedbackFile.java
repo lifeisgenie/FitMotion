@@ -5,11 +5,8 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Builder
 public class FeedbackFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
