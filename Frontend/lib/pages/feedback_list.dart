@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:FitMotion/pages/feedback_detail.dart';
 import 'package:FitMotion/pages/index.dart';
 import 'package:FitMotion/pages/profile.dart';
 import 'package:FitMotion/pages/search.dart';
@@ -124,9 +125,10 @@ class _FeedbackList extends State<FeedbackList> {
     }
   }
 
-  final List<Map<String, String>> feedbackData = [
+  final List<Map<String, dynamic>> feedbackData = [
     {
-      'fd_id': "1",
+
+      'fd_id': 1,
       'exercise_url': './assets/images/squat.jpg',
       'exercise_name': '스쿼트',
       'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
@@ -134,7 +136,8 @@ class _FeedbackList extends State<FeedbackList> {
       'time': '12:10pm'
     },
     {
-      'fd_id': "2",
+
+      'fd_id': 2,
       'exercise_url': './assets/images/bench_press.jpg',
       'exercise_name': '벤치프레스',
       'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
@@ -211,6 +214,7 @@ class _FeedbackList extends State<FeedbackList> {
                 child: ListView(
                   children: feedbackData.map((feedback) {
                     return FeedbackItem(
+                      fd_id: feedback['fd_id']!,
                       exercise_url: feedback['exercise_url']!,
                       exercise_name: feedback['exercise_name']!,
                       content: feedback['content']!,
@@ -258,6 +262,7 @@ class _FeedbackList extends State<FeedbackList> {
 }
 
 class FeedbackItem extends StatelessWidget {
+  final int fd_id;
   final String exercise_url;
   final String exercise_name;
   final String content;
@@ -265,7 +270,8 @@ class FeedbackItem extends StatelessWidget {
   final String time;
 
   FeedbackItem(
-      {required this.exercise_url,
+      {required this.fd_id,
+      required this.exercise_url,
       required this.exercise_name,
       required this.content,
       required this.date,
@@ -273,39 +279,46 @@ class FeedbackItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[850],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage(exercise_url),
-        ),
-        title: Text(
-          exercise_name,
-          style: TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-          overflow: TextOverflow.ellipsis,
-          content,
-          style: TextStyle(color: Colors.white70),
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              date,
-              style: TextStyle(color: Colors.white54),
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FeedbackPage(fd_id: fd_id)),
+          );
+        },
+        child: Card(
+          color: Colors.grey[850],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: AssetImage(exercise_url),
             ),
-            Text(
-              time,
-              style: TextStyle(color: Colors.white54),
+            title: Text(
+              exercise_name,
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
-      ),
-    );
+            subtitle: Text(
+              overflow: TextOverflow.ellipsis,
+              content,
+              style: TextStyle(color: Colors.white70),
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  date,
+                  style: TextStyle(color: Colors.white54),
+                ),
+                Text(
+                  time,
+                  style: TextStyle(color: Colors.white54),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
