@@ -127,6 +127,7 @@ class _FeedbackList extends State<FeedbackList> {
 
   final List<Map<String, dynamic>> feedbackData = [
     {
+
       'fd_id': 1,
       'exercise_url': './assets/images/squat.jpg',
       'exercise_name': '스쿼트',
@@ -135,6 +136,7 @@ class _FeedbackList extends State<FeedbackList> {
       'time': '12:10pm'
     },
     {
+
       'fd_id': 2,
       'exercise_url': './assets/images/bench_press.jpg',
       'exercise_name': '벤치프레스',
