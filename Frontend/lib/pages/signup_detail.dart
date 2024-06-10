@@ -56,9 +56,12 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
           "weight": weight
         }),
       );
+      final responseData = jsonDecode(response.body);
+      final String message = responseData['message'];
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('회원가입 성공, 다시 로그인 하세요.');
+        _showDialog('회원가입 성공', '회원가입이 완료되었습니다. 다시 로그인 하세요.', true);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => Login()),
         );
@@ -66,10 +69,36 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
         // 회원가입 실패
         print('회원가입 실패. status code: ${response.statusCode}');
         print(password);
+        _showDialog('회원가입 실패', message, false);
       }
     } catch (e) {
       print('회원가입 에러: $e');
     }
+  }
+
+  void _showDialog(String title, String content, bool isSuccess) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: Text("확인"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (isSuccess) {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -116,7 +145,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
                     _userSignup();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.blue,
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -136,7 +165,7 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.white60,
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
