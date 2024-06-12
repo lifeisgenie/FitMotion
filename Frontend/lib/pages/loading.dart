@@ -2,18 +2,23 @@ import 'dart:async';
 import 'package:FitMotion/pages/feedback_detail.dart';
 import 'package:flutter/material.dart';
 
-class LoadingScreen extends StatefulWidget {
+class LoadingPage extends StatefulWidget {
   @override
-  _LoadingScreenState createState() => _LoadingScreenState();
+  _LoadingPageState createState() => _LoadingPageState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingPageState extends State<LoadingPage> {
   List<String> imageUrls = [
-    'https://via.placeholder.com/300.png/09f/fff', // Example image URLs
-    'https://via.placeholder.com/300.png/021/fff',
-    'https://via.placeholder.com/300.png/321/fff',
-    'https://via.placeholder.com/300.png/654/fff',
-    'https://via.placeholder.com/300.png/987/fff'
+    'assets/images/exercise_picture/exercise_picture1.jpg',
+    'assets/images/exercise_picture/exercise_picture2.jpg',
+    'assets/images/exercise_picture/exercise_picture3.jpg',
+    'assets/images/exercise_picture/exercise_picture4.jpg',
+    'assets/images/exercise_picture/exercise_picture5.jpg',
+    'assets/images/exercise_picture/exercise_picture6.jpg',
+    'assets/images/exercise_picture/exercise_picture7.jpg',
+    'assets/images/exercise_picture/exercise_picture8.jpg',
+    'assets/images/exercise_picture/exercise_picture9.jpg',
+    'assets/images/exercise_picture/exercise_picture10.jpg'
   ];
   List<String> tips = [
     '운동 전에는 반드시 스트레칭을 하세요!',
@@ -38,16 +43,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         currentTipIndex = (currentTipIndex + 1) % tips.length;
       });
 
-      if (timer.tick >= 20) {
-        timer.cancel();
-        // 로딩 완료 후 다른 페이지로 이동
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  FeedbackPage(fd_id: 1)), // 여기에 적절한 fd_id 값 전달
-        );
-      }
+      // if (timer.tick >= 20) {
+      //   timer.cancel();
+      //   // 로딩 완료 후 다른 페이지로 이동
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) =>
+      //             FeedbackPage(fd_id: 1)), // 여기에 적절한 fd_id 값 전달
+      //   );
+      // }
     });
   }
 
@@ -78,7 +83,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               width: 300,
               height: 200,
               color: Colors.white,
-              child: Image.network(
+              child: Image.asset(
                 imageUrls[_progress % imageUrls.length],
                 fit: BoxFit.cover,
               ),
