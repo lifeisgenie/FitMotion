@@ -103,10 +103,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 25),
             buildTextField(_phoneController, '전화번호'),
             SizedBox(height: 16),
             buildTextField(_idController, '아이디'),
+            Text(
+              '아이디는 최소 10자 이상이어야 합니다',
+              style: TextStyle(color: Colors.white54, fontSize: 12),
+            ),
             SizedBox(height: 16),
             PasswordField(
               controller: _passwordController,
@@ -118,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 });
               },
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 16),
             PasswordField(
               controller: _confirmPasswordController,
               isPasswordVisible: _isPasswordVisible2,

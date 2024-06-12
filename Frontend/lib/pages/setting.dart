@@ -86,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             leading: Icon(Icons.person, color: Colors.white),
             title: Text(
-              '프로필 수정',
+              '개인정보 수정',
               style: TextStyle(fontSize: 21, color: Colors.white),
             ),
             trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
