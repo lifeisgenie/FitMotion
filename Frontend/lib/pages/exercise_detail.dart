@@ -151,9 +151,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => RecordScreen(
-                                      exerciseName: widget.exerciseName,
-                                    ),
+                                    builder: (context) => SquartCheck(),
                                   ),
                                 );
                               },

@@ -91,19 +91,11 @@ class _RecordScreenState extends State<RecordScreen> {
             final http.StreamedResponse response = await request.send();
             if (response.statusCode == 200) {
               print("비디오 전송 완료");
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyFeedback()),
-              );
             } else {
               print('비디오 전송 실패. 오류 코드: ${response.statusCode}');
             }
           } catch (e) {
             print('비디오 전송 실패: $e');
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyFeedback()),
-            );
           }
         }
       } catch (e) {

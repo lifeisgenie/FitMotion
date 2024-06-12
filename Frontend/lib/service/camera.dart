@@ -1,16 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:FitMotion/pages/feedback.dart';
-import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_tflite/flutter_tflite.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -171,29 +173,88 @@ class _CameraState extends State<Camera> {
     Future.delayed(Duration(seconds: 1), () async {
       try {
         final result = await ImageGallerySaver.saveFile(outputPath);
-        print('저장 완료: $result');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyFeedback()),
-        );
+        await _uploadVideoToServer(outputPath);
       } catch (e) {
         print("실패 ㅜㅜ ");
       }
     });
-    await _uploadVideoToServer(outputPath);
   }
 
   // 서버에 비디오 파일을 업로드하는 함수
   Future<void> _uploadVideoToServer(String filePath) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('http://your_flask_server/upload'));
-    request.files.add(await http.MultipartFile.fromPath('video', filePath));
-    var response = await request.send();
+    try {
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['AI_URL']!;
+      final Uri url = Uri.parse('$baseUrl/upload');
+      var request = http.MultipartRequest('POST', url);
+      request.files.add(await http.MultipartFile.fromPath('video', filePath));
+      var response = await request.send();
 
-    if (response.statusCode == 200) {
-      print('Video uploaded successfully');
-    } else {
-      print('Video upload failed');
+      if (response.statusCode == 200) {
+        print('비디오 전송 성공');
+
+// 응답 헤더에서 content-type을 가져옴
+        final contentType = response.headers['content-type'];
+
+        // content-type에서 boundary 값을 추출
+        final boundaryMatch = RegExp('boundary=(.*)').firstMatch(contentType!);
+        if (boundaryMatch == null) {
+          print('Boundary not found in content-type');
+          return;
+        }
+
+        final boundary = boundaryMatch.group(1)!;
+
+        // 응답 데이터를 byte 리스트로 읽음
+        final responseBodyBytes = await response.stream.toBytes();
+
+        // byte 리스트를 문자열로 디코딩
+        final responseBodyString = utf8.decode(responseBodyBytes);
+
+        // boundary를 사용하여 multipart 데이터 파싱
+        final parts = responseBodyString.split('--$boundary');
+        String? jsonData;
+        // Map<String, List<int>>? fileData;
+        File mp4File;
+        // 각 파트에 대해 처리
+        for (final part in parts) {
+          if (part.trim().isEmpty) {
+            continue; // 공백 또는 빈 파트는 무시
+          }
+
+          // Content-Disposition에서 name을 추출하여 파트의 역할을 결정
+          final dispositionMatch = RegExp('name="([^"]*)"').firstMatch(part);
+          if (dispositionMatch == null) {
+            continue;
+          }
+          final name = dispositionMatch.group(1);
+
+          if (name == 'json') {
+            final jsonContent = part.split('\r\n\r\n')[1].trim();
+            final jsonData = json.decode(jsonContent);
+            print('JSON Data: $jsonData');
+          } else if (name == 'file') {
+            final fileContent = part.split('\r\n\r\n')[1].trim();
+            // Assuming fileContent is the file content in bytes
+            // Write it to a file
+            final file = File('received_video.mp4');
+            await file.writeAsBytes(fileContent.codeUnits);
+            print('Video file received and saved as \'received_video.mp4\'');
+            mp4File = file;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                // builder: (context) => MyFeedback(videoFile: file),
+                builder: (context) => MyFeedback(videoFile: mp4File),
+              ),
+            );
+          }
+        }
+      } else {
+        print('전송 실패');
+      }
+    } catch (e) {
+      print('비디오 전송 에러: $e');
     }
   }
 

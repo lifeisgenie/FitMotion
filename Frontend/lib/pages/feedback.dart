@@ -1,11 +1,42 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class MyFeedback extends StatefulWidget {
+  final File videoFile;
+
+  MyFeedback({required this.videoFile});
+
   @override
   _MyFeedback createState() => _MyFeedback();
 }
 
 class _MyFeedback extends State<MyFeedback> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeVideoPlayer();
+  }
+
+  void _initializeVideoPlayer() async {
+    _controller = VideoPlayerController.file(widget.videoFile);
+    await _controller.initialize();
+    if (mounted) {
+      setState(() {});
+    }
+    _controller.play();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,15 +67,12 @@ class _MyFeedback extends State<MyFeedback> {
             ),
             SizedBox(height: 10),
             Container(
-              height: 200,
-              color: Colors.grey[800],
-              child: Center(
-                child: Icon(
-                  Icons.play_circle_outline,
-                  color: Colors.white,
-                  size: 100,
-                ),
-              ),
+              child: _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : CircularProgressIndicator(),
             ),
             SizedBox(height: 20),
             Text(
