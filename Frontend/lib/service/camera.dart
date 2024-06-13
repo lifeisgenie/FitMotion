@@ -180,7 +180,7 @@ class _CameraState extends State<Camera> {
     });
   }
 
-  // 서버에 비디오 파일을 업로드하는 함수
+// 서버에 비디오 파일을 업로드하는 함수
   Future<void> _uploadVideoToServer(String filePath) async {
     try {
       await dotenv.load(fileName: ".env");
@@ -193,7 +193,7 @@ class _CameraState extends State<Camera> {
       if (response.statusCode == 200) {
         print('비디오 전송 성공');
 
-// 응답 헤더에서 content-type을 가져옴
+        // 응답 헤더에서 content-type을 가져옴
         final contentType = response.headers['content-type'];
 
         // content-type에서 boundary 값을 추출
@@ -202,52 +202,53 @@ class _CameraState extends State<Camera> {
           print('Boundary not found in content-type');
           return;
         }
-
         final boundary = boundaryMatch.group(1)!;
 
         // 응답 데이터를 byte 리스트로 읽음
         final responseBodyBytes = await response.stream.toBytes();
 
-        // byte 리스트를 문자열로 디코딩
-        final responseBodyString = utf8.decode(responseBodyBytes);
+        final boundaryBytes = utf8.encode('--$boundary');
 
-        // boundary를 사용하여 multipart 데이터 파싱
-        final parts = responseBodyString.split('--$boundary');
-        String? jsonData;
-        // Map<String, List<int>>? fileData;
+        final parts = splitMultipart(responseBodyBytes, boundaryBytes);
+
+        Map<String, dynamic>? jsonData;
+
         File mp4File;
         // 각 파트에 대해 처리
         for (final part in parts) {
-          if (part.trim().isEmpty) {
-            continue; // 공백 또는 빈 파트는 무시
-          }
-
           // Content-Disposition에서 name을 추출하여 파트의 역할을 결정
-          final dispositionMatch = RegExp('name="([^"]*)"').firstMatch(part);
+          final dispositionMatch =
+              RegExp(r'Content-Disposition:.*name="([^"]*)"')
+                  .firstMatch(utf8.decode(part));
           if (dispositionMatch == null) {
             continue;
           }
           final name = dispositionMatch.group(1);
 
-          if (name == 'json') {
-            final jsonContent = part.split('\r\n\r\n')[1].trim();
-            final jsonData = json.decode(jsonContent);
-            print('JSON Data: $jsonData');
-          } else if (name == 'file') {
-            final fileContent = part.split('\r\n\r\n')[1].trim();
-            // Assuming fileContent is the file content in bytes
-            // Write it to a file
-            final file = File('received_video.mp4');
-            await file.writeAsBytes(fileContent.codeUnits);
-            print('Video file received and saved as \'received_video.mp4\'');
-            mp4File = file;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                // builder: (context) => MyFeedback(videoFile: file),
-                builder: (context) => MyFeedback(videoFile: mp4File),
-              ),
-            );
+          if (name == 'feedback') {
+            final jsonContentMatch = RegExp(r'\r\n\r\n(.*)', dotAll: true)
+                .firstMatch(utf8.decode(part));
+
+            print("J이름 : $jsonContentMatch");
+            if (jsonContentMatch != null) {
+              final jsonContent = jsonContentMatch.group(1)!.trim();
+              jsonData = json.decode(jsonContent);
+              print('JSON Data: $jsonData');
+            }
+          } else if (name == 'video.mp4') {
+            print("이름 : $name");
+            final fileContentMatch = RegExp(r'\r\n\r\n(.*)', dotAll: true)
+                .firstMatch(utf8.decode(part));
+
+            print("f이름 : $fileContentMatch");
+            if (fileContentMatch != null) {
+              final fileContent = part.sublist(
+                  fileContentMatch.start + 4); // 4 is length of \r\n\r\n
+              final file = File('received_video.mp4');
+              await file.writeAsBytes(fileContent);
+              print('Video file received and saved as \'received_video.mp4\'');
+              mp4File = file;
+            }
           }
         }
       } else {
@@ -256,6 +257,44 @@ class _CameraState extends State<Camera> {
     } catch (e) {
       print('비디오 전송 에러: $e');
     }
+  }
+
+  List<List<int>> splitMultipart(List<int> data, List<int> boundary) {
+    List<List<int>> parts = [];
+    int start = 0;
+    while (start < data.length) {
+      final boundaryIndex = indexOf(data, boundary, start);
+      if (boundaryIndex == -1) break;
+
+      final endIndex =
+          indexOf(data, [13, 10, 13, 10], boundaryIndex + boundary.length);
+      if (endIndex == -1) {
+        parts.add(data.sublist(boundaryIndex + boundary.length));
+        break;
+      } else {
+        parts.add(data.sublist(boundaryIndex + boundary.length, endIndex));
+        start = endIndex + 4; // 4 is length of \r\n\r\n
+      }
+    }
+    return parts;
+  }
+
+  int indexOf(List<int> data, List<int> pattern, [int start = 0]) {
+    for (int i = start; i <= data.length - pattern.length; i++) {
+      if (matchPattern(data, pattern, i)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  bool matchPattern(List<int> data, List<int> pattern, int start) {
+    for (int i = 0; i < pattern.length; i++) {
+      if (data[start + i] != pattern[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // 이미지 스트림 시작 함수

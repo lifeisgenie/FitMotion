@@ -16,12 +16,12 @@ class FeedbackList extends StatefulWidget {
 }
 
 class _FeedbackList extends State<FeedbackList> {
-  late Future<List<Map<String, dynamic>>> FeedbackLists;
+  late Future<List<Map<String, dynamic>>> Feedbacklists;
 
   @override
   void initState() {
     super.initState();
-    // FeedbackLists = fetchFeedbackData();
+    Feedbacklists = fetchFeedbackData();
   }
 
   int _selectedIndex = 1;
@@ -30,27 +30,26 @@ class _FeedbackList extends State<FeedbackList> {
     try {
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
-      final Uri url = Uri.parse('$baseUrl/feedback/list/1');
-
+      final Uri url = Uri.parse('$baseUrl/user/feedback/list/1');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final jsonString = utf8.decode(response.bodyBytes);
         Map<String, dynamic> responseData = json.decode(jsonString);
-        List<dynamic> data = responseData['data']['feedback_list'];
-
+        List<dynamic> data = responseData['data']['feedbackList'];
+        print(data);
         print('피드백 리스트 조회 성공');
         return data.map((item) {
-          Map<String, dynamic> exerciseData = item['exercise'];
-          String date = formatDate(item['created_date']);
-          String time = formatTime(item['created_date']);
+          Map<String, dynamic> exerciseData = item['edto']['data'];
+          String date = formatDate(item['createdDate']);
+          String time = formatTime(item['createdDate']);
           return {
-            'fd_id': item['fd_id'] as int,
+            'fd_id': item['feedbackId'] as int,
             'exercise': {
-              'exerciseName': exerciseData['exerciseName'] as String,
-              'exerciseCategory': exerciseData['exerciseCategory'] as String,
-              'exerciseExplain': exerciseData['exerciseExplain'] as String,
-              'exerciseUrl': exerciseData['exerciseUrl'] as String,
+              'exerciseName': exerciseData['exerciseName'],
+              'exerciseCategory': exerciseData['exerciseCategory'],
+              'exerciseExplain': exerciseData['exerciseExplain'],
+              'exerciseUrl': exerciseData['exerciseUrl'],
             },
             'date': date,
             'time': time,
@@ -125,26 +124,24 @@ class _FeedbackList extends State<FeedbackList> {
     }
   }
 
-  final List<Map<String, dynamic>> feedbackData = [
-    {
-
-      'fd_id': 1,
-      'exercise_url': './assets/images/squat.jpg',
-      'exercise_name': '스쿼트',
-      'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
-      'date': '05/07',
-      'time': '12:10pm'
-    },
-    {
-
-      'fd_id': 2,
-      'exercise_url': './assets/images/bench_press.jpg',
-      'exercise_name': '벤치프레스',
-      'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
-      'date': '05/08',
-      'time': '10:00am'
-    },
-  ];
+  // final List<Map<String, dynamic>> feedbackData = [
+  //   {
+  //     'fd_id': 1,
+  //     'exercise_url': './assets/images/squat.jpg',
+  //     'exercise_name': '스쿼트',
+  //     'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
+  //     'date': '05/07',
+  //     'time': '12:10pm'
+  //   },
+  //   {
+  //     'fd_id': 2,
+  //     'exercise_url': './assets/images/bench_press.jpg',
+  //     'exercise_name': '벤치프레스',
+  //     'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
+  //     'date': '05/08',
+  //     'time': '10:00am'
+  //   },
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -211,44 +208,33 @@ class _FeedbackList extends State<FeedbackList> {
               ),
               SizedBox(height: screenHeight * 0.01),
               Expanded(
-                child: ListView(
-                  children: feedbackData.map((feedback) {
-                    return FeedbackItem(
-                      fd_id: feedback['fd_id']!,
-                      exercise_url: feedback['exercise_url']!,
-                      exercise_name: feedback['exercise_name']!,
-                      content: feedback['content']!,
-                      date: feedback['date']!,
-                      time: feedback['time']!,
-                    );
-                  }).toList(),
-                ),
-              ),
-              // Expanded(
-              //     child: FutureBuilder<List<Map<String, String>>>(
-              //         future: futureFeedbackData,
-              //         builder: (context, snapshot) {
-              //           if (snapshot.connectionState == ConnectionState.waiting) {
-              //             return Center(child: CircularProgressIndicator());
-              //           } else if (snapshot.hasError) {
-              //             return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
-              //           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              //             return Center(child: Text('데이터가 존재하지 않습니다.'));
-              //           } else {
-              //             final feedbackData = snapshot.data!;
-              //             return ListView(
-              //               children: feedbackData.map((item) {
-              //                 return FeedbackItem(
-              //  exercise_url: feedback['exercise_url']!,
-              // exercise_name: feedback['exercise_name']!,
-              // content: feedback['content']!,
-              // date: feedback['date']!,
-              // time: feedback['time']!,
-              //                 );
-              //               }).toList(),
-              //             );
-              //           }
-              //         })),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                      future: Feedbacklists,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('데이터를 불러오는데 실패했습니다.'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Center(child: Text('데이터가 존재하지 않습니다.'));
+                        } else {
+                          final feedbacks = snapshot.data!;
+                          return ListView(
+                            children: feedbacks.map((item) {
+                              return FeedbackItem(
+                                fd_id: item['fd_id'],
+                                exercise_url: item['exercise']['exerciseUrl'],
+                                exercise_name: item['exercise']['exerciseName'],
+                                content: item['exercise']['exerciseExplain'],
+                                date: item['date'],
+                                time: item['time'],
+                              );
+                            }).toList(),
+                          );
+                        }
+                      })),
             ],
           ),
         ),

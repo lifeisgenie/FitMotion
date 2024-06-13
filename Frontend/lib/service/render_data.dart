@@ -177,7 +177,7 @@ class _RenderDataState extends State<RenderData> {
         midCount = false;
         squatUp = !squatUp;
         setState(() {
-          whatToDo = '다시!';
+          whatToDo = '자세를 다시 확인중...';
         });
         _updateCheck(false);
       }
@@ -299,7 +299,8 @@ class _RenderDataState extends State<RenderData> {
             height: 15,
             child: Container(
               child: Text(
-                "● ${k["part"]}",
+                // "● ${k["part"]}",
+                "●",
                 style: TextStyle(
                   color: Color.fromRGBO(37, 213, 253, 1.0),
                   fontSize: 12.0,
@@ -365,32 +366,54 @@ class _RenderDataState extends State<RenderData> {
         // keypoints를 렌더링하는 Stack
         Stack(children: _renderKeypoints()),
         // 바닥에 텍스트와 색상을 표시하는 Align 위젯
-        Align(
-          alignment: Alignment.bottomCenter,
+        Positioned(
+          top: 16.0,
+          right: 16.0,
           child: SizedBox(
-            height: 50, // 필요에 따라 높이 조절
+            width: 85,
+            height: 30,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              decoration: BoxDecoration(
+                color: widget.check ? Colors.red : Colors.grey,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text(
+                textAlign: TextAlign.center,
+                widget.check ? '녹화중' : '녹화 대기',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0.0, 1.0),
+          child: SizedBox(
+            height: 60, // 필요에 따라 높이 조절
             width: widget.screenW,
             child: Container(
               decoration: BoxDecoration(
                 color: correctColor, // 자세가 맞으면 초록색, 아니면 빨간색
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25.0),
-                  topRight: Radius.circular(25),
-                ),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(25.0),
+                //   topRight: Radius.circular(25),
+                //   bottomLeft: Radius.circular(25.0),
+                //   bottomRight: Radius.circular(25),
+                // ),
               ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      '$whatToDo\n횟수: ${_counter.toString()}', // 현재 상태와 카운트 표시
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              child: Center(
+                child: Text(
+                  '$whatToDo\n횟수: ${_counter.toString()}', // 현재 상태와 카운트 표시
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
             ),
           ),
