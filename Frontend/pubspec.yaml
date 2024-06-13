@@ -93,6 +93,7 @@ flutter:
     - ./assets/
     - ./assets/videos/
     - ./assets/images/
+    - ./assets/images/exercise_pictures/
     - ./assets/posenet_mv1_075_float_from_checkpoints.tflite
     - ./assets/1.tflite
   # To add custom fonts to your application, add a fonts section here,
