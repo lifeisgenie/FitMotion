@@ -9,16 +9,16 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   List<String> imageUrls = [
-    'assets/images/exercise_picture/exercise_picture1.jpg',
-    'assets/images/exercise_picture/exercise_picture2.jpg',
-    'assets/images/exercise_picture/exercise_picture3.jpg',
-    'assets/images/exercise_picture/exercise_picture4.jpg',
-    'assets/images/exercise_picture/exercise_picture5.jpg',
-    'assets/images/exercise_picture/exercise_picture6.jpg',
-    'assets/images/exercise_picture/exercise_picture7.jpg',
-    'assets/images/exercise_picture/exercise_picture8.jpg',
-    'assets/images/exercise_picture/exercise_picture9.jpg',
-    'assets/images/exercise_picture/exercise_picture10.jpg'
+    'assets/images/exercise_pictures/exercise_picture1.jpg',
+    'assets/images/exercise_pictures/exercise_picture2.jpg',
+    'assets/images/exercise_pictures/exercise_picture3.jpg',
+    'assets/images/exercise_pictures/exercise_picture4.jpg',
+    'assets/images/exercise_pictures/exercise_picture5.jpg',
+    'assets/images/exercise_pictures/exercise_picture6.jpg',
+    'assets/images/exercise_pictures/exercise_picture7.jpg',
+    'assets/images/exercise_pictures/exercise_picture8.jpg',
+    'assets/images/exercise_pictures/exercise_picture9.jpg',
+    'assets/images/exercise_pictures/exercise_picture10.jpg'
   ];
   List<String> tips = [
     '운동 전에는 반드시 스트레칭을 하세요!',
@@ -39,20 +39,13 @@ class _LoadingPageState extends State<LoadingPage> {
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        _progress = (timer.tick * 100 / 20).toInt();
+        if (_progress < 100) {
+          _progress = (timer.tick * 100 / 5).toInt();
+        } else {
+          _progress = 100;
+        }
         currentTipIndex = (currentTipIndex + 1) % tips.length;
       });
-
-      // if (timer.tick >= 20) {
-      //   timer.cancel();
-      //   // 로딩 완료 후 다른 페이지로 이동
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) =>
-      //             FeedbackPage(fd_id: 1)), // 여기에 적절한 fd_id 값 전달
-      //   );
-      // }
     });
   }
 
@@ -125,28 +118,6 @@ class _LoadingPageState extends State<LoadingPage> {
               ),
             ),
             SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      currentTipIndex =
-                          (currentTipIndex - 1 + tips.length) % tips.length;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward, color: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      currentTipIndex = (currentTipIndex + 1) % tips.length;
-                    });
-                  },
-                ),
-              ],
-            ),
           ],
         ),
       ),

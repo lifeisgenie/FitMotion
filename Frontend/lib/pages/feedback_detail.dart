@@ -18,6 +18,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPage extends State<FeedbackPage> {
   late String videoUrl = "";
   late DateTime createdDate;
+  late String content = "";
   VideoPlayerController? _controller;
   bool _isVideoEnd = false;
 
@@ -44,8 +45,8 @@ class _FeedbackPage extends State<FeedbackPage> {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final feedbackData = jsonData['data'];
-        videoUrl =
-            feedbackData['videoUrl'].replaceFirst('./', 'assets/videos/');
+        videoUrl = feedbackData['videoUrl'].replaceFirst('./', '');
+        content = feedbackData['content'];
         createdDate = DateTime.parse(feedbackData['createdDate']);
         print("불러오기 성공");
         print(videoUrl);
@@ -163,7 +164,7 @@ class _FeedbackPage extends State<FeedbackPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Text(
-                  '스쿼트를 할 때, 등과 허리를 곧게 유지하고 무릎이 발끝을 초과하지 않도록 주의해야 합니다. 힘을 발로 전달하고 엉덩이와 다리 근육을 적절히 사용하세요. 호흡을 제어하며 균형을 유지해야 합니다. 이동 범위를 최대한 확보하여 근력과 유연성을 항상 시키세요.',
+                  content,
                   style: TextStyle(color: Colors.white),
                 ),
               ),

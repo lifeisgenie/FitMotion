@@ -42,11 +42,13 @@ class _Login extends State<Login> {
       final responseData = jsonDecode(response.body);
       final accessToken = responseData['accessToken'];
       final refreshToken = responseData['refreshToken'];
+      final userId = responseData['id'];
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessToken', accessToken);
       await prefs.setString('refreshToken', refreshToken);
       await prefs.setString('email', email);
+      await prefs.setInt('userId', userId);
 
       // 홈 화면으로 이동
       Navigator.pushReplacement(

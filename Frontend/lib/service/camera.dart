@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:FitMotion/pages/feedback.dart';
+import 'package:FitMotion/pages/feedback_detail.dart';
+import 'package:FitMotion/pages/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -173,7 +175,19 @@ class _CameraState extends State<Camera> {
     Future.delayed(Duration(seconds: 1), () async {
       try {
         final result = await ImageGallerySaver.saveFile(outputPath);
+        final File file = File("test.mp4");
         await _uploadVideoToServer(outputPath);
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyFeedback(
+              content: "content",
+              video_path:
+                  "https://firebasestorage.googleapis.com/v0/b/fitmotion-a47b2.appspot.com/o/good.mp4?alt=media&token=ccb7c24e-f71b-44b5-8ae1-f07678c16de4",
+            ),
+          ),
+        );
       } catch (e) {
         print("실패 ㅜㅜ ");
       }
@@ -183,6 +197,13 @@ class _CameraState extends State<Camera> {
 // 서버에 비디오 파일을 업로드하는 함수
   Future<void> _uploadVideoToServer(String filePath) async {
     try {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoadingPage(),
+        ),
+      );
+
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['AI_URL']!;
       final Uri url = Uri.parse('$baseUrl/upload');
@@ -192,65 +213,6 @@ class _CameraState extends State<Camera> {
 
       if (response.statusCode == 200) {
         print('비디오 전송 성공');
-
-        // 응답 헤더에서 content-type을 가져옴
-        final contentType = response.headers['content-type'];
-
-        // content-type에서 boundary 값을 추출
-        final boundaryMatch = RegExp('boundary=(.*)').firstMatch(contentType!);
-        if (boundaryMatch == null) {
-          print('Boundary not found in content-type');
-          return;
-        }
-        final boundary = boundaryMatch.group(1)!;
-
-        // 응답 데이터를 byte 리스트로 읽음
-        final responseBodyBytes = await response.stream.toBytes();
-
-        final boundaryBytes = utf8.encode('--$boundary');
-
-        final parts = splitMultipart(responseBodyBytes, boundaryBytes);
-
-        Map<String, dynamic>? jsonData;
-
-        File mp4File;
-        // 각 파트에 대해 처리
-        for (final part in parts) {
-          // Content-Disposition에서 name을 추출하여 파트의 역할을 결정
-          final dispositionMatch =
-              RegExp(r'Content-Disposition:.*name="([^"]*)"')
-                  .firstMatch(utf8.decode(part));
-          if (dispositionMatch == null) {
-            continue;
-          }
-          final name = dispositionMatch.group(1);
-
-          if (name == 'feedback') {
-            final jsonContentMatch = RegExp(r'\r\n\r\n(.*)', dotAll: true)
-                .firstMatch(utf8.decode(part));
-
-            print("J이름 : $jsonContentMatch");
-            if (jsonContentMatch != null) {
-              final jsonContent = jsonContentMatch.group(1)!.trim();
-              jsonData = json.decode(jsonContent);
-              print('JSON Data: $jsonData');
-            }
-          } else if (name == 'video.mp4') {
-            print("이름 : $name");
-            final fileContentMatch = RegExp(r'\r\n\r\n(.*)', dotAll: true)
-                .firstMatch(utf8.decode(part));
-
-            print("f이름 : $fileContentMatch");
-            if (fileContentMatch != null) {
-              final fileContent = part.sublist(
-                  fileContentMatch.start + 4); // 4 is length of \r\n\r\n
-              final file = File('received_video.mp4');
-              await file.writeAsBytes(fileContent);
-              print('Video file received and saved as \'received_video.mp4\'');
-              mp4File = file;
-            }
-          }
-        }
       } else {
         print('전송 실패');
       }

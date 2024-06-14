@@ -1,52 +1,98 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class MyFeedback extends StatefulWidget {
-  final File videoFile;
+  final String video_path;
+  final String content;
 
-  MyFeedback({required this.videoFile});
+  MyFeedback({required this.content, required this.video_path});
 
   @override
   _MyFeedback createState() => _MyFeedback();
 }
 
 class _MyFeedback extends State<MyFeedback> {
-  late String videoUrl = "";
-  late DateTime createdDate;
   VideoPlayerController? _controller;
   bool _isVideoEnd = false;
+  bool _isLoading = false;
+  late String content = widget.content;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-    )..initialize().then((_) {
-        setState(() {});
-      });
-
-    _controller?.addListener(() {
-      if (_controller!.value.position == _controller!.value.duration) {
-        setState(() {
-          _isVideoEnd = true;
-        });
-      } else {
-        setState(() {
-          _isVideoEnd = false;
-        });
-      }
-    });
+    _isLoading = true; // 데이터 로딩 시작
+    fetchFeedbackData();
   }
 
   @override
   void dispose() {
     _controller?.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchFeedbackData() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      int UserId = prefs.getInt('userId') ?? 1;
+      double exercise_id = 2;
+      await dotenv.load(fileName: ".env");
+      final String baseUrl = dotenv.env['BASE_URL']!;
+      final Uri url = Uri.parse('$baseUrl/user/feedback/save');
+      print("비디오 : ${widget.content}");
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "userId": UserId,
+          "videoUrl": widget.video_path,
+          "content": widget.content,
+          "exerciseId": exercise_id
+        }),
+      );
+      final responseData = jsonDecode(response.body);
+      final String message = responseData['message'];
+      if (response.statusCode == 201) {
+        _controller =
+            VideoPlayerController.networkUrl(Uri.parse(widget.video_path))
+              ..initialize().then((_) {
+                setState(() {
+                  _isLoading = false; // 로딩 완료
+                });
+              });
+
+        _controller?.addListener(() {
+          if (_controller!.value.position == _controller!.value.duration) {
+            setState(() {
+              _isVideoEnd = true;
+            });
+          } else {
+            setState(() {
+              _isVideoEnd = false;
+            });
+          }
+        });
+      } else {
+        print('서버 에러: ${response.statusCode}');
+        setState(() {
+          _isLoading = false; // 로딩 완료 (에러 처리)
+        });
+      }
+    } catch (e) {
+      print('네트워크 에러: $e');
+      setState(() {
+        _isLoading = false; // 로딩 완료 (에러 처리)
+      });
+    }
   }
 
   @override
@@ -99,12 +145,20 @@ class _MyFeedback extends State<MyFeedback> {
                         aspectRatio: _controller!.value.aspectRatio,
                         child: VideoPlayer(_controller!),
                       )
-                    else
+                    else if (_isLoading)
                       Container(
                         height: 200,
                         color: Colors.grey[800],
                         child: Center(
                           child: CircularProgressIndicator(),
+                        ),
+                      )
+                    else
+                      Container(
+                        height: 200,
+                        color: Colors.grey[800],
+                        child: Center(
+                          child: Text('영상을 불러올 수 없습니다.'),
                         ),
                       ),
                     if (_controller == null ||
@@ -135,7 +189,7 @@ class _MyFeedback extends State<MyFeedback> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Text(
-                  '스쿼트를 할 때, 등과 허리를 곧게 유지하고 무릎이 발끝을 초과하지 않도록 주의해야 합니다. 힘을 발로 전달하고 엉덩이와 다리 근육을 적절히 사용하세요. 호흡을 제어하며 균형을 유지해야 합니다. 이동 범위를 최대한 확보하여 근력과 유연성을 항상 시키세요.',
+                  widget.content,
                   style: TextStyle(color: Colors.white),
                 ),
               ),

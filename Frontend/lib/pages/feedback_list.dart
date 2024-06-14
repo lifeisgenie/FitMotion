@@ -9,6 +9,7 @@ import 'package:FitMotion/widgets/bottom_navigatorBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FeedbackList extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class FeedbackList extends StatefulWidget {
 
 class _FeedbackList extends State<FeedbackList> {
   late Future<List<Map<String, dynamic>>> Feedbacklists;
+  late List<Map<String, dynamic>> filteredFeedbacks = [];
 
   @override
   void initState() {
@@ -28,9 +30,12 @@ class _FeedbackList extends State<FeedbackList> {
 
   Future<List<Map<String, dynamic>>> fetchFeedbackData() async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String UserId = (prefs.getInt('userId') ?? '').toString();
+      print(UserId);
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
-      final Uri url = Uri.parse('$baseUrl/user/feedback/list/1');
+      final Uri url = Uri.parse('$baseUrl/user/feedback/list/$UserId');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -185,6 +190,21 @@ class _FeedbackList extends State<FeedbackList> {
             children: [
               TextField(
                 controller: _searchController,
+                onChanged: (value) {
+                  setState(
+                    () {
+                      Feedbacklists.then(
+                        (feedbacks) {
+                          filteredFeedbacks = feedbacks
+                              .where((item) => item['exercise']['exerciseName']
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                              .toList();
+                        },
+                      );
+                    },
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: '운동 검색',
                   hintStyle: TextStyle(color: Colors.white54),
