@@ -6,13 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResponseLoginDTO {
     private int statusCode;
     private String message;
-    private String accessToken;
-    private String refreshToken;
-    private String email;
+    private LoginSuccessData data;
+
+    @Data
+    public static class LoginSuccessData {
+        private String email;
+
+        public LoginSuccessData(String email) {
+            this.email = email;
+        }
+
+        // getters and setters
+    }
 }

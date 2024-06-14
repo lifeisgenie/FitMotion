@@ -8,7 +8,6 @@ import FitMotion.backend.entity.FeedbackFile;
 import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
-import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
 import FitMotion.backend.repository.ExerciseRepository;
@@ -16,19 +15,19 @@ import FitMotion.backend.repository.FeedbackRepository;
 import FitMotion.backend.repository.UserProfileRepository;
 import FitMotion.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,37 +88,39 @@ public class UserService {
     /**
      * 로그인
      */
-    public ResponseLoginDTO login(RequestLoginDTO dto) {
-        try {
-            // 사용자 존재 여부 확인
-            User user = userRepository.findByEmail(dto.getEmail())
-                    .orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
-
-            // 비밀번호 확인
-            if (!bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
-                throw new InvalidPasswordException("잘못된 비밀번호입니다.");
-            }
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-            );
-
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-            String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(customUserDetails.getUsername());
-
-            return ResponseLoginDTO.builder()
-                    .statusCode(HttpStatus.OK.value())
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .message("로그인 성공")
-                    .email(dto.getEmail())
-                    .build();
-        } catch (AuthenticationException e) {
-            throw new RuntimeException("로그인 실패", e);
-        }
-    }
+//    public ResponseLoginDTO login(RequestLoginDTO dto) {
+//        try {
+//            // 사용자 존재 여부 확인
+//            User user = userRepository.findByEmail(dto.getEmail())
+//                    .orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
+//
+//            // 비밀번호 확인
+//            if (!bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
+//                throw new InvalidPasswordException("잘못된 비밀번호입니다.");
+//            }
+//
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
+//            );
+//
+//            // 인증된 사용자 정보 가져오기
+//            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//
+//            // access, refresh 토큰 생성
+//            String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
+//
+//            // 빌더 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
+//            return ResponseLoginDTO.builder()
+//                    .statusCode(HttpStatus.OK.value())
+//                    .accessToken(accessToken)
+//                    .refreshToken(refreshToken)
+//                    .message("로그인 성공")
+//                    .email(dto.getEmail())
+//                    .build();
+//        } catch (AuthenticationException e) {
+//            throw new RuntimeException("로그인 실패", e);
+//        }
+//    }
 
     /**
      * 로그아웃
@@ -136,6 +137,26 @@ public class UserService {
                     .message("로그아웃 실패")
                     .build();
         }
+    }
+
+    /**
+     * 개인정보 조회
+     */
+    public ResponseProfileDTO getUserProfile(String email) {
+        UserProfile userProfile = userProfileRepository.findByUserEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        ResponseProfileDTO dto = ResponseProfileDTO.builder()
+                .userId(userProfile.getUserId())
+                .email(userProfile.getUser().getEmail())
+                .username(userProfile.getUsername())
+                .age(userProfile.getAge())
+                .phone(userProfile.getPhone())
+                .height(userProfile.getHeight())
+                .weight(userProfile.getWeight())
+                .build();
+
+        return dto;
     }
 
     /**
@@ -183,7 +204,6 @@ public class UserService {
                 return new ResponseExerciseDetailDTO(404, "운동을 찾을 수 없습니다", null);
             }
         } catch (Exception e) {
-            logger.error("운동 조회 실패: {}", e.getMessage(), e);
             return new ResponseExerciseDetailDTO(500, "운동 조회 실패", null);
         }
     }
