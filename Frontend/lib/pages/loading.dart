@@ -40,7 +40,7 @@ class _LoadingPageState extends State<LoadingPage> {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (_progress < 100) {
-          _progress = (timer.tick * 100 / 5).toInt();
+          _progress = (timer.tick * 100 / 20).toInt();
         } else {
           _progress = 100;
         }

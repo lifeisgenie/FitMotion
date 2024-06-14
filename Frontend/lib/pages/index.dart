@@ -22,6 +22,7 @@ class _Index extends State<Index> {
 
   int _selectedIndex = 2;
 
+  // 로그아웃
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -39,6 +40,7 @@ class _Index extends State<Index> {
     fetchUserDetail();
   }
 
+  // 유저 데이터 불러오기
   Future<void> fetchUserDetail() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,6 +70,7 @@ class _Index extends State<Index> {
     }
   }
 
+  // bottomNavigationBar 함수
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -183,15 +186,14 @@ class _Index extends State<Index> {
               child: Text(
                 '자세 교정',
                 style: TextStyle(
-                    fontSize: screenWidth * 0.06,
-                    color: Colors.white), // 0.6로 수정함
+                    fontSize: screenWidth * 0.06, color: Colors.white),
               ),
             ),
             SizedBox(height: screenHeight * 0.02),
             Container(
               height: screenHeight * 0.7, // ExerciseCard가 차지할 최대 높이
 
-              child: ExerciseCard(), // ExerciseCard 위젯을 사용합니다.
+              child: ExerciseCard(), // ExerciseCard
             ),
             SizedBox(height: screenHeight * 0.02),
           ],

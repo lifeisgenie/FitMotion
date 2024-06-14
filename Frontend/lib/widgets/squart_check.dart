@@ -8,6 +8,11 @@ import 'package:flutter_tflite/flutter_tflite.dart';
 import 'dart:math';
 
 class SquartCheck extends StatefulWidget {
+  final double exerciseId;
+  final String exerciseName;
+
+  SquartCheck({required this.exerciseId, required this.exerciseName});
+
   @override
   _SquartCheckState createState() => _SquartCheckState();
 }
@@ -71,7 +76,6 @@ class _SquartCheckState extends State<SquartCheck> {
       setState(() {
         _check = value;
       });
-      print("check는 $_check");
     }
   }
 
@@ -94,6 +98,8 @@ class _SquartCheckState extends State<SquartCheck> {
         children: <Widget>[
           if (cameras != null && cameras!.isNotEmpty)
             Camera(
+              exerciseName: widget.exerciseName,
+              exerciseId: widget.exerciseId,
               cameras: cameras, // 카메라 목록 전달
               setRecognitions: _setRecognitions, // 인식 결과 설정 함수 전달
               check: _check, // check 변수 전달

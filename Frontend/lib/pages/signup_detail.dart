@@ -68,7 +68,6 @@ class _SignUpDetailPageState extends State<SignUpDetailPage> {
       } else {
         // 회원가입 실패
         print('회원가입 실패. status code: ${response.statusCode}');
-        print(password);
         _showDialog('회원가입 실패', message, false);
       }
     } catch (e) {

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:FitMotion/pages/feedback.dart';
-import 'package:FitMotion/pages/feedback_detail.dart';
 import 'package:FitMotion/pages/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_tflite/flutter_tflite.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,11 +20,15 @@ import 'package:path_provider/path_provider.dart';
 typedef void Callback(List<dynamic> list, int h, int w);
 
 class Camera extends StatefulWidget {
+  final String exerciseName;
+  final double exerciseId;
   final List<CameraDescription> cameras;
   final Callback setRecognitions;
   final bool check;
 
   Camera({
+    required this.exerciseName,
+    required this.exerciseId,
     required this.cameras,
     required this.setRecognitions,
     required this.check,
@@ -44,6 +46,9 @@ class _CameraState extends State<Camera> {
   late String _videoPath; // 비디오 파일 경로
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg(); // FFmpeg 인스턴스
   late DateTime startRecordingTime; // 녹화 시작 시간
+
+  late String video_path;
+  late String content;
 
   @override
   void initState() {
@@ -168,28 +173,28 @@ class _CameraState extends State<Camera> {
 
     // FFmpeg를 사용하여 raw 프레임 데이터를 mp4로 변환
     final ffmpegCommand =
-        '-f rawvideo -pix_fmt nv21 -s 1280x720 -r 8 -i $inputFilePath -vf "transpose=3" -t $recordingDurationInSeconds $outputPath';
+        '-f rawvideo -pix_fmt nv21 -s 1280x720 -r 6 -i $inputFilePath -vf "transpose=3" -t $recordingDurationInSeconds $outputPath';
     await _flutterFFmpeg.execute(ffmpegCommand);
 
     print('비디오 저장 완료 :  $outputPath');
     Future.delayed(Duration(seconds: 1), () async {
       try {
         final result = await ImageGallerySaver.saveFile(outputPath);
-        final File file = File("test.mp4");
         await _uploadVideoToServer(outputPath);
         Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MyFeedback(
-              content: "content",
-              video_path:
-                  "https://firebasestorage.googleapis.com/v0/b/fitmotion-a47b2.appspot.com/o/good.mp4?alt=media&token=ccb7c24e-f71b-44b5-8ae1-f07678c16de4",
+              exerciseName: widget.exerciseName,
+              exerciseId: widget.exerciseId,
+              content: content,
+              video_path: video_path,
             ),
           ),
         );
       } catch (e) {
-        print("실패 ㅜㅜ ");
+        print("비디오 업로드 실패");
       }
     });
   }
@@ -213,6 +218,11 @@ class _CameraState extends State<Camera> {
 
       if (response.statusCode == 200) {
         print('비디오 전송 성공');
+        var responseData = await http.Response.fromStream(response);
+        var responseBody = jsonDecode(responseData.body);
+
+        video_path = responseBody['video_path'];
+        content = responseBody['feedback'];
       } else {
         print('전송 실패');
       }

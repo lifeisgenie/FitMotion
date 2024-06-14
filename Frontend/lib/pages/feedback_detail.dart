@@ -34,6 +34,7 @@ class _FeedbackPage extends State<FeedbackPage> {
     super.dispose();
   }
 
+  // 피드백 정보 불러오기
   Future<void> fetchFeedbackData() async {
     try {
       await dotenv.load(fileName: ".env");
@@ -45,14 +46,13 @@ class _FeedbackPage extends State<FeedbackPage> {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final feedbackData = jsonData['data'];
-        videoUrl = feedbackData['videoUrl'].replaceFirst('./', '');
-        content = feedbackData['content'];
-        createdDate = DateTime.parse(feedbackData['createdDate']);
-        print("불러오기 성공");
-        print(videoUrl);
+        videoUrl = feedbackData['videoUrl'];
+        content = utf8.decode(feedbackData['content'].runes.toList());
 
-        // Initialize the VideoPlayerController
-        _controller = VideoPlayerController.asset(videoUrl)
+        createdDate = DateTime.parse(feedbackData['createdDate']);
+
+        // video 컨트롤러 연결 및 실행
+        _controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
           ..initialize().then((_) {
             setState(() {});
           });

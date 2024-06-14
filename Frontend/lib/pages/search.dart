@@ -74,7 +74,7 @@ class _SearchPage extends State<SearchPage> {
         final jsonString = utf8.decode(response.bodyBytes);
         Map<String, dynamic> json = jsonDecode(jsonString);
         List<dynamic> data = json['data']['exerciseList'];
-        print("Received data: $data");
+
         return data.map((item) {
           return {
             'exerciseName': item['exerciseName'] as String,
@@ -83,12 +83,12 @@ class _SearchPage extends State<SearchPage> {
           };
         }).toList();
       } else {
-        print('Failed to load exercises. Status code: ${response.statusCode}');
+        print('운동 리스트 불러오기 실패 : ${response.statusCode}');
         throw Exception('Failed to load exercises');
       }
     } catch (e) {
       print('Error: $e');
-      throw Exception('Error fetching exercises: $e');
+      throw Exception('운동 리스트 불러오기 실패: $e');
     }
   }
 

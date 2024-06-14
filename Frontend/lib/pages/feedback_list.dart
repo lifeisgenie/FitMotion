@@ -28,6 +28,7 @@ class _FeedbackList extends State<FeedbackList> {
 
   int _selectedIndex = 1;
 
+  // 유저의 Feedback 데이터 불러오기
   Future<List<Map<String, dynamic>>> fetchFeedbackData() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -129,29 +130,11 @@ class _FeedbackList extends State<FeedbackList> {
     }
   }
 
-  // final List<Map<String, dynamic>> feedbackData = [
-  //   {
-  //     'fd_id': 1,
-  //     'exercise_url': './assets/images/squat.jpg',
-  //     'exercise_name': '스쿼트',
-  //     'content': '피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
-  //     'date': '05/07',
-  //     'time': '12:10pm'
-  //   },
-  //   {
-  //     'fd_id': 2,
-  //     'exercise_url': './assets/images/bench_press.jpg',
-  //     'exercise_name': '벤치프레스',
-  //     'content': '피드백 내용피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백피드백',
-  //     'date': '05/08',
-  //     'time': '10:00am'
-  //   },
-  // ];
-
   @override
   Widget build(BuildContext context) {
     TextEditingController _searchController = TextEditingController();
 
+    // 텍스트 컨트롤러 비우기
     void _clearSearch() {
       _searchController.clear(); // 입력된 텍스트를 지우기
     }
@@ -267,6 +250,7 @@ class _FeedbackList extends State<FeedbackList> {
   }
 }
 
+// 리스트 항목
 class FeedbackItem extends StatelessWidget {
   final int fd_id;
   final String exercise_url;

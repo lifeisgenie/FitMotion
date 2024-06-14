@@ -10,10 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class MyFeedback extends StatefulWidget {
+  final String exerciseName;
+  final double exerciseId;
   final String video_path;
   final String content;
 
-  MyFeedback({required this.content, required this.video_path});
+  MyFeedback(
+      {required this.exerciseName,
+      required this.content,
+      required this.video_path,
+      required this.exerciseId});
 
   @override
   _MyFeedback createState() => _MyFeedback();
@@ -42,7 +48,6 @@ class _MyFeedback extends State<MyFeedback> {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       int UserId = prefs.getInt('userId') ?? 1;
-      double exercise_id = 2;
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
       final Uri url = Uri.parse('$baseUrl/user/feedback/save');
@@ -56,7 +61,7 @@ class _MyFeedback extends State<MyFeedback> {
           "userId": UserId,
           "videoUrl": widget.video_path,
           "content": widget.content,
-          "exerciseId": exercise_id
+          "exerciseId": widget.exerciseId,
         }),
       );
       final responseData = jsonDecode(response.body);

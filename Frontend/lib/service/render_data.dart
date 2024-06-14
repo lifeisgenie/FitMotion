@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:FitMotion/pages/feedback.dart';
 import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +94,6 @@ class _RenderDataState extends State<RenderData> {
 
   // 운동에 따른 자세를 체크하는 함수
   bool _postureAccordingToExercise(Map<String, List<double>> poses) {
-    print(poses);
     setState(() {
       shoulderLY = poses['leftShoulder']?[1] ?? 0.0;
       shoulderRY = poses['rightShoulder']?[1] ?? 0.0;
@@ -121,7 +119,6 @@ class _RenderDataState extends State<RenderData> {
 
 // 자세가 올바른지 체크하는 함수
   _checkCorrectPosture(Map<String, List<double>> poses) {
-    print(poses);
     if (_postureAccordingToExercise(poses)) {
       if (!isCorrectPosture) {
         setState(() {
@@ -143,7 +140,6 @@ class _RenderDataState extends State<RenderData> {
   Future<void> _countingLogic(Map<String, List<double>> poses) async {
     if (poses != null) {
       _checkCorrectPosture(poses);
-      print(whatToDo);
 
       if (isCorrectPosture && squatUp && midCount == false) {
         _updateCheck(true);

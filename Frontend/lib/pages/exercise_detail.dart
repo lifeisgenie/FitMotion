@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:FitMotion/pages/record_screen.dart';
 import 'package:FitMotion/widgets/squart_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,14 +14,10 @@ class ExerciseDetail extends StatefulWidget {
 }
 
 class _ExerciseDetail extends State<ExerciseDetail> {
-  final String title = '스쿼트';
-  final String muscles = '대퇴사두근, 대둔근, 척추기립근';
-  final String description =
-      '스쿼트는 웨이트 트레이닝의 가장 대표적인 운동 중 하나이며, 데드리프트, 벤치 프레스와 함께 웨이트 트레이닝의 트로이카 운동으로 꼽힌다. 중량을 거루는 스포츠인 파워리프팅 중 하나이다.';
-
   late String exerciseUrl = "./assets/images/squat.jpg";
   late String exerciseCategory = "하체±";
   late String exerciseExplain = "내려갔다 올라오거라";
+  late double exerciseId = 1;
   bool isLoading = true;
 
   @override
@@ -31,12 +26,12 @@ class _ExerciseDetail extends State<ExerciseDetail> {
     fetchExerciseDetail(widget.exerciseName);
   }
 
+  // 운동상세 불러오기
   Future<void> fetchExerciseDetail(String exerciseName) async {
     try {
       await dotenv.load(fileName: ".env");
       final String baseUrl = dotenv.env['BASE_URL']!;
       final Uri url = Uri.parse('$baseUrl/user/exercise/detail/$exerciseName');
-      print(widget.exerciseName);
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -45,6 +40,7 @@ class _ExerciseDetail extends State<ExerciseDetail> {
         final Map<String, dynamic> data = responseData['data'];
 
         setState(() {
+          exerciseId = data['exerciseId'] ?? exerciseId as double;
           exerciseUrl = data['exerciseUrl'] ?? exerciseUrl;
           exerciseCategory = data['exerciseCategory'] ?? exerciseCategory;
           exerciseExplain = data['exerciseExplain'] ?? exerciseExplain;
@@ -151,7 +147,9 @@ class _ExerciseDetail extends State<ExerciseDetail> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SquartCheck(),
+                                    builder: (context) => SquartCheck(
+                                        exerciseName: widget.exerciseName,
+                                        exerciseId: exerciseId),
                                   ),
                                 );
                               },
