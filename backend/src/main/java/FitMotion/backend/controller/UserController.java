@@ -2,7 +2,6 @@ package FitMotion.backend.controller;
 
 import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
-import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.InvalidPasswordException;
 import FitMotion.backend.exception.UserNotFoundException;
@@ -10,9 +9,9 @@ import FitMotion.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -54,6 +53,7 @@ public class UserController {
         }
     }
 
+
     /**
      * 로그아웃
      */
@@ -66,11 +66,10 @@ public class UserController {
     /**
      * 개인정보 수정
      */
-    @PutMapping("/profile/update")
-    public ResponseEntity<ResponseMessageDTO> updateUserProfile(@RequestBody RequestUpdateDTO dto, Authentication authentication) {
+    @PutMapping("/profile")
+    public ResponseEntity<ResponseMessageDTO> updateUserProfile(@RequestBody RequestUpdateDTO dto) {
         try {
-            String email = authentication.getName(); // 사용자 인증 정보에서 이메일을 가져옴
-            ResponseMessageDTO result = userService.updateUserProfile(email, dto); // result 변수를 선언 및 초기화
+            ResponseMessageDTO result = userService.updateUserProfile(dto);
             return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatusCode()));
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.NOT_FOUND.value(), "사용자를 찾을 수 없습니다."), HttpStatus.NOT_FOUND);

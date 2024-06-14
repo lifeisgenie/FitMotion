@@ -3,8 +3,6 @@ package FitMotion.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -28,7 +26,4 @@ public class Exercise {
 
     @Column(name = "exercise_url")
     private String exerciseUrl;
-
-    @OneToMany(mappedBy = "exercise")
-    private List<FeedbackFile> feedbackFiles;
 }
