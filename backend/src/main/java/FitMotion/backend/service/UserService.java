@@ -3,6 +3,7 @@ package FitMotion.backend.service;
 import FitMotion.backend.dto.CustomUserDetails;
 import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
+import FitMotion.backend.dto.response.ResponseFeedbackDetailDTO.FeedbackData;
 import FitMotion.backend.entity.Exercise;
 import FitMotion.backend.entity.FeedbackFile;
 import FitMotion.backend.entity.User;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +47,8 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+
+	private CustomUserDetails _userProfile;
 
     /**
      * 회원가입
@@ -109,6 +113,8 @@ public class UserService {
 
             String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
             String refreshToken = jwtUtil.generateRefreshToken(customUserDetails.getUsername());
+            Long userProfileId = userProfileRepository.findUserIdByEmail(dto.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("사용자 프로필을 찾을 수 없습니다."));
 
             return ResponseLoginDTO.builder()
                     .statusCode(HttpStatus.OK.value())
@@ -116,6 +122,7 @@ public class UserService {
                     .refreshToken(refreshToken)
                     .message("로그인 성공")
                     .email(dto.getEmail())
+                    .id(userProfileId)
                     .build();
         } catch (AuthenticationException e) {
             throw new RuntimeException("로그인 실패", e);
@@ -163,7 +170,34 @@ public class UserService {
             throw new RuntimeException("개인정보 수정 실패", e);
         }
     }
-
+    
+    /**
+     * 개인정보 조회
+     */
+    @Transactional
+    public ResponseUserProfile ResponseUserProfile(String email) {
+        try {
+            Optional<UserProfile> userProfileOptional = userProfileRepository.findByUserEmail(email);
+            if(userProfileOptional.isPresent()) {
+            	UserProfile _userprofile = userProfileOptional.get();
+            	ResponseUserProfile.userProfile uf = new ResponseUserProfile.userProfile (
+            		_userprofile.getUserId(),
+            		_userprofile.getAge(),
+            		_userprofile.getHeight(),
+            		_userprofile.getWeight(),
+            		_userprofile.getUsername(),
+            		_userprofile.getPhone()
+            	);
+                return new ResponseUserProfile(200, "유저 조회 성공" ,uf);
+            } else {
+                return new ResponseUserProfile(500, "유저 조회 실패", null);
+            }
+        } catch (Exception e) {
+            logger.error("유저 조회 실패: {}", e.getMessage(), e);
+            return new ResponseUserProfile(500, "유저 조회 실패", null);
+        }
+    }
+    
     /**
      * 운동 상세 조회
      */
@@ -188,6 +222,32 @@ public class UserService {
             return new ResponseExerciseDetailDTO(500, "운동 조회 실패", null);
         }
     }
+    
+    /**
+     * 운동 상세 조회(id)
+     */
+    public ResponseExerciseDetailDTO getExerciseid(Long exerciseId) {
+        try {
+            Optional<Exercise> exerciseOptional = exerciseRepository.findByExerciseId(exerciseId);
+            if (exerciseOptional.isPresent()) {
+                Exercise exercise = exerciseOptional.get();
+                ResponseExerciseDetailDTO.ExerciseData exerciseData = new ResponseExerciseDetailDTO.ExerciseData(
+                        exercise.getExerciseName(),
+                        exercise.getExerciseCategory(),
+                        exercise.getExerciseExplain(),
+                        exercise.getExerciseUrl()
+                );
+
+                return new ResponseExerciseDetailDTO(200, "운동 상세 조회 성공", exerciseData);
+            } else {
+                return new ResponseExerciseDetailDTO(404, "운동을 찾을 수 없습니다", null);
+            }
+        } catch (Exception e) {
+            logger.error("운동 조회 실패: {}", e.getMessage(), e);
+            return new ResponseExerciseDetailDTO(500, "운동 조회 실패", null);
+        }
+    }
+
 
     /**
      * 운동 리스트 조회
@@ -222,6 +282,7 @@ public class UserService {
                     feedback.getFeedbackId(),
                     feedback.getExercise().getExerciseId(),
                     feedback.getVideoUrl(),
+                    feedback.getContent(),
                     feedback.getCreatedDate()
             );
             return new ResponseFeedbackDetailDTO(200, "피드백 조회 성공", feedbackData);
@@ -238,9 +299,40 @@ public class UserService {
         return feedbackFiles.stream()
                 .map(feedback -> new ResponseFeedbackListDTO.FeedbackInfo(
                         feedback.getFeedbackId(),
+                        getExerciseid(feedback.getExercise().getExerciseId()),
                         feedback.getExercise().getExerciseId(),
                         feedback.getCreatedDate()
                 ))
                 .collect(Collectors.toList());
     }
-}
+
+
+/**
+ * 피드백 저장
+ */
+@Transactional
+public ResponseMessageDTO feedbacksave(RequestFeedbackDetailDTO dto) {
+
+    try {
+
+    	UserProfile user = userProfileRepository.findByUserId(dto.getUserId());
+    	if(user == null) {
+    		return new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "피드백 저장 실패");
+    	}
+    	Exercise exer = exerciseRepository.findByExercise(dto.getExerciseId()); 
+        // 사용자 프로필 정보 저장
+        FeedbackFile feedbackFile = FeedbackFile.builder()
+                .userProfile(user) // UserProfile은 외부에서 설정해야 함
+                .exercise(exer) // Exercise는 외부에서 설정해야 함
+                .videoUrl(dto.getVideoUrl())
+                .content(dto.getContent())
+                .createdDate(new Date()) // 현재 시간을 생성 날짜로 설정
+                .build();
+        feedbackRepository.save(feedbackFile);
+
+        return new ResponseMessageDTO(HttpStatus.CREATED.value(), "피드백 저장 성공");
+    } catch (Exception e) {
+        // 기타 예외 발생 시
+        return new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "피드백 저장 실패");
+    }
+}}

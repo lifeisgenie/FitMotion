@@ -13,6 +13,7 @@ public class ResponseFeedbackListDTO {
     private int statusCode;
     private String message;
     private FeedbackData data;
+    private ResponseExerciseDetailDTO edto;
 
     @Data
     @AllArgsConstructor
@@ -24,6 +25,7 @@ public class ResponseFeedbackListDTO {
     @AllArgsConstructor
     public static class FeedbackInfo {
         private Long feedbackId;
+        private ResponseExerciseDetailDTO edto;
         private Long exerciseId;
         private Date createdDate;
     }

@@ -18,6 +18,7 @@ public class ResponseFeedbackDetailDTO {
         private Long feedbackId;
         private Long exerciseId;
         private String videoUrl;
+        private String content;
         private Date createdDate;
     }
 }

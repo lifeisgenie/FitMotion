@@ -7,7 +7,10 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FeedbackFile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_id")
@@ -23,6 +26,9 @@ public class FeedbackFile {
 
     @Column(name = "video_url")
     private String videoUrl;
+    
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)

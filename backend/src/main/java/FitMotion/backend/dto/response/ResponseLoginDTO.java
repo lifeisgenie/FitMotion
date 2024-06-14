@@ -15,4 +15,5 @@ public class ResponseLoginDTO {
     private String accessToken;
     private String refreshToken;
     private String email;
+    private Long id;
 }

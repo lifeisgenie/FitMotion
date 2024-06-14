@@ -12,4 +12,7 @@ import java.util.List;
 public interface FeedbackRepository extends JpaRepository<FeedbackFile, Long> {
     @Query("SELECT f FROM FeedbackFile f WHERE f.userProfile.userId = :userId")
     List<FeedbackFile> findByUserId(@Param("userId") Long userId);
+    
+    @Override
+    <S extends FeedbackFile> S save(S entity);
 }

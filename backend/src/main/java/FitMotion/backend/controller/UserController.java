@@ -42,15 +42,16 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<ResponseLoginDTO> login(@RequestBody RequestLoginDTO dto) {
-        try {
+        Long _long = null;
+		try {
             ResponseLoginDTO response = userService.login(dto);
             return ResponseEntity.ok(response);
         } catch (InvalidPasswordException e) {
-            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.UNAUTHORIZED.value(), "잘못된 비밀번호입니다.", null, null, dto.getEmail()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.UNAUTHORIZED.value(), "잘못된 비밀번호입니다.", null, null, dto.getEmail(),_long), HttpStatus.UNAUTHORIZED);
         } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.NOT_FOUND.value(), "존재하지 않는 계정입니다.", null, null, dto.getEmail()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.NOT_FOUND.value(), "존재하지 않는 계정입니다.", null, null, dto.getEmail(),_long), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "로그인 실패", null, null, dto.getEmail()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "로그인 실패", null, null, dto.getEmail(),_long), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,6 +64,15 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
     }
 
+    /**
+     * 개인정보 조회
+     */
+    @GetMapping("/profile/detail/{Email}")
+    public ResponseEntity<ResponseUserProfile> profileDetail(@PathVariable("Email") String Email){
+    	ResponseUserProfile response = userService.ResponseUserProfile(Email);
+    	return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+    
     /**
      * 개인정보 수정
      */
@@ -83,7 +93,7 @@ public class UserController {
      * 운동 상세 조회
      */
     @GetMapping("/exercise/detail/{exerciseName}")
-    public ResponseEntity<ResponseExerciseDetailDTO> getExerciseDetail(@PathVariable String exerciseName) {
+    public ResponseEntity<ResponseExerciseDetailDTO> getExerciseDetail(@PathVariable("exerciseName") String exerciseName) {
         ResponseExerciseDetailDTO response = userService.getExerciseDetail(exerciseName);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -101,7 +111,7 @@ public class UserController {
      * 피드백 상세 조회
      */
     @GetMapping("/feedback/detail/{feedbackId}")
-    public ResponseEntity<ResponseFeedbackDetailDTO> getFeedbackDetail(@PathVariable Long feedbackId) {
+    public ResponseEntity<ResponseFeedbackDetailDTO> getFeedbackDetail(@PathVariable("feedbackId") Long feedbackId) {
         try {
             ResponseFeedbackDetailDTO response = userService.getFeedbackDetail(feedbackId);
             if (response.getStatusCode() == 200) {
@@ -120,15 +130,32 @@ public class UserController {
      * 피드백 리스트 조회
      */
     @GetMapping("/feedback/list/{userId}")
-    public ResponseEntity<ResponseFeedbackListDTO> getFeedbackList(@PathVariable Long userId) {
+    public ResponseEntity<ResponseFeedbackListDTO> getFeedbackList(@PathVariable("userId") Long userId) {
         try {
+        	System.out.print(userId);
             List<ResponseFeedbackListDTO.FeedbackInfo> feedbackList = userService.getFeedbackListByUserId(userId);
             ResponseFeedbackListDTO.FeedbackData data = new ResponseFeedbackListDTO.FeedbackData(feedbackList);
-            return ResponseEntity.ok(new ResponseFeedbackListDTO(200, "피드백 리스트 조회 성공", data));
+            return ResponseEntity.ok(new ResponseFeedbackListDTO(200, "피드백 리스트 조회 성공", data, null));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseFeedbackListDTO(500, "피드백 리스트 조회 실패", null));
+                    .body(new ResponseFeedbackListDTO(500, "피드백 리스트 조회 실패", null, null));
+        }
+    }
+    
+    
+    /**
+     * 회원가입
+     */
+    @PostMapping("/feedback/save")
+    public ResponseEntity<ResponseMessageDTO> feedbacksave(@RequestBody RequestFeedbackDetailDTO dto) {
+        try {
+            ResponseMessageDTO result = userService.feedbacksave(dto);
+            return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatusCode()));
+        } catch (EmailAlreadyExistsException e) {
+            return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "피드백 조회 실패"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
