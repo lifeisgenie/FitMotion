@@ -3,8 +3,6 @@ package FitMotion.backend.controller;
 import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
-//import FitMotion.backend.exception.InvalidPasswordException;
-//import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.exception.UserNotFoundException;
 import FitMotion.backend.jwt.JWTUtil;
 import FitMotion.backend.service.UserService;
@@ -14,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -25,7 +21,6 @@ public class UserController {
 
     private final UserService userService;
     private final JWTUtil jwtUtil;
-
 
     /**
      * 회원가입
@@ -41,23 +36,6 @@ public class UserController {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 가입 실패"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    /**
-     * 로그인
-     */
-//    @PostMapping("/login")
-//    public ResponseEntity<ResponseLoginDTO> login(@RequestBody RequestLoginDTO dto) {
-//        try {
-//            ResponseLoginDTO response = userService.login(dto);
-//            return ResponseEntity.ok(response);
-//        } catch (InvalidPasswordException e) {
-//            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.UNAUTHORIZED.value(), "잘못된 비밀번호입니다.", null, null, dto.getEmail()), HttpStatus.UNAUTHORIZED);
-//        } catch (UserNotFoundException e) {
-//            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.NOT_FOUND.value(), "존재하지 않는 계정입니다.", null, null, dto.getEmail()), HttpStatus.NOT_FOUND);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(new ResponseLoginDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "로그인 실패", null, null, dto.getEmail()), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     /**
      * 로그아웃
@@ -92,6 +70,21 @@ public class UserController {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.NOT_FOUND.value(), "사용자를 찾을 수 없습니다."), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 정보 수정 실패"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 비밀번호 변경
+     */
+    @PostMapping("/profile/password")
+    public ResponseEntity<ResponseMessageDTO> changePassword(@RequestBody RequestPasswordDTO dto) {
+        try {
+            userService.changePassword(dto);
+            ResponseMessageDTO response = new ResponseMessageDTO(HttpStatus.OK.value(), "비밀번호가 성공적으로 변경되었습니다.");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            ResponseMessageDTO response = new ResponseMessageDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -147,62 +140,5 @@ public class UserController {
                     .body(new ResponseFeedbackListDTO(500, "피드백 리스트 조회 실패", null));
         }
     }
-//    private final JWTUtil jwtUtil;
-//
-//    @PostMapping("/generate")
-//    public ResponseEntity<Map<String, String>> generateToken(@RequestBody Map<String, String> payload) {
-//        String email = payload.get("email");
-//        if (email == null || email.isEmpty()) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//        String accessToken = jwtUtil.generateAccessToken(email);
-//        String refreshToken = jwtUtil.generateRefreshToken(email);
-//        refreshTokenRepository.save(new RefreshToken(email, refreshToken)); // Refresh Token 저장
-//        Map<String, String> response = new HashMap<>();
-//        response.put("accessToken", accessToken);
-//        response.put("refreshToken", refreshToken);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @PostMapping("/refresh")
-//    public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestBody Map<String, String> payload) {
-//        String refreshToken = payload.get("refreshToken");
-//        String email = payload.get("email");
-//
-//        // 저장소에서 Refresh Token을 검증
-//        RefreshToken storedRefreshToken = refreshTokenRepository.findByEmail(email);
-//        if (storedRefreshToken == null || !storedRefreshToken.getToken().equals(refreshToken)) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//        }
-//
-//        // Refresh Token이 만료되지 않았는지 검증
-//        if (jwtUtil.isTokenExpired(refreshToken)) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//        }
-//
-//        // 새로운 Access Token 발급
-//        String newAccessToken = jwtUtil.generateAccessToken(email);
-//        Map<String, String> response = new HashMap<>();
-//        response.put("accessToken", newAccessToken);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @GetMapping("/validate")
-//    public ResponseEntity<Map<String, String>> validateToken(@RequestParam String token) {
-//        Map<String, String> response = new HashMap<>();
-//        try {
-//            String email = jwtUtil.extractEmail(token);
-//            if (jwtUtil.validateToken(token, email)) {
-//                response.put("status", "valid");
-//                response.put("email", email);
-//            } else {
-//                response.put("status", "invalid");
-//            }
-//        } catch (Exception e) {
-//            response.put("status", "invalid");
-//            response.put("message", e.getMessage());
-//        }
-//        return ResponseEntity.ok(response);
-//    }
 }
 

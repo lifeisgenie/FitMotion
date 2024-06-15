@@ -49,7 +49,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManager authenticationManager = authenticationManagerBean();
 
-        // LoginFilter 생성 시 빈으로 등록했던 authenticationManager를 주입하도록 설정
         LoginFilter loginFilter = new LoginFilter(authenticationManager, jwtUtil, accessTokenExpiration);
         loginFilter.setFilterProcessesUrl("/user/login");
 
@@ -60,7 +59,6 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/login", "/user/signup").permitAll()
-//                        .requestMatchers("/user/change-password").authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

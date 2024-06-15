@@ -1,6 +1,5 @@
 package FitMotion.backend.service;
 
-import FitMotion.backend.dto.CustomUserDetails;
 import FitMotion.backend.dto.request.*;
 import FitMotion.backend.dto.response.*;
 import FitMotion.backend.entity.Exercise;
@@ -9,14 +8,12 @@ import FitMotion.backend.entity.User;
 import FitMotion.backend.entity.UserProfile;
 import FitMotion.backend.exception.EmailAlreadyExistsException;
 import FitMotion.backend.exception.UserNotFoundException;
-import FitMotion.backend.jwt.JWTUtil;
 import FitMotion.backend.repository.ExerciseRepository;
 import FitMotion.backend.repository.FeedbackRepository;
 import FitMotion.backend.repository.UserProfileRepository;
 import FitMotion.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,23 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final ExerciseRepository exerciseRepository;
     private final FeedbackRepository feedbackRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JWTUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
 
     /**
      * 회원가입
@@ -52,20 +43,17 @@ public class UserService {
         String email = dto.getEmail();
         Boolean isExist = userRepository.existsByEmail(email);
 
-        // 이메일이 이미 존재하는지 확인
         if (isExist) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
         try {
-            // 사용자 정보 저장
             User user = User.builder()
                     .email(dto.getEmail())
                     .password(bCryptPasswordEncoder.encode(dto.getPassword()))
                     .build();
             userRepository.save(user);
 
-            // 사용자 프로필 정보 저장
             UserProfile userProfile = UserProfile.builder()
                     .user(user)
                     .username(dto.getUsername())
@@ -75,52 +63,13 @@ public class UserService {
                     .weight(dto.getWeight())
                     .build();
 
-            // 새로운 사용자 객체를 저장소에 저장
             userProfileRepository.save(userProfile);
 
             return new ResponseMessageDTO(HttpStatus.CREATED.value(), "회원 가입 성공");
         } catch (Exception e) {
-            // 기타 예외 발생 시
             return new ResponseMessageDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 가입 실패");
         }
     }
-
-    /**
-     * 로그인
-     */
-//    public ResponseLoginDTO login(RequestLoginDTO dto) {
-//        try {
-//            // 사용자 존재 여부 확인
-//            User user = userRepository.findByEmail(dto.getEmail())
-//                    .orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
-//
-//            // 비밀번호 확인
-//            if (!bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
-//                throw new InvalidPasswordException("잘못된 비밀번호입니다.");
-//            }
-//
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-//            );
-//
-//            // 인증된 사용자 정보 가져오기
-//            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-//
-//            // access, refresh 토큰 생성
-//            String accessToken = jwtUtil.generateAccessToken(customUserDetails.getUsername());
-//
-//            // 빌더 패턴을 사용하여 ResponseLoginDTO 객체를 생성해 access, refresh 토큰 설정
-//            return ResponseLoginDTO.builder()
-//                    .statusCode(HttpStatus.OK.value())
-//                    .accessToken(accessToken)
-//                    .refreshToken(refreshToken)
-//                    .message("로그인 성공")
-//                    .email(dto.getEmail())
-//                    .build();
-//        } catch (AuthenticationException e) {
-//            throw new RuntimeException("로그인 실패", e);
-//        }
-//    }
 
     /**
      * 로그아웃
@@ -146,7 +95,7 @@ public class UserService {
         UserProfile userProfile = userProfileRepository.findByUserEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        ResponseProfileDTO dto = ResponseProfileDTO.builder()
+        return ResponseProfileDTO.builder()
                 .userId(userProfile.getUserId())
                 .email(userProfile.getUser().getEmail())
                 .username(userProfile.getUsername())
@@ -155,8 +104,6 @@ public class UserService {
                 .height(userProfile.getHeight())
                 .weight(userProfile.getWeight())
                 .build();
-
-        return dto;
     }
 
     /**
@@ -182,6 +129,47 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("개인정보 수정 실패", e);
         }
+    }
+
+    /**
+     * 비밀번호 변경
+     */
+    public void changePassword(RequestPasswordDTO dto) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email;
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            throw new IllegalArgumentException("인증된 사용자가 아닙니다.");
+        }
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        User user = optionalUser.get();
+
+        if (!bCryptPasswordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 올바르지 않습니다.");
+        }
+
+        if (dto.getNewPassword().length() < 8 ||
+                !dto.getNewPassword().matches(".*[A-Z].*") ||
+                !dto.getNewPassword().matches(".*[a-z].*") ||
+                !dto.getNewPassword().matches(".*\\d.*") ||
+                !dto.getNewPassword().matches(".*[@#$%^&+=!].*")) {
+            throw new IllegalArgumentException("새 비밀번호가 비밀번호 정책을 만족하지 않습니다.");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("새 비밀번호가 확인 비밀번호와 일치하지 않습니다.");
+        }
+
+        String hashedPassword = bCryptPasswordEncoder.encode(dto.getNewPassword());
+
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
     }
 
     /**
