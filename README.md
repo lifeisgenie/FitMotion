@@ -1,5 +1,3 @@
-# TABA_Project
-
 ![alt text](image.png)
 
 <br />
@@ -48,7 +46,7 @@
 <br />
 
 ## ***FitMotion에서 정확한 자세로 운동하고 있는지 확인해봐요*
-
+<!--
 <br />
 
 <div id='2'></div>
@@ -91,8 +89,8 @@
 |          | Build        | Gradle          | 8.7     |
 |          | WebRTC       | JWT             | 0.11.0  |
 | FrontEnd | Flutter      |                 | 3.22.0  |
-| AI       | TensorFlow   |                 | 2.16.1  |
-|          | Python       |                 | 3.11.9  |
+|          | TensorFlow   |                 | 2.16.1  |
+| AI       | Python       |                 | 3.11.9  |
 |          | cuda         |                 | 11.8    |
 |          | pytorch      |                 | 11.8    |
 
@@ -131,7 +129,7 @@
 - 이용자에게 시각적인 피드백을 제공한다.
 - 정확한 운동 자세를 제시하여 자세 교정을 돕는다.
 
-<!--![i7b206 p ssafy io_randomvideo](https://user-images.githubusercontent.com/53360337/185414241-54f53b97-a8e8-471c-869e-092b3e093eac.png)
+![i7b206 p ssafy io_randomvideo](https://user-images.githubusercontent.com/53360337/185414241-54f53b97-a8e8-471c-869e-092b3e093eac.png)
 ![i7b206 p ssafy io_randomvideo (1)](https://user-images.githubusercontent.com/53360337/185414353-44555f77-3812-4ed2-9245-22fb1000cf7d.png)
 
 
@@ -148,23 +146,36 @@
 # 팀원소개
 
 <table>
-  <tbody>
     <tr>
-      <td align="center"><a href=""><img src="width="100px;" alt=""/><br /><sub><b>FE 팀장 : </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>FE 팀원 : </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>FE 팀원 : </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>FE 팀원 : </b></sub></a><br /></td>
-     <tr/>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>BE 부팀장 : </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>BE 팀원 : </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>BE 팀원 : </b></sub></a><br /></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185133988-eb3716cf-a87c-4a45-905a-0603d3466ee7.png" width="140px" /> </a> <br></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185134234-fd849d9d-ff45-42c9-9971-0f75902687ed.png" width="140px" /></a> <br></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185134422-a4f0821d-b2b0-4cc0-ae98-2cd6c9683652.png" width="140px" /></a> <br></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185134769-c0801c1b-48cd-4c86-b0f6-1ef68c15380b.png" width="140px" /> </a> <br></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185135010-0e5c4ff6-54c7-4a12-add0-30193b32ba6b.png" width="140px" /> </a> <br></td>
+        <td height="140px" align="center"> <a href="">
+            <img src="https://user-images.githubusercontent.com/53360337/185134598-e16bc8a7-6cc4-4467-be12-3c684d70a091.png" width="140px" /></a> <br></td>
     </tr>
-  </tbody>
+    <tr>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+    </tr>
+    <tr>
+        <td align="center">Front-End</td>
+        <td align="center">Front=End</td>
+        <td align="center">Back-End</td>
+        <td align="center">AI</td>
+        <td align="center">AI</td>
+    </tr>
 </table>
-머리1 | 머리2 | 머리3 | 뚝배기
----- | ---- | ---- | ----
-다리 | | | 뚝배기깹니다
-금 | 의 | 환 | 향
+
 <br />
 
 <div id="6"></div>
