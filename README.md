@@ -222,7 +222,7 @@
 
 ## 화면 설계서
 
-[화면 설계서](https://www.figma.com/file/DaeQGfmCisSECkzLV5OYJa/%EC%9C%84%ED%95%8F?node-id=2%3A11)
+[화면 설계서](https://www.figma.com/design/rWutGyb1d2elwRDTxDQKt2/FitMotion's-Figma?node-id=0-1&t=PnSCEaaVufAEa4Af-1)
 
 <br />
 
