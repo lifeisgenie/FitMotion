@@ -176,6 +176,11 @@
     </tr>
 </table>
 
+## Team
+|<img src="https://avatars.githubusercontent.com/u/89370421?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/145273667?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/160105597?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/168407176?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/115446843?v=4" width="150" height="150"/>|
+|:-:|:-:|:-:|:-:|:-:|
+|[@Chos1](https://github.com/Chos1)|Seo Kang<br/>[@gangs8664](https://github.com/gangs8664)|승진<br/>[@lifeisgenie](https://github.com/lifeisgenie)|[@ziphaiseod9](https://github.com/ziphaiseod9)|[@wnsrl4920](https://github.com/wnsrl4920)|
+
 <br />
 
 <div id="6"></div>
