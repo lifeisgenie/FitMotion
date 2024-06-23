@@ -144,7 +144,7 @@
 <div id="5"></div>
 
 # 팀원소개
-
+<!--
 <table>
     <tr>
         <td height="140px" align="center"> <a href="">
@@ -175,6 +175,7 @@
         <td align="center">AI</td>
     </tr>
 </table>
+!-->
 
 ## Team
 |<img src="https://avatars.githubusercontent.com/u/89370421?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/145273667?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/160105597?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/168407176?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/115446843?v=4" width="150" height="150"/>|
