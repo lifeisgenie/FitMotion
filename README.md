@@ -216,7 +216,7 @@
 
 ## API 명세서
 
-![image](https://user-images.githubusercontent.com/53360337/184503190-c6abc6ba-f941-4382-89ee-813c6152ede3.png)
+![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/API.png)
 
 <br />
 
