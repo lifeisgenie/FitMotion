@@ -108,12 +108,6 @@
 
 <br />
 
-## CI/CD
-
-![image](https://user-images.githubusercontent.com/53360337/185145852-3c1ea708-df03-457e-8e70-a77644ec27e8.png)
-
-<br />
-
 ## 디렉토리 구조
 
 ![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/directoryarchitecture.png)
@@ -190,7 +184,7 @@
 
 ## 화면 설계서
 
-[화면 설계서](https://www.figma.com/file/DaeQGfmCisSECkzLV5OYJa/%EC%9C%84%ED%95%8F?node-id=2%3A11)
+[화면 설계서](https://www.figma.com/design/rWutGyb1d2elwRDTxDQKt2/FitMotion's-Figma?node-id=0-1&t=PnSCEaaVufAEa4Af-1)
 
 <br />
 
