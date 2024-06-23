@@ -144,38 +144,6 @@
 <div id="5"></div>
 
 # 팀원소개
-<!--
-<table>
-    <tr>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185133988-eb3716cf-a87c-4a45-905a-0603d3466ee7.png" width="140px" /> </a> <br></td>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185134234-fd849d9d-ff45-42c9-9971-0f75902687ed.png" width="140px" /></a> <br></td>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185134422-a4f0821d-b2b0-4cc0-ae98-2cd6c9683652.png" width="140px" /></a> <br></td>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185134769-c0801c1b-48cd-4c86-b0f6-1ef68c15380b.png" width="140px" /> </a> <br></td>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185135010-0e5c4ff6-54c7-4a12-add0-30193b32ba6b.png" width="140px" /> </a> <br></td>
-        <td height="140px" align="center"> <a href="">
-            <img src="https://user-images.githubusercontent.com/53360337/185134598-e16bc8a7-6cc4-4467-be12-3c684d70a091.png" width="140px" /></a> <br></td>
-    </tr>
-    <tr>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-    </tr>
-    <tr>
-        <td align="center">Front-End</td>
-        <td align="center">Front=End</td>
-        <td align="center">Back-End</td>
-        <td align="center">AI</td>
-        <td align="center">AI</td>
-    </tr>
-</table>
-!-->
 
 ## Team
 |<img src="https://avatars.githubusercontent.com/u/89370421?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/145273667?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/160105597?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/168407176?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/115446843?v=4" width="150" height="150"/>|
@@ -217,12 +185,6 @@
 ## API 명세서
 
 ![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/API.png)
-
-<br />
-
-## 화면 설계서
-
-[화면 설계서](https://www.figma.com/design/rWutGyb1d2elwRDTxDQKt2/FitMotion's-Figma?node-id=0-1&t=PnSCEaaVufAEa4Af-1)
 
 <br />
 
