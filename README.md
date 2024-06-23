@@ -91,8 +91,8 @@
 |          | Build        | Gradle          | 8.7     |
 |          | WebRTC       | JWT             | 0.11.0  |
 | FrontEnd | Flutter      |                 | 3.22.0  |
-|          | TensorFlow   |                 | 2.16.1  |
-| AI       | Python       |                 | 3.11.9  |
+| AI       | TensorFlow   |                 | 2.16.1  |
+|          | Python       |                 | 3.11.9  |
 |          | cuda         |                 | 11.8    |
 |          | pytorch      |                 | 11.8    |
 
