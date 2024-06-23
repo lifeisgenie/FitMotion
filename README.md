@@ -116,7 +116,7 @@
 
 ## 디렉토리 구조
 
-![image](https://user-images.githubusercontent.com/53360337/185148535-3ae41e28-9d5c-4665-bd8e-a682b66bf204.png)
+![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/directoryarchitecture.png)
 
 <br />
 
@@ -228,7 +228,7 @@
 
 ## ER-Diagram
 
-![image](https://user-images.githubusercontent.com/53360337/184503044-0cb2e131-2706-4aff-b963-ffa161b9cfb3.png)
+![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/ERD.png)
 
 <br />
 
