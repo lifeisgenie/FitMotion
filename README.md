@@ -73,13 +73,13 @@
 
 ## 상세 기술스택 및 버전
 
-|구분|기술스택|상세내용|버전|
-|---|---|---|---|---|
+| 구분     | 기술스택     | 상세내용        | 버전    |
+|----------|--------------|-----------------|---------|
 | 공통     | 형상관리     | Gitlab          | \-      |
 |          | 커뮤니케이션 | Discord         | \-      |
 |          | 커뮤니케이션 | Notion          | \-      |
-| Server   | 서버         | FireBase   | 13.11.2    |
-|          | 플랫폼       | FLASK           | -       |     |
+| Server   | 서버         | FireBase        | 13.11.2 |
+|          | 플랫폼       | FLASK           | \-      |
 | BackEnd  | DB           | MySQL           | 8.0.37  |
 |          | Java         | JDK             | 17      |
 |          | Spring       | Spring          | 3.2.5   |
@@ -89,8 +89,8 @@
 |          | Build        | Gradle          | 8.7     |
 |          | WebRTC       | JWT             | 0.11.0  |
 | FrontEnd | Flutter      |                 | 3.22.0  |
-|          | TensorFlow   |                 | 2.16.1  |
-| AI       | Python       |                 | 3.11.9  |
+| AI       | TensorFlow   |                 | 2.16.1  |
+|          | Python       |                 | 3.11.9  |
 |          | cuda         |                 | 11.8    |
 |          | pytorch      |                 | 11.8    |
 
