@@ -179,7 +179,7 @@
 ## Team
 |<img src="https://avatars.githubusercontent.com/u/89370421?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/145273667?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/160105597?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/168407176?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/115446843?v=4" width="150" height="150"/>|
 |:-:|:-:|:-:|:-:|:-:|
-|조성환(팀장)[@Chos1](https://github.com/Chos1)|서강(FE)<br/>[@gangs8664](https://github.com/gangs8664)|한승진(BE)<br/>[@lifeisgenie](https://github.com/lifeisgenie)|황동혁(AI)[@ziphaiseod9](https://github.com/ziphaiseod9)|홍준기(AI)[@wnsrl4920](https://github.com/wnsrl4920)|
+|조성환(팀장)<br/>[@Chos1](https://github.com/Chos1)|서강(FE)<br/>[@gangs8664](https://github.com/gangs8664)|한승진(BE)<br/>[@lifeisgenie](https://github.com/lifeisgenie)|황동혁(AI)<br/>[@ziphaiseod9](https://github.com/ziphaiseod9)|홍준기(AI)<br/>[@wnsrl4920](https://github.com/wnsrl4920)|
 
 <br />
 
