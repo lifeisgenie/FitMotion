@@ -104,7 +104,7 @@
 
 ## 시스템 구성
 
-![image](https://user-images.githubusercontent.com/53360337/185145709-d2519b71-e565-442b-bf1a-cae2323fef7b.png)
+![image](https://github.com/gangs8664/Github_User_Content/blob/b95dc3445fcb274c2cf722b53cd71553e8d84d96/system_architecture.png)
 
 <br />
 
