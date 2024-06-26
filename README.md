@@ -136,6 +136,11 @@
   <img src="https://github.com/gangs8664/Github_User_Content/blob/44b1ef32c8a9ecd64ead21b2545da8fbca3cbd70/%E1%84%89%E1%85%B5%E1%84%8B%E1%85%A7%E1%86%AB_7%E1%84%87%E1%85%A5%E1%86%AB_%E1%84%90%E1%85%B3%E1%86%AF%E1%84%85%E1%85%B5%E1%86%AB%E1%84%8C%E1%85%A1%E1%84%89%E1%85%A62.gif" width="250px" />
 </p>
 
+## 이미지 갤러리
+
+| 설명 1 | 설명 2 | 설명 3 | 설명 4 | 설명 5 | 설명 6 | 설명 7 |
+|--------|--------|--------|--------|--------|--------|--------|
+| ![이미지 1](https://path-to-your-first-image.gif) | ![이미지 2](https://path-to-your-second-image.gif) | ![이미지 3](https://path-to-your-third-image.gif) | ![이미지 4](https://path-to-your-fourth-image.gif) | ![이미지 5](https://path-to-your-fifth-image.gif) | ![이미지 6](https://path-to-your-sixth-image.gif) | ![이미지 7](https://path-to-your-seventh-image.gif) |
 
 
 
