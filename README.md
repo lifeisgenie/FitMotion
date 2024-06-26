@@ -127,8 +127,8 @@
 ![i7b206 p ssafy io_randomvideo (1)](https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo2.png)
 
 
-<img src="https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo1.png" width="400px" />
-<img src="https://user-images.githubusercontent.com/53360337/185411477-db8e509a-9990-495d-a0a5-ecd67a742454.png" width="160px" />
+<img src="https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo1.png" width="300px" />
+<img src="https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo2.png" width="300px" />
 <img src="https://user-images.githubusercontent.com/53360337/185411554-5abd8ece-e665-4aa0-84d7-6cd6df57154f.png" width="160px" />
 
 <br />
