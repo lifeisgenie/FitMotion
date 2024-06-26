@@ -123,10 +123,7 @@
 - 이용자에게 시각적인 피드백을 제공한다.
 - 정확한 운동 자세를 제시하여 자세 교정을 돕는다.
 
-![i7b206 p ssafy io_randomvideo](https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo1.png)
-![i7b206 p ssafy io_randomvideo (1)](https://github.com/gangs8664/Github_User_Content/blob/39ca2869dc22fe3ae012bf8704505e7f0a3e3253/demo2.png)
-
-## 이미지 갤러리
+## 시연
 
 | 로그인 | 운동 촬영 | AI분석 대기 | AI분석 피드백 | 피드백 목록 이동| 틀린자세1 | 틀린자세2 |
 |--------|--------|--------|--------|--------|--------|--------|
