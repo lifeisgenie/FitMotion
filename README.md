@@ -172,7 +172,7 @@
 
 ## 기능 명세서
 
-![image](https://github.com/gangs8664/Github_User_Content/blob/152a7c57246f9c947e4c328880a0e1d763e87ddb/%E1%84%80%E1%85%B5%E1%84%82%E1%85%B3%E1%86%BC%E1%84%86%E1%85%A7%E1%86%BC%E1%84%89%E1%85%A6%E1%84%89%E1%85%A5.png)
+![image](https://github.com/gangs8664/Github_User_Content/blob/44b1ef32c8a9ecd64ead21b2545da8fbca3cbd70/FitMotion_%E1%84%80%E1%85%B5%E1%84%82%E1%85%B3%E1%86%BC%E1%84%86%E1%85%A7%E1%86%BC%E1%84%89%E1%85%A6%E1%84%89%E1%85%A5.png)
 
 <br />
 
