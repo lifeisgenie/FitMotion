@@ -1,4 +1,4 @@
-![alt text](image.png)
+![alt text](https://github.com/gangs8664/Github_User_Content/blob/40040ddbc6099ff5473833ed6373c4476ca2ce1c/FitMotion_logo.png)
 
 <br />
 
